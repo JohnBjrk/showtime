@@ -5,7 +5,7 @@
 run_test(Module, Function, Args) ->
     try
         Result = apply(Module, Function, Args),
-        {normal, Result}
+        {ok, Result}
     catch
         Class:Reason:Stacktrace ->
             % io:fwrite("Reason ~p", [Reason]),
@@ -48,10 +48,10 @@ run_test(Module, Function, Args) ->
                              end
                           end,
                           Stacktrace),
-            {erlang_exception,
+            {error, {erlang_exception,
              GleamClass,
              GleamReason,
-             {trace_list, GleamTraceList}}
+             {trace_list, GleamTraceList}}}
     end.
 
 map_extra_info_list(ExtraInfoList) ->
