@@ -1,6 +1,6 @@
 import galant.{
-  cyan, magenta, open, placeholder, start_bold, start_cyan, start_dim,
-  start_green, start_magenta, start_red, text, to_string, to_string_styler,
+  cyan, open, placeholder, start_bold, start_cyan, start_green, start_magenta,
+  start_red, to_string, to_string_styler,
 }
 
 pub fn error_style(text) {

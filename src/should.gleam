@@ -1,6 +1,3 @@
-import gleam/io
-import gleam/function
-
 pub type Assertion(t) {
   Eq(a: t, b: t)
   NotEq(a: t, b: t)
@@ -23,14 +20,14 @@ pub fn evaluate(assertion) -> AssertionResult(t) {
       case a == b {
         True -> Ok(assertion)
         False -> {
-          assert Ok(assertion) = Error(assertion)
+          assert Ok(_assertion) = Error(assertion)
         }
       }
     NotEq(a, b) ->
       case a != b {
         True -> Ok(assertion)
         False -> {
-          assert Ok(assertion) = Error(assertion)
+          assert Ok(_assertion) = Error(assertion)
         }
       }
   }

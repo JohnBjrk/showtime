@@ -1,5 +1,4 @@
 import gleam/option.{Option}
-import gleam/dynamic.{Dynamic}
 import test_result.{TestResult}
 
 pub type TestRun {

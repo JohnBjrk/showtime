@@ -1,8 +1,5 @@
 import gleam/dynamic.{Dynamic}
-import gleam/list
-import gleam/int
 import gleam/map.{Map}
-import gleam/erlang/atom.{Atom}
 
 pub type Exception {
   ErlangException(class: Class, reason: Reason, stacktrace: TraceList)

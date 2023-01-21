@@ -11,8 +11,8 @@ import test_result.{
 import test_suite.{CompletedTestRun, TestRun}
 import should.{Assertion, Eq, NotEq}
 import styles.{
-  bold_cyan, bold_green, bold_red, error_style, expected_style, got_style,
-  message_style, module_style,
+  bold_green, bold_red, error_style, expected_style, got_style, message_style,
+  module_style,
 }
 import compare.{Annotated, Diff, InBoth, Literal, Unique, do_compare}
 

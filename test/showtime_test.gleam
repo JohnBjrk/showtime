@@ -4,7 +4,6 @@ import gleeunit/should as gshould
 import showtime
 import other_module.{call_me}
 import should
-import sketch
 
 pub type TestType {
   TestType(arg1: String, arg2: List(String))
@@ -12,7 +11,7 @@ pub type TestType {
 }
 
 pub fn main() {
-  sketch.main()
+  showtime.main()
   // run("showtime_test")
   // gleeunit.main()
 }
