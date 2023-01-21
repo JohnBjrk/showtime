@@ -1,8 +1,10 @@
 import gleam/list
 import gleam/dynamic.{Dynamic}
 import gleam/erlang/atom.{Atom}
-import test_suite.{EndTest, StartTest, TestEventHandler, TestSuite}
-import test_result.{TestResult}
+import showtime/common/test_suite.{
+  EndTest, StartTest, TestEventHandler, TestSuite,
+}
+import showtime/common/test_result.{TestResult}
 
 pub fn run_test_suite(
   test_suite: TestSuite,

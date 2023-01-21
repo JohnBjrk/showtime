@@ -1,5 +1,5 @@
 import gleam/option.{Option}
-import test_result.{TestResult}
+import showtime/common/test_result.{TestResult}
 
 pub type TestRun {
   OngoingTestRun(test_function: TestFunction, started_at: Int)

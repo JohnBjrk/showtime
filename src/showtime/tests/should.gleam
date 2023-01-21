@@ -3,9 +3,6 @@ pub type Assertion(t) {
   NotEq(a: t, b: t)
 }
 
-pub type AssertionResult(t) =
-  Result(Assertion(t), Assertion(t))
-
 pub fn equal(a: t, b: t) {
   evaluate(Eq(a, b))
 }
@@ -14,7 +11,7 @@ pub fn not_equal(a: t, b: t) {
   evaluate(NotEq(a, b))
 }
 
-pub fn evaluate(assertion) -> AssertionResult(t) {
+pub fn evaluate(assertion) -> Nil {
   case assertion {
     Eq(a, b) ->
       case a == b {
@@ -31,4 +28,5 @@ pub fn evaluate(assertion) -> AssertionResult(t) {
         }
       }
   }
+  Nil
 }

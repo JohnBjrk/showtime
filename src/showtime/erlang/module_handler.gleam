@@ -1,6 +1,6 @@
 import gleam/otp/actor.{Continue}
 import gleam/erlang/process
-import test_suite.{
+import showtime/common/test_suite.{
   EndTestSuite, StartTestSuite, TestEventHandler, TestFunctionCollector,
   TestModule, TestRunner,
 }

@@ -6,7 +6,9 @@ import gleam/int
 import gleam/option.{Some}
 import gleam/erlang/file
 import gleam/erlang/atom.{Atom}
-import test_suite.{TestFunction, TestModule, TestModuleHandler, TestSuite}
+import showtime/common/test_suite.{
+  TestFunction, TestModule, TestModuleHandler, TestSuite,
+}
 
 pub fn collect_modules(
   test_module_handler: TestModuleHandler,

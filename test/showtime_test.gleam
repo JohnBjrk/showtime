@@ -2,8 +2,7 @@ import gleam/io
 import gleeunit
 import gleeunit/should as gshould
 import showtime
-import other_module.{call_me}
-import should
+import showtime/tests/should
 
 pub type TestType {
   TestType(arg1: String, arg2: List(String))

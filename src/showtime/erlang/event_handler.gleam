@@ -4,11 +4,11 @@ import gleam/otp/actor.{Continue, Stop}
 import gleam/erlang.{Millisecond}
 import gleam/erlang/process.{Normal}
 import gleam/map
-import test_suite.{
+import showtime/common/test_suite.{
   CompletedTestRun, EndTest, EndTestRun, EndTestSuite, OngoingTestRun, StartTest,
   StartTestRun, StartTestSuite, TestEvent,
 }
-import formatter.{create_test_report}
+import showtime/reports/formatter.{create_test_report}
 
 type TestState {
   NotStarted

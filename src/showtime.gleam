@@ -1,5 +1,5 @@
 import gleam/list
-import test_suite.{EndTestRun, StartTestRun}
+import showtime/common/test_suite.{EndTestRun, StartTestRun}
 import showtime/erlang/event_handler
 import showtime/erlang/module_handler
 import showtime/erlang/runner

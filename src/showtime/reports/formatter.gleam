@@ -4,17 +4,19 @@ import gleam/list
 import gleam/string
 import gleam/map.{Map}
 import gleam/dynamic.{Dynamic}
-import test_result.{
+import showtime/common/test_result.{
   Assert, AssertEqual, Expected, Expression, GleamError, GleamErrorDetail,
   ReasonDetail, Value,
 }
-import test_suite.{CompletedTestRun, TestRun}
-import should.{Assertion, Eq, NotEq}
-import styles.{
+import showtime/common/test_suite.{CompletedTestRun, TestRun}
+import showtime/tests/should.{Assertion, Eq, NotEq}
+import showtime/reports/styles.{
   bold_green, bold_red, error_style, expected_style, got_style, message_style,
   module_style,
 }
-import compare.{Annotated, Diff, InBoth, Literal, Unique, do_compare}
+import showtime/reports/compare.{
+  Annotated, Diff, InBoth, Literal, Unique, do_compare,
+}
 
 type ModuleAndTest {
   ModuleAndTestRun(module_name: String, test_run: TestRun)
