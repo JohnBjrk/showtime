@@ -123,9 +123,6 @@ fn start_test_event_handler() {
         }
         case next {
           Continue(#(Finished(num_modules), num_done, events)) if num_done == num_modules -> {
-            io.println("Done")
-            events
-            |> io.debug()
             io.println(create_test_report(events))
             Stop(Normal)
           }
@@ -146,7 +143,6 @@ fn start_test_event_handler() {
     case test_event {
       EndTestRun(..) -> {
         process.send(subject, test_event)
-        io.println("Waiting for exit")
         process.select_forever(exit_subject)
       }
 
@@ -166,7 +162,6 @@ fn start_test_module_handler(
       fn(module: TestModule, state) {
         process.start(
           fn() {
-            io.println("Got module event " <> module.name)
             let test_suite = test_function_collector(module)
             test_event_handler(StartTestSuite(module))
             run_test_suite(test_suite, test_event_handler)
@@ -178,7 +173,6 @@ fn start_test_module_handler(
       },
     )
   fn(test_module: TestModule) {
-    io.println("Found module " <> test_module.name)
     process.send(subject, test_module)
     Nil
   }

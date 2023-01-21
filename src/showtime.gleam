@@ -11,7 +11,6 @@ import gleam/erlang/file
 import gleam/otp/task.{async, await}
 import playground
 import sketch
-import assertions
 
 pub type TestFunction {
   TestFunction(module_name: String, function_name: String)

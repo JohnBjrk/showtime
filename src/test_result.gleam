@@ -12,14 +12,15 @@ pub type TestResult =
   Result(Dynamic, Exception)
 
 pub type Reason {
-  AssertEqual(List(ReasonDetail))
+  AssertEqual(details: List(ReasonDetail))
+  // AssertEqual(details: Dynamic)
   GleamError(details: GleamErrorDetail)
 }
 
 pub type ReasonDetail {
-  Module(name: Atom)
+  Module(name: String)
   ReasonLine(line_no: Int)
-  Expression(List(String))
+  Expression(expression: String)
   Expected(value: Dynamic)
   Value(value: Dynamic)
 }

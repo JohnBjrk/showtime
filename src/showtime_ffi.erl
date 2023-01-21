@@ -1,6 +1,6 @@
 -module(showtime_ffi).
 
--export([run_test/3, functions/0]).
+-export([run_test/3, functions/0, diff/2]).
 
 run_test(Module, Function, Args) ->
     try
@@ -8,21 +8,35 @@ run_test(Module, Function, Args) ->
         {ok, Result}
     catch
         Class:Reason:Stacktrace ->
-            % io:fwrite("Reason ~p", [Reason]),
             GleamReason =
                 case Reason of
                     {Assertion, ReasonList} ->
-                        ErlangReasonList = lists:map(fun(ReasonDetail) ->
-                                     case ReasonDetail of
-                                         {line, LineNo} -> {reason_line, LineNo};
-                                         {expression, List} -> {expression, list_to_binary(List)};
-                                         Other -> Other
-                                     end
-                                  end,
-                                  ReasonList),
-                        {Assertion, ErlangReasonList};
-                    #{function := GleamFunction, gleam_error := GleamError, line := Line, message := Message, module := GleamModule, value := Value} ->
-                        {gleam_error, {GleamError, GleamModule, GleamFunction, Line, Message, Value}}
+                        ErlangReasonList =
+                            lists:map(fun(ReasonDetail) ->
+                                         case ReasonDetail of
+                                             {line, LineNo} -> {reason_line, LineNo};
+                                             {expression, List} ->
+                                                 {expression, list_to_binary(List)};
+                                             {module, ModuleAtom} ->
+                                                 {module, atom_to_binary(ModuleAtom)};
+                                             Other -> Other
+                                         end
+                                      end,
+                                      ReasonList),
+                        % io:fwrite("Reason ~p", [ErlangReasonList]),
+                        GleamAssertionType = case Assertion of
+                            assertEqual -> assert_equal;
+                            OtherAssertionType -> OtherAssertionType
+                        end,
+                        {GleamAssertionType, ErlangReasonList};
+                    #{function := GleamFunction,
+                      gleam_error := GleamError,
+                      line := Line,
+                      message := Message,
+                      module := GleamModule,
+                      value := Value} ->
+                        {gleam_error,
+                         {GleamError, GleamModule, GleamFunction, Line, Message, Value}}
                 end,
             GleamClass =
                 case Class of
@@ -36,22 +50,19 @@ run_test(Module, Function, Args) ->
                              case Trace of
                                  {ModuleName, FunctionName, Arity, ExtraInfoList} ->
                                      {trace_module,
-                                      ModuleName,
-                                      FunctionName,
+                                      atom_to_binary(ModuleName),
+                                      atom_to_binary(FunctionName),
                                       map_arity(Arity),
                                       map_extra_info_list(ExtraInfoList)};
                                  {FunctionName, Arity, ExtraInfoList} ->
                                      {trace,
-                                      FunctionName,
+                                      atom_to_binary(FunctionName),
                                       map_arity(Arity),
                                       map_extra_info_list(ExtraInfoList)}
                              end
                           end,
                           Stacktrace),
-            {error, {erlang_exception,
-             GleamClass,
-             GleamReason,
-             {trace_list, GleamTraceList}}}
+            {error, {erlang_exception, GleamClass, GleamReason, {trace_list, GleamTraceList}}}
     end.
 
 map_extra_info_list(ExtraInfoList) ->
@@ -71,6 +82,26 @@ map_arity(Arity) ->
             {num, Num}
     end.
 
+diff(List1, List2) when is_list(List1), is_list(List2) ->
+    InBoth = sets:to_list(sets:intersection([sets:from_list(List1),sets:from_list(List2)])),
+    Annotated1 = lists:map(fun(Element) ->
+                case lists:member(Element, InBoth) of
+                    true -> {in_both, Element};
+                    false -> {unique, Element}
+                end
+            end,
+            List1),
+    Annotated2 = lists:map(fun(Element) ->
+                case lists:member(Element, InBoth) of
+                    true -> {in_both, Element};
+                    false -> {unique, Element}
+                end
+            end,
+            List2),
+    {diff, Annotated1, Annotated2};
+
+diff(V1, V2) ->
+    {literal, V1, V2}.
 functions() ->
     Funs = module_info(exports),
     Funs.

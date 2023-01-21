@@ -13,6 +13,7 @@ version = "0.1.0"
 gleam_stdlib = "~> 0.25"
 gleam_erlang = "~> 0.17"
 gleam_otp = "~> 0.5"
+galant = "~> 0.1"
 
 [dev-dependencies]
 gleeunit = "~> 0.7"

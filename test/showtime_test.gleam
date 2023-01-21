@@ -1,9 +1,9 @@
 import gleam/io
 import gleeunit
-import gleeunit/should
+import gleeunit/should as gshould
 import showtime
 import other_module.{call_me}
-import assertions
+import should
 import sketch
 
 pub type TestType {
@@ -18,16 +18,67 @@ pub fn main() {
 }
 
 pub fn i_am_test() {
-  io.println("Testing")
   1
-  |> should.equal(call_me("Sal"))
+  |> gshould.equal(2)
+}
+
+pub fn many_gleeunit_should_test() {
+  1
+  |> gshould.equal(1)
+  1
+  |> gshould.equal(1)
+  1
+  |> gshould.equal(1)
+  1
+  |> gshould.equal(1)
+  1
+  |> gshould.equal(1)
+  1
+  |> gshould.equal(1)
+  1
+  |> gshould.equal(1)
+  1
+  |> gshould.equal(1)
+  1
+  |> gshould.equal(1)
+  1
+  |> gshould.equal(2)
+}
+
+pub fn many_showtime_should_test() {
+  1
+  |> should.equal(1)
+  1
+  |> should.equal(1)
+  1
+  |> should.equal(1)
+  1
+  |> should.equal(1)
+  1
+  |> should.equal(1)
+  1
+  |> should.equal(1)
+  1
+  |> should.equal(1)
+  1
+  |> should.equal(1)
+  1
+  |> should.equal(1)
+  1
+  |> should.equal(2)
 }
 
 pub fn other_test() {
-  io.println("Other test")
-  // assert TestType("nope", []) = TestType("apa", ["bepa", "depa"])
-  // assertions.should()
-  // |> assertions.eq(["apa"], ["apa", "bepa"])
-  assertions.should()
-  |> assertions.eq(Variant, TestType("apa", ["älg", "skog"]))
+  Variant
+  |> should.equal(TestType("apa", ["älg", "skog"]))
+}
+
+pub fn list_test() {
+  [1, 2, 3]
+  |> should.equal([3, 4, 5])
+}
+
+pub fn djur_test() {
+  TestType("apa", ["ren", "tur"])
+  |> should.not_equal(TestType("apa", ["ren", "tur"]))
 }
