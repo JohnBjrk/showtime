@@ -1,6 +1,6 @@
 import galant.{
   cyan, open, placeholder, start_bold, start_cyan, start_green, start_magenta,
-  start_red, to_string, to_string_styler,
+  start_red, start_yellow, to_string, to_string_styler,
 }
 
 pub fn error_style(text) {
@@ -37,6 +37,14 @@ pub fn bold_green() {
   open()
   |> start_bold()
   |> start_green()
+  |> placeholder()
+  |> to_string_styler()
+}
+
+pub fn bold_yellow() {
+  open()
+  |> start_bold()
+  |> start_yellow()
   |> placeholder()
   |> to_string_styler()
 }

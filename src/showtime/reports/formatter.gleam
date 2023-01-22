@@ -2,28 +2,36 @@ import gleam/io
 import gleam/int
 import gleam/list
 import gleam/string
+import gleam/option.{None, Option, Some}
 import gleam/map.{Map}
 import gleam/dynamic.{Dynamic}
 import showtime/common/test_result.{
   Assert, AssertEqual, Expected, Expression, GleamError, GleamErrorDetail,
-  ReasonDetail, Value,
+  Ignored, ReasonDetail, TestFunctionReturn, Value,
 }
 import showtime/common/test_suite.{CompletedTestRun, TestRun}
 import showtime/tests/should.{Assertion, Eq, NotEq}
 import showtime/reports/styles.{
-  bold_green, bold_red, error_style, expected_style, got_style, message_style,
-  module_style,
+  bold_green, bold_red, bold_yellow, error_style, expected_style, got_style,
+  message_style, module_style,
 }
 import showtime/reports/compare.{
   Annotated, Diff, InBoth, Literal, Unique, do_compare,
 }
+import showtime/tests/meta.{Meta}
 
 type ModuleAndTest {
   ModuleAndTestRun(module_name: String, test_run: TestRun)
 }
 
 type UnifiedError {
-  UnifiedError(reason: String, message: String, expected: String, got: String)
+  UnifiedError(
+    meta: Option(Meta),
+    reason: String,
+    message: String,
+    expected: String,
+    got: String,
+  )
 }
 
 pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
@@ -40,10 +48,31 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
       |> map.values()
       |> list.filter_map(fn(test_run) {
         case test_run {
-          CompletedTestRun(_, _, result) ->
+          CompletedTestRun(test_function, _, result) ->
             case result {
               Error(_) -> Ok(ModuleAndTestRun(module_name, test_run))
               Ok(_) -> Error(Nil)
+              Ok(Ignored(_)) -> Error(Nil)
+            }
+          _ -> Error(Nil)
+        }
+      })
+    })
+
+  let ignored_test_runs =
+    test_results
+    |> map.to_list()
+    |> list.flat_map(fn(entry) {
+      let #(module_name, test_module_results) = entry
+      test_module_results
+      |> map.values()
+      |> list.filter_map(fn(test_run) {
+        case test_run {
+          CompletedTestRun(test_function, _, result) ->
+            case result {
+              Ok(Ignored(reason)) ->
+                Ok(#(module_name <> "." <> test_function.name, reason))
+              _ -> Error(Nil)
             }
           _ -> Error(Nil)
         }
@@ -81,7 +110,7 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
         _ -> Error(Nil)
       }
     })
-    |> string.join("\n")
+    |> list.fold([], fn(rows, test_rows) { list.append(rows, test_rows) })
   let all_test_execution_time_reports =
     all_test_runs
     |> list.filter_map(fn(test_run) {
@@ -98,24 +127,45 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
   let all_tests_count =
     all_test_runs
     |> list.length()
+  let ignored_tests_count =
+    ignored_test_runs
+    |> list.length()
   let failed_tests_count =
     failed_test_runs
     |> list.length()
-  "\n" <> execution_times_report <> "\n\n" <> failed_tests_report <> "\n" <> int.to_string(
-    all_tests_count - failed_tests_count,
-  ) <> "/" <> int.to_string(all_tests_count) <> " passed"
+
+  let passed =
+    bold_green()(
+      int.to_string(all_tests_count - failed_tests_count - ignored_tests_count) <> " passed",
+    )
+  let failed =
+    bold_red()(
+      int.to_string(all_tests_count - ignored_tests_count) <> " failed",
+    )
+  let ignored = case ignored_tests_count {
+    0 -> ""
+    _ -> ", " <> bold_yellow()(int.to_string(ignored_tests_count) <> " ignored")
+  }
+
+  let failed_tests_table =
+    Table(None, failed_tests_report)
+    |> align_table()
+    |> to_string()
+
+  "\n" <> failed_tests_table <> "\n" <> passed <> ", " <> failed <> ignored
 }
 
 fn erlang_error_to_unified(error_details: List(ReasonDetail), message: String) {
   error_details
   |> list.fold(
-    UnifiedError("not_set", message, "", ""),
+    UnifiedError(None, "not_set", message, "", ""),
     fn(unified, reason) {
       case reason {
         Expression(expression) -> UnifiedError(..unified, reason: expression)
         Expected(value) ->
-          UnifiedError(..unified, expected: string.inspect(value))
-        Value(value) -> UnifiedError(..unified, got: string.inspect(value))
+          UnifiedError(..unified, expected: bold_green()(string.inspect(value)))
+        Value(value) ->
+          UnifiedError(..unified, got: bold_red()(string.inspect(value)))
         _ -> unified
       }
     },
@@ -129,19 +179,20 @@ fn gleam_error_to_unified(gleam_error: GleamErrorDetail) -> UnifiedError {
         dynamic.unsafe_coerce(value)
       assert Error(assertion) = result
       case assertion {
-        Eq(expected, got) -> {
+        Eq(expected, got, meta) -> {
           let d = do_compare(expected, got)
           let #(annotated_expected, annotated_got) = case d {
             Diff(expected, got) -> #(
-              format_diff(expected, bold_red()),
-              format_diff(got, bold_green()),
+              format_diff(expected, bold_green()),
+              format_diff(got, bold_red()),
             )
             Literal(expected, got) -> #(
-              bold_red()(string.inspect(expected)),
-              bold_green()(string.inspect(got)),
+              bold_green()(string.inspect(expected)),
+              bold_red()(string.inspect(got)),
             )
           }
           UnifiedError(
+            meta,
             "assert",
             "Assert equal",
             annotated_expected,
@@ -150,9 +201,10 @@ fn gleam_error_to_unified(gleam_error: GleamErrorDetail) -> UnifiedError {
         }
         NotEq(expected, got) ->
           UnifiedError(
+            None,
             "assert",
             "Assert not equal",
-            "!" <> string.inspect(expected),
+            "not " <> string.inspect(expected),
             string.inspect(got),
           )
       }
@@ -174,9 +226,181 @@ fn format_diff(values: List(Annotated), unique_styler) -> String {
 }
 
 fn format_reason(error: UnifiedError, module: String, function: String) {
-  error_style("   Error") <> " in: " <> module_style(module <> "." <> function) <> "\n" <> message_style(
-    "    Message: ",
-  ) <> error.message <> "\n" <> expected_style("   Expected: ") <> error.expected <> "\n" <> got_style(
-    "        Got: ",
-  ) <> error.got <> "\n"
+  let meta = case error.meta {
+    Some(meta) ->
+      Some([
+        AlignRight(Content("Description", module_style("Description")), 2),
+        Separator(": "),
+        AlignLeft(Content(meta.description, meta.description), 0),
+      ])
+
+    None -> None
+  }
+
+  let arrow =
+    string.join(
+      list.repeat("-", string.length(module) + 1 + string.length(function) / 2),
+      "",
+    ) <> "⌄"
+  let test = module <> "." <> function
+  let standard_table_rows = [
+    Some([
+      AlignRight(Content("Error", error_style("Error")), 2),
+      Separator(": "),
+      AlignLeft(Content(arrow, arrow), 0),
+    ]),
+    Some([
+      AlignRight(Content("Test", module_style("Test")), 2),
+      Separator(": "),
+      AlignLeft(
+        Content(
+          module <> "." <> function,
+          module <> "." <> module_style(function),
+        ),
+        0,
+      ),
+    ]),
+    meta,
+    Some([
+      AlignRight(Content("Expected", module_style("Expected")), 2),
+      Separator(": "),
+      AlignLeft(Content(error.expected, error.expected), 0),
+    ]),
+    Some([
+      AlignRight(Content("Got", module_style("Got")), 2),
+      Separator(": "),
+      AlignLeft(Content(error.got, error.got), 0),
+    ]),
+    Some([
+      AlignRight(Content("", ""), 0),
+      AlignRight(Content("", ""), 0),
+      AlignRight(Content("", ""), 0),
+    ]),
+  ]
+  // meta <> error_style("   Error") <> " in: " <> module_style(
+  //   module <> "." <> function,
+  // ) <> "\n" <> message_style("    Message: ") <> error.message <> "\n" <> expected_style(
+  //   "   Expected: ",
+  // ) <> error.expected <> "\n" <> got_style("        Got: ") <> error.got <> "\n"
+  // let table_rows =
+  standard_table_rows
+  |> list.filter_map(fn(row) { option.to_result(row, Nil) })
+  // Table(None, table_rows)
+  // |> align_table()
+  // |> to_string()
+}
+
+pub type Content {
+  Content(unstyled: String, styled: String)
+}
+
+pub type Col {
+  AlignRight(content: Content, margin: Int)
+  AlignLeft(content: Content, margin: Int)
+  Separator(char: String)
+  Aligned(content: String)
+}
+
+pub type Table {
+  Table(header: Option(String), rows: List(List(Col)))
+}
+
+pub fn to_string(table: Table) -> String {
+  let rows =
+    table.rows
+    |> list.map(fn(row) {
+      row
+      |> list.filter_map(fn(col) {
+        case col {
+          Separator(char) -> Ok(char)
+          Aligned(content) -> Ok(content)
+          _ -> Error(Nil)
+        }
+      })
+      |> string.join("")
+    })
+    |> string.join("\n")
+  let header =
+    table.header
+    |> option.map(fn(header) { header <> "\n" })
+    |> option.unwrap("")
+  header <> rows
+}
+
+pub fn align_table(table: Table) -> Table {
+  let cols =
+    table.rows
+    |> list.transpose()
+  let col_width =
+    cols
+    |> list.map(fn(col) {
+      col
+      |> list.map(fn(content) {
+        case content {
+          AlignRight(Content(unstyled, _), _) -> unstyled
+          AlignLeft(Content(unstyled, _), _) -> unstyled
+          Separator(char) -> char
+          Aligned(content) -> content
+        }
+      })
+      |> list.fold(0, fn(max, str) { int.max(max, string.length(str)) })
+    })
+  let aligned_col =
+    cols
+    |> list.zip(col_width)
+    |> list.map(fn(col_and_width) {
+      let #(col, width) = col_and_width
+      col
+      |> list.map(fn(content) {
+        case content {
+          AlignRight(Content(unstyled, styled), margin) ->
+            Aligned(pad_left(
+              styled,
+              width + margin - string.length(unstyled),
+              " ",
+            ))
+          AlignLeft(Content(unstyled, styled), margin) ->
+            Aligned(pad_right(
+              styled,
+              width + margin - string.length(unstyled),
+              " ",
+            ))
+          Separator(char) -> Separator(char)
+          Aligned(content) -> Aligned(content)
+        }
+      })
+    })
+  let aligned_rows =
+    aligned_col
+    |> list.transpose()
+  Table(..table, rows: aligned_rows)
+}
+
+fn align_on(strings: List(String), align_char: String, margin: Int) {
+  let longest =
+    strings
+    |> list.map(fn(str) {
+      case string.split(str, align_char) {
+        [first, ..] -> first
+        _ -> ""
+      }
+    })
+    |> list.map(string.length)
+    |> list.fold(0, fn(max, length) { int.max(length, max) })
+  strings
+  |> list.map(fn(str) { string.pad_left(str, longest + margin, " ") })
+}
+
+fn pad_left(str: String, num: Int, char: String) {
+  let padding =
+    list.repeat(char, num)
+    |> string.join("")
+  padding <> str
+}
+
+fn pad_right(str: String, num: Int, char: String) {
+  let padding =
+    list.repeat(char, num)
+    |> string.join("")
+  str <> padding
 }

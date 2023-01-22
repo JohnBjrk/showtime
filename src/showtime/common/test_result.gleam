@@ -1,12 +1,21 @@
 import gleam/dynamic.{Dynamic}
 import gleam/map.{Map}
 
+pub type IgnoreReason {
+  Ignore
+}
+
+pub type TestReturn {
+  TestFunctionReturn(value: Dynamic)
+  Ignored(reason: IgnoreReason)
+}
+
 pub type Exception {
   ErlangException(class: Class, reason: Reason, stacktrace: TraceList)
 }
 
 pub type TestResult =
-  Result(Dynamic, Exception)
+  Result(TestReturn, Exception)
 
 pub type Reason {
   AssertEqual(details: List(ReasonDetail))

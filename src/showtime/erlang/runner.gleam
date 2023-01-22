@@ -1,10 +1,11 @@
+import gleam/io
 import gleam/list
 import gleam/dynamic.{Dynamic}
 import gleam/erlang/atom.{Atom}
 import showtime/common/test_suite.{
   EndTest, StartTest, TestEventHandler, TestSuite,
 }
-import showtime/common/test_result.{TestResult}
+import showtime/common/test_result.{Ignored, TestFunctionReturn, TestResult}
 
 pub fn run_test_suite(
   test_suite: TestSuite,
@@ -18,7 +19,7 @@ pub fn run_test_suite(
   })
 }
 
-pub fn run_test(module_name: String, test_name: String) {
+pub fn run_test(module_name: String, test_name: String) -> TestResult {
   run_test_ffi(
     atom.create_from_string(module_name),
     atom.create_from_string(test_name),

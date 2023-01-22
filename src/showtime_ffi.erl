@@ -4,8 +4,20 @@
 
 run_test(Module, Function, Args) ->
     try
+        % io:fwrite("Testing~n"),
         Result = apply(Module, Function, Args),
-        {ok, Result}
+        % io:fwrite("Test result: ~p~n", [Result]),
+        FinalResult = case Result of
+            {test, {meta, _Description, Tags}, TestFun} ->
+                case lists:any(fun(Tag) ->
+                    Tag == <<"ignore">>
+                end, Tags) of
+                    true -> {ignored, ignore};
+                    false -> {test_function_return, TestFun()}
+                end;
+            DirectResult -> {test_function_return, DirectResult}
+        end,
+        {ok, FinalResult}
     catch
         Class:Reason:Stacktrace ->
             GleamReason =
