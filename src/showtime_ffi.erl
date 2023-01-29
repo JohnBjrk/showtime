@@ -1,6 +1,6 @@
 -module(showtime_ffi).
 
--export([run_test/3, functions/0, diff/2]).
+-export([run_test/3, functions/0]).
 
 run_test(Module, Function, IgnoreTags) ->
     try
@@ -96,26 +96,6 @@ map_arity(Arity) ->
             {num, Num}
     end.
 
-diff(List1, List2) when is_list(List1), is_list(List2) ->
-    InBoth = sets:to_list(sets:intersection([sets:from_list(List1),sets:from_list(List2)])),
-    Annotated1 = lists:map(fun(Element) ->
-                case lists:member(Element, InBoth) of
-                    true -> {in_both, Element};
-                    false -> {unique, Element}
-                end
-            end,
-            List1),
-    Annotated2 = lists:map(fun(Element) ->
-                case lists:member(Element, InBoth) of
-                    true -> {in_both, Element};
-                    false -> {unique, Element}
-                end
-            end,
-            List2),
-    {diff, Annotated1, Annotated2};
-
-diff(V1, V2) ->
-    {literal, V1, V2}.
 functions() ->
     Funs = module_info(exports),
     Funs.

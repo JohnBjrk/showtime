@@ -7,17 +7,15 @@ import gleam/map.{Map}
 import gleam/dynamic.{Dynamic}
 import showtime/common/test_result.{
   Assert, AssertEqual, Expected, Expression, GleamError, GleamErrorDetail,
-  Ignored, ReasonDetail, TestFunctionReturn, Value,
+  Ignored, ReasonDetail, Value,
 }
 import showtime/common/test_suite.{CompletedTestRun, TestRun}
 import showtime/tests/should.{Assertion, Eq, NotEq}
 import showtime/reports/styles.{
   error_style, expected_highlight, failed_style, function_style, got_highlight,
-  heading_style, ignored_style, module_style, passed_style,
+  heading_style, ignored_style, passed_style,
 }
-import showtime/reports/compare.{
-  Annotated, Diff, InBoth, Literal, LiteralString, Unique, do_compare,
-}
+import showtime/reports/compare.{compare}
 import showtime/tests/meta.{Meta}
 
 type ModuleAndTest {
@@ -48,13 +46,17 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
       |> map.values()
       |> list.filter_map(fn(test_run) {
         case test_run {
-          CompletedTestRun(test_function, _, result) ->
+          CompletedTestRun(_test_function, _, result) ->
             case result {
               Error(_) -> Ok(ModuleAndTestRun(module_name, test_run))
               Ok(_) -> Error(Nil)
               Ok(Ignored(_)) -> Error(Nil)
             }
-          _ -> Error(Nil)
+          _ -> {
+            test_run
+            |> io.debug()
+            Error(Nil)
+          }
         }
       })
     })
@@ -83,7 +85,7 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
     failed_test_runs
     |> list.filter_map(fn(module_and_test_run) {
       case module_and_test_run.test_run {
-        CompletedTestRun(test_function, total_time, result) ->
+        CompletedTestRun(test_function, _total_time, result) ->
           case result {
             Error(exception) ->
               case exception.reason {
@@ -120,7 +122,7 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
         _ -> Error(Nil)
       }
     })
-  let execution_times_report =
+  let _execution_times_report =
     all_test_execution_time_reports
     |> string.join("\n")
 
@@ -138,10 +140,7 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
     passed_style(
       int.to_string(all_tests_count - failed_tests_count - ignored_tests_count) <> " passed",
     )
-  let failed =
-    failed_style(
-      int.to_string(all_tests_count - ignored_tests_count) <> " failed",
-    )
+  let failed = failed_style(int.to_string(failed_tests_count) <> " failed")
   let ignored = case ignored_tests_count {
     0 -> ""
     _ -> ", " <> ignored_style(int.to_string(ignored_tests_count) <> " ignored")
@@ -177,31 +176,14 @@ fn erlang_error_to_unified(error_details: List(ReasonDetail), message: String) {
 
 fn gleam_error_to_unified(gleam_error: GleamErrorDetail) -> UnifiedError {
   case gleam_error {
-    Assert(module, function, line_no, message, value) -> {
+    Assert(_module, _function, _line_no, _message, value) -> {
       let result: Result(Dynamic, Assertion(Dynamic)) =
         dynamic.unsafe_coerce(value)
       assert Error(assertion) = result
       case assertion {
         Eq(expected, got, meta) -> {
-          let d = do_compare(expected, got)
-          let #(annotated_expected, annotated_got) = case d {
-            Diff(expected, got) -> #(
-              format_diff(expected, expected_highlight),
-              format_diff(got, got_highlight),
-            )
-            Literal(expected, got) -> #(
-              expected_highlight(string.inspect(expected)),
-              got_highlight(string.inspect(got)),
-            )
-            LiteralString(expected, got) -> #(expected, got)
-          }
-          UnifiedError(
-            meta,
-            "assert",
-            "Assert equal",
-            annotated_expected,
-            annotated_got,
-          )
+          let #(expected, got) = compare(expected, got)
+          UnifiedError(meta, "assert", "Assert equal", expected, got)
         }
         NotEq(expected, got) ->
           UnifiedError(
@@ -214,19 +196,6 @@ fn gleam_error_to_unified(gleam_error: GleamErrorDetail) -> UnifiedError {
       }
     }
   }
-}
-
-fn format_diff(values: List(Annotated), unique_styler) -> String {
-  let formatted_values =
-    values
-    |> list.map(fn(value) {
-      case value {
-        InBoth(value) -> string.inspect(value)
-        Unique(value) -> unique_styler(string.inspect(value))
-      }
-    })
-    |> string.join(", ")
-  "[" <> formatted_values <> "]"
 }
 
 fn format_reason(error: UnifiedError, module: String, function: String) {
@@ -246,7 +215,6 @@ fn format_reason(error: UnifiedError, module: String, function: String) {
       list.repeat("-", string.length(module) + 1 + string.length(function) / 2),
       "",
     ) <> "⌄"
-  let test = module <> "." <> function
   let standard_table_rows = [
     Some([
       AlignRight(Content("Error", error_style("Error")), 2),

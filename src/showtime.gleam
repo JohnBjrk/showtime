@@ -1,6 +1,6 @@
 import gleam/io
 import gleam/list
-import gleam/option.{None, Option, Some}
+import gleam/option.{None, Some}
 import gleam/result
 import gleam/erlang.{start_arguments}
 import glint.{CommandInput}
