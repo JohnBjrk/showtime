@@ -12,8 +12,8 @@ import showtime/common/test_result.{
 import showtime/common/test_suite.{CompletedTestRun, TestRun}
 import showtime/tests/should.{Assertion, Eq, NotEq}
 import showtime/reports/styles.{
-  bold_green, bold_red, bold_yellow, error_style, expected_style, got_style,
-  message_style, module_style,
+  error_style, expected_highlight, failed_style, function_style, got_highlight,
+  heading_style, ignored_style, module_style, passed_style,
 }
 import showtime/reports/compare.{
   Annotated, Diff, InBoth, Literal, LiteralString, Unique, do_compare,
@@ -135,16 +135,16 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
     |> list.length()
 
   let passed =
-    bold_green()(
+    passed_style(
       int.to_string(all_tests_count - failed_tests_count - ignored_tests_count) <> " passed",
     )
   let failed =
-    bold_red()(
+    failed_style(
       int.to_string(all_tests_count - ignored_tests_count) <> " failed",
     )
   let ignored = case ignored_tests_count {
     0 -> ""
-    _ -> ", " <> bold_yellow()(int.to_string(ignored_tests_count) <> " ignored")
+    _ -> ", " <> ignored_style(int.to_string(ignored_tests_count) <> " ignored")
   }
 
   let failed_tests_table =
@@ -163,9 +163,12 @@ fn erlang_error_to_unified(error_details: List(ReasonDetail), message: String) {
       case reason {
         Expression(expression) -> UnifiedError(..unified, reason: expression)
         Expected(value) ->
-          UnifiedError(..unified, expected: bold_green()(string.inspect(value)))
+          UnifiedError(
+            ..unified,
+            expected: expected_highlight(string.inspect(value)),
+          )
         Value(value) ->
-          UnifiedError(..unified, got: bold_red()(string.inspect(value)))
+          UnifiedError(..unified, got: got_highlight(string.inspect(value)))
         _ -> unified
       }
     },
@@ -183,12 +186,12 @@ fn gleam_error_to_unified(gleam_error: GleamErrorDetail) -> UnifiedError {
           let d = do_compare(expected, got)
           let #(annotated_expected, annotated_got) = case d {
             Diff(expected, got) -> #(
-              format_diff(expected, bold_green()),
-              format_diff(got, bold_red()),
+              format_diff(expected, expected_highlight),
+              format_diff(got, got_highlight),
             )
             Literal(expected, got) -> #(
-              bold_green()(string.inspect(expected)),
-              bold_red()(string.inspect(got)),
+              expected_highlight(string.inspect(expected)),
+              got_highlight(string.inspect(got)),
             )
             LiteralString(expected, got) -> #(expected, got)
           }
@@ -230,7 +233,7 @@ fn format_reason(error: UnifiedError, module: String, function: String) {
   let meta = case error.meta {
     Some(meta) ->
       Some([
-        AlignRight(Content("Description", module_style("Description")), 2),
+        AlignRight(Content("Description", heading_style("Description")), 2),
         Separator(": "),
         AlignLeft(Content(meta.description, meta.description), 0),
       ])
@@ -251,24 +254,24 @@ fn format_reason(error: UnifiedError, module: String, function: String) {
       AlignLeft(Content(arrow, arrow), 0),
     ]),
     Some([
-      AlignRight(Content("Test", module_style("Test")), 2),
+      AlignRight(Content("Test", heading_style("Test")), 2),
       Separator(": "),
       AlignLeft(
         Content(
           module <> "." <> function,
-          module <> "." <> module_style(function),
+          module <> "." <> function_style(function),
         ),
         0,
       ),
     ]),
     meta,
     Some([
-      AlignRight(Content("Expected", module_style("Expected")), 2),
+      AlignRight(Content("Expected", heading_style("Expected")), 2),
       Separator(": "),
       AlignLeft(Content(error.expected, error.expected), 0),
     ]),
     Some([
-      AlignRight(Content("Got", module_style("Got")), 2),
+      AlignRight(Content("Got", heading_style("Got")), 2),
       Separator(": "),
       AlignLeft(Content(error.got, error.got), 0),
     ]),
@@ -278,17 +281,8 @@ fn format_reason(error: UnifiedError, module: String, function: String) {
       AlignRight(Content("", ""), 0),
     ]),
   ]
-  // meta <> error_style("   Error") <> " in: " <> module_style(
-  //   module <> "." <> function,
-  // ) <> "\n" <> message_style("    Message: ") <> error.message <> "\n" <> expected_style(
-  //   "   Expected: ",
-  // ) <> error.expected <> "\n" <> got_style("        Got: ") <> error.got <> "\n"
-  // let table_rows =
   standard_table_rows
   |> list.filter_map(fn(row) { option.to_result(row, Nil) })
-  // Table(None, table_rows)
-  // |> align_table()
-  // |> to_string()
 }
 
 pub type Content {

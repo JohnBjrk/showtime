@@ -1,73 +1,53 @@
-import galant.{
-  cyan, open, placeholder, start_bold, start_cyan, start_green, start_magenta,
-  start_red, start_yellow, to_string, to_string_styler,
+import gleam_community/ansi
+
+pub fn passed_style(text) {
+  bold_green(text)
+}
+
+pub fn failed_style(text) {
+  bold_red(text)
+}
+
+pub fn ignored_style(text) {
+  bold_yellow(text)
 }
 
 pub fn error_style(text) {
-  bold_red()(text)
+  bold_red(text)
+}
+
+pub fn expected_highlight(text) {
+  bold_green(text)
+}
+
+pub fn got_highlight(text) {
+  bold_red(text)
 }
 
 pub fn module_style(text: String) {
-  open()
-  |> cyan(text)
-  |> to_string()
+  ansi.cyan(text)
 }
 
-pub fn message_style(text) {
-  dim_magenta()(text)
+pub fn heading_style(text: String) {
+  ansi.cyan(text)
 }
 
-pub fn expected_style(text) {
-  dim_magenta()(text)
+pub fn function_style(text: String) {
+  bold_cyan(text)
 }
 
-pub fn got_style(text) {
-  dim_magenta()(text)
+fn bold_red(text: String) {
+  ansi.bold(ansi.red(text))
 }
 
-pub fn bold_red() {
-  open()
-  |> start_bold()
-  |> start_red()
-  |> placeholder()
-  |> to_string_styler()
+fn bold_green(text) {
+  ansi.bold(ansi.green(text))
 }
 
-pub fn bold_green() {
-  open()
-  |> start_bold()
-  |> start_green()
-  |> placeholder()
-  |> to_string_styler()
+fn bold_yellow(text) {
+  ansi.bold(ansi.yellow(text))
 }
 
-pub fn bold_yellow() {
-  open()
-  |> start_bold()
-  |> start_yellow()
-  |> placeholder()
-  |> to_string_styler()
-}
-
-pub fn bold_cyan() {
-  open()
-  |> start_bold()
-  |> start_cyan()
-  |> placeholder()
-  |> to_string_styler()
-}
-
-pub fn bold_magenta() {
-  open()
-  |> start_bold()
-  |> start_magenta()
-  |> placeholder()
-  |> to_string_styler()
-}
-
-pub fn dim_magenta() {
-  open()
-  |> start_cyan()
-  |> placeholder()
-  |> to_string_styler()
+fn bold_cyan(text) {
+  ansi.bold(ansi.cyan(text))
 }
