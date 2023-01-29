@@ -100,6 +100,16 @@ pub fn meta_test() {
   )
 }
 
+pub fn diff_string_test() {
+  test(
+    Meta("Test diffing of strings", []),
+    fn(meta) {
+      "a test string"
+      |> test.equal("the test thing", meta)
+    },
+  )
+}
+
 pub fn diff_custom_test() {
   test(
     Meta("Testing diffs of custom types", ["diff"]),

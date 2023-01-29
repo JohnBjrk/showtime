@@ -2,15 +2,17 @@
 
 -export([run_test/3, functions/0, diff/2]).
 
-run_test(Module, Function, Args) ->
+run_test(Module, Function, IgnoreTags) ->
     try
         % io:fwrite("Testing~n"),
-        Result = apply(Module, Function, Args),
+        Result = apply(Module, Function, []),
         % io:fwrite("Test result: ~p~n", [Result]),
         FinalResult = case Result of
             {test, {meta, _Description, Tags}, TestFun} ->
                 case lists:any(fun(Tag) ->
-                    Tag == <<"ignore">>
+                    lists:any(fun(IgnoreTag) ->
+                        IgnoreTag == Tag
+                    end, IgnoreTags)
                 end, Tags) of
                     true -> {ignored, ignore};
                     false -> {test_function_return, TestFun()}

@@ -16,7 +16,7 @@ import showtime/reports/styles.{
   message_style, module_style,
 }
 import showtime/reports/compare.{
-  Annotated, Diff, InBoth, Literal, Unique, do_compare,
+  Annotated, Diff, InBoth, Literal, LiteralString, Unique, do_compare,
 }
 import showtime/tests/meta.{Meta}
 
@@ -190,6 +190,7 @@ fn gleam_error_to_unified(gleam_error: GleamErrorDetail) -> UnifiedError {
               bold_green()(string.inspect(expected)),
               bold_red()(string.inspect(got)),
             )
+            LiteralString(expected, got) -> #(expected, got)
           }
           UnifiedError(
             meta,
@@ -374,21 +375,6 @@ pub fn align_table(table: Table) -> Table {
     aligned_col
     |> list.transpose()
   Table(..table, rows: aligned_rows)
-}
-
-fn align_on(strings: List(String), align_char: String, margin: Int) {
-  let longest =
-    strings
-    |> list.map(fn(str) {
-      case string.split(str, align_char) {
-        [first, ..] -> first
-        _ -> ""
-      }
-    })
-    |> list.map(string.length)
-    |> list.fold(0, fn(max, length) { int.max(length, max) })
-  strings
-  |> list.map(fn(str) { string.pad_left(str, longest + margin, " ") })
 }
 
 fn pad_left(str: String, num: Int, char: String) {

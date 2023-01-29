@@ -9,6 +9,7 @@ pub fn start(
   test_event_handler: TestEventHandler,
   test_function_collector: TestFunctionCollector,
   run_test_suite: TestRunner,
+  ignore_tags: List(String),
 ) {
   assert Ok(subject) =
     actor.start(
@@ -18,7 +19,7 @@ pub fn start(
           fn() {
             let test_suite = test_function_collector(module)
             test_event_handler(StartTestSuite(module))
-            run_test_suite(test_suite, test_event_handler)
+            run_test_suite(test_suite, test_event_handler, ignore_tags)
             test_event_handler(EndTestSuite(module))
           },
           True,

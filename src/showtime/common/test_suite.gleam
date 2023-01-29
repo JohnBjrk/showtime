@@ -44,7 +44,7 @@ pub type TestFunctionCollector =
   fn(TestModule) -> TestSuite
 
 pub type TestRunner =
-  fn(TestSuite, TestEventHandler) -> Nil
+  fn(TestSuite, TestEventHandler, List(String)) -> Nil
 
 pub type TestOk {
   TestOk
