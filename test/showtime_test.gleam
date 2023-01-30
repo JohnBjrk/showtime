@@ -23,8 +23,8 @@ pub fn main() {
 }
 
 pub fn i_am_test() {
-  1
-  |> gshould.equal(2)
+  TestType("name", ["other", "names"])
+  |> gshould.equal(TestType("name", ["some", "name"]))
 }
 
 pub fn many_gleeunit_should_test() {

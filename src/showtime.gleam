@@ -83,54 +83,67 @@ if javascript {
     CompletedTestRun, EndTest, EndTestRun, StartTestRun, StartTestSuite,
     TestEvent, TestModule, TestRun,
   }
+  import showtime/common/common_event_handler.{
+    Finished, HandlerState, NotStarted, handle_event,
+  }
   import showtime/reports/formatter.{create_test_report}
 
   pub fn main() {
     io.println("Hello from JavaScript")
-    test(event_handler)
+    test(event_handler, HandlerState(NotStarted, 0, map.new()))
   }
 
-  fn event_handler(state: List(TestRun), event: TestEvent, value) {
-    state
-    |> io.debug()
-    event
-    |> io.debug()
-    value
-    |> io.debug()
-    let new_state = case event {
-      StartTestRun -> {
-        io.println("Start test-run")
-        state
-      }
-      StartTestSuite(TestModule(name, path)) -> {
-        io.println("Start Module: " <> name)
-        state
-      }
-      EndTest(test_module, test_function, result) -> {
-        io.println("End Test")
-        result
-        |> io.debug()
-        [CompletedTestRun(test_function, 0, result), ..state]
-      }
-      EndTestRun(num_modules) -> {
-        let result_map =
-          state
-          |> list.map(fn(test_run) { #(test_run.test_function.name, test_run) })
-          |> map.from_list()
-        let module_map = map.from_list([#("SUPERDUMMY MODULE", result_map)])
-        io.println(create_test_report(module_map))
-        state
-      }
-      _ -> {
-        io.println("Unknown event")
-        state
-      }
+  fn event_handler(event: TestEvent, state: HandlerState) {
+    // state
+    // |> io.debug()
+    // event
+    // |> io.debug()
+
+    // value
+    // |> io.debug()
+    let new_state = handle_event(event, state)
+    case new_state {
+      HandlerState(Finished(num_modules), num_done, events) ->
+        io.println(create_test_report(events))
+      _ -> Nil
     }
     new_state
+    // let new_state = case event {
+    //   StartTestRun -> {
+    //     io.println("Start test-run")
+    //     state
+    //   }
+    //   StartTestSuite(TestModule(name, path)) -> {
+    //     io.println("Start Module: " <> name)
+    //     state
+    //   }
+    //   EndTest(test_module, test_function, result) -> {
+    //     io.println("End Test")
+    //     result
+    //     |> io.debug()
+    //     [CompletedTestRun(test_function, 0, result), ..state]
+    //   }
+    //   EndTestRun(num_modules) -> {
+    //     let result_map =
+    //       state
+    //       |> list.map(fn(test_run) { #(test_run.test_function.name, test_run) })
+    //       |> map.from_list()
+    //     let module_map = map.from_list([#("SUPERDUMMY MODULE", result_map)])
+    //     io.println(create_test_report(module_map))
+    //     state
+    //   }
+    //   _ -> {
+    //     io.println("Unknown event")
+    //     state
+    //   }
+    // }
+    // new_state
+    // |> io.debug()
   }
 
   external fn test(
-    fn(List(TestRun), TestEvent, Dynamic) -> List(TestRun),
+    fn(TestEvent, HandlerState) -> HandlerState,
+    HandlerState,
   ) -> Nil =
     "./showtime_ffi.mjs" "test"
 }

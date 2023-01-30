@@ -1,10 +1,12 @@
-import { StartTestRun, StartTestSuite, TestModule, EndTestRun, EndTest, TestFunction } from "./showtime/common/test_suite.mjs";
-import { Assert, ErlangException, GleamError, ErlangError, TraceList } from "./showtime/common/test_result.mjs"
-import { Error, List } from "./gleam.mjs"
-export const test = async (callback) => {
+import { StartTestRun, StartTestSuite, TestModule, EndTestRun, EndTest, TestFunction, StartTest, EndTestSuite } from "./showtime/common/test_suite.mjs";
+import { Assert, ErlangException, GleamError, ErlangError, TraceList, TestFunctionReturn } from "./showtime/common/test_result.mjs"
+import { Eq } from "./showtime/tests/should.mjs"
+import { Error, List, Ok } from "./gleam.mjs"
+import { None } from "../gleam_stdlib/gleam/option.mjs";
+export const test = async (callback, init_state) => {
     console.log("Hello")
-    let state = List.fromArray([])
-    state = callback(state, new StartTestRun())
+    let state = init_state
+    state = callback(new StartTestRun(), state)
 
     let passes = 0;
     let failures = 0;
@@ -16,19 +18,31 @@ export const test = async (callback) => {
 
     for await (let path of await gleamFiles("test")) {
       let js_path = path.slice("test/".length).replace(".gleam", ".mjs");
-      state = callback(state, new StartTestSuite(new TestModule(js_path, js_path)))
+      const test_module = new TestModule(js_path, js_path)
+      state = callback(new StartTestSuite(test_module), state)
       let module = await import(join_path(dist, js_path));
       for (let fnName of Object.keys(module)) {
         if (!fnName.endsWith("_test")) continue;
+        state = callback(new StartTest(test_module, new TestFunction(fnName)), state)
         try {
           // console.log("FUNCTION: NAME: " + fnName)
           let result = await module[fnName]();
           // console.log(JSON.stringify(result, null, 2))
-          // if (result && result.test_function) {
-          //   console.log("FOUND TESTFUNCTION")
-          //   result.test_function()
-          // }
+          if (result && result.test_function) {
+            // console.log("FOUND TESTFUNCTION")
+            result.test_function()
+          }
           // write(`\u001b[32m.\u001b[0m`);
+          state = callback(
+            new EndTest(
+              test_module, 
+              new TestFunction(fnName), 
+              new Ok(
+                new TestFunctionReturn(result)
+              )
+            ),
+            state
+          )
           passes++;
         } catch (error) {
           // console.log("RAW ERROR")
@@ -40,18 +54,17 @@ export const test = async (callback) => {
           if (error && error.value) {
             // callback(new StartTestRun(), error.value)
             state = callback(
-              state,
               new EndTest(
-                new TestModule(js_path, js_path), 
-                new TestFunction("DUMMY"), 
+                test_module, 
+                new TestFunction(fnName), 
                 new Error(
                   new ErlangException(
                     new ErlangError(),
                     new GleamError(
                       new Assert(
-                        "DUMMY_MODULE_NAME",
-                        "DUMMY_FUNCTION_NAME",
-                        0,
+                        test_module.name,
+                        fnName,
+                        error.line ? error.line : 0,
                         "DUMMY_MESSAGE",
                         error.value
                       )
@@ -59,15 +72,47 @@ export const test = async (callback) => {
                     new TraceList(List.fromArray([]))
                   )
                 )
-              )
+              ),
+              state
             )
+          } else {
+            console.log("LEGACY: "  + JSON.stringify(error))
+            console.log(error.message)
+            const error_parts = error.message.split("\n")
+            const expected = error_parts[1].trim()
+            const got = error_parts[3].trim()
+            state = callback(
+              new EndTest(
+                test_module, 
+                new TestFunction(fnName), 
+                new Error(
+                  new ErlangException(
+                    new ErlangError(),
+                    new GleamError(
+                      new Assert(
+                        test_module.name,
+                        fnName,
+                        error.line ? error.line : 0,
+                        "DUMMY_MESSAGE",
+                        new Error( new Eq(expected ? expected : "DUMMY_EXPECTED", got ? got : "DUMMY_GOT", new None()))
+                        // new Error( new Eq("DUMMY_EXPECTED", "DUMMY_GOT", new None()))
+                      )
+                    ),
+                    new TraceList(List.fromArray([]))
+                  )
+                )
+              ),
+              state
+            )
+
           }
           failures++;
         }
       }
+      state = callback(new EndTestSuite(test_module), state)
       num_modules++;
     }
-    state = callback(state, new EndTestRun(num_modules))
+    state = callback(new EndTestRun(num_modules), state)
 }
 
 async function* gleamFiles(directory) {
