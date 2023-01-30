@@ -23,6 +23,8 @@ pub fn main() {
 }
 
 pub fn i_am_test() {
+  Variant
+  |> gshould.equal(TestType("name", ["some", "name"]))
   TestType("name", ["other", "names"])
   |> gshould.equal(TestType("name", ["some", "name"]))
 }

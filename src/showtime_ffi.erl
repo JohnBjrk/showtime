@@ -37,7 +37,7 @@ run_test(Module, Function, IgnoreTags) ->
                                          end
                                       end,
                                       ReasonList),
-                        % io:fwrite("Reason ~p", [ErlangReasonList]),
+                        % io:fwrite("Reason ~p~n", [ErlangReasonList]),
                         GleamAssertionType = case Assertion of
                             assertEqual -> assert_equal;
                             OtherAssertionType -> OtherAssertionType
@@ -76,6 +76,7 @@ run_test(Module, Function, IgnoreTags) ->
                              end
                           end,
                           Stacktrace),
+            % io:fwrite("Reason ~p", [GleamReason]),
             {error, {erlang_exception, GleamClass, GleamReason, {trace_list, GleamTraceList}}}
     end.
 

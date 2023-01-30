@@ -76,8 +76,6 @@ export const test = async (callback, init_state) => {
               state
             )
           } else {
-            console.log("LEGACY: "  + JSON.stringify(error))
-            console.log(error.message)
             const error_parts = error.message.split("\n")
             const expected = error_parts[1].trim()
             const got = error_parts[3].trim()
@@ -95,7 +93,6 @@ export const test = async (callback, init_state) => {
                         error.line ? error.line : 0,
                         "DUMMY_MESSAGE",
                         new Error( new Eq(expected ? expected : "DUMMY_EXPECTED", got ? got : "DUMMY_GOT", new None()))
-                        // new Error( new Eq("DUMMY_EXPECTED", "DUMMY_GOT", new None()))
                       )
                     ),
                     new TraceList(List.fromArray([]))

@@ -1,4 +1,7 @@
 import gleam_community/ansi
+import gleam/list
+import gleam/string
+import gleam/bit_string
 
 pub fn passed_style(text) {
   bold_green(text)
@@ -22,6 +25,10 @@ pub fn expected_highlight(text) {
 
 pub fn got_highlight(text) {
   bold_red(text)
+}
+
+pub fn not_style(text) {
+  ansi.bold(text)
 }
 
 pub fn module_style(text: String) {
@@ -50,4 +57,24 @@ fn bold_yellow(text) {
 
 fn bold_cyan(text) {
   ansi.bold(ansi.cyan(text))
+}
+
+pub fn strip_style(text) {
+  let #(new_text, _) =
+    text
+    |> string.to_graphemes()
+    |> list.fold(
+      #("", False),
+      fn(acc, char) {
+        let #(str, removing) = acc
+        assert bit_char = bit_string.from_string(char)
+        case bit_char, removing {
+          <<0x1b>>, _ -> #(str, True)
+          <<0x6d>>, True -> #(str, False)
+          _, True -> #(str, True)
+          _, False -> #(str <> char, False)
+        }
+      },
+    )
+  new_text
 }

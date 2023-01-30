@@ -13,7 +13,7 @@ import showtime/common/test_suite.{CompletedTestRun, TestRun}
 import showtime/tests/should.{Assertion, Eq, NotEq}
 import showtime/reports/styles.{
   error_style, expected_highlight, failed_style, function_style, got_highlight,
-  heading_style, ignored_style, passed_style,
+  heading_style, ignored_style, not_style, passed_style, strip_style,
 }
 import showtime/reports/compare.{compare}
 import showtime/tests/meta.{Meta}
@@ -181,16 +181,16 @@ fn gleam_error_to_unified(gleam_error: GleamErrorDetail) -> UnifiedError {
         dynamic.unsafe_coerce(value)
       assert Error(assertion) = result
       case assertion {
-        Eq(expected, got, meta) -> {
+        Eq(got, expected, meta) -> {
           let #(expected, got) = compare(expected, got)
           UnifiedError(meta, "assert", "Assert equal", expected, got)
         }
-        NotEq(expected, got) ->
+        NotEq(got, expected) ->
           UnifiedError(
             None,
             "assert",
             "Assert not equal",
-            "not " <> string.inspect(expected),
+            not_style("not ") <> string.inspect(expected),
             string.inspect(got),
           )
       }
@@ -236,12 +236,12 @@ fn format_reason(error: UnifiedError, module: String, function: String) {
     Some([
       AlignRight(Content("Expected", heading_style("Expected")), 2),
       Separator(": "),
-      AlignLeft(Content(error.expected, error.expected), 0),
+      AlignLeft(Content(strip_style(error.expected), error.expected), 0),
     ]),
     Some([
       AlignRight(Content("Got", heading_style("Got")), 2),
       Separator(": "),
-      AlignLeft(Content(error.got, error.got), 0),
+      AlignLeft(Content(strip_style(error.got), error.got), 0),
     ]),
     Some([
       AlignRight(Content("", ""), 0),

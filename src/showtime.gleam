@@ -105,6 +105,7 @@ if javascript {
     case new_state {
       HandlerState(Finished(num_modules), num_done, events) ->
         io.println(create_test_report(events))
+      // Nil
       _ -> Nil
     }
     new_state
