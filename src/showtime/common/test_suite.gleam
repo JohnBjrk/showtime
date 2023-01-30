@@ -24,10 +24,14 @@ pub type TestSuite {
 
 pub type TestEvent {
   StartTestRun
-  StartTestSuite(TestModule)
-  StartTest(TestModule, TestFunction)
-  EndTest(TestModule, test_function: TestFunction, result: TestResult)
-  EndTestSuite(TestModule)
+  StartTestSuite(test_module: TestModule)
+  StartTest(test_module: TestModule, test_function: TestFunction)
+  EndTest(
+    test_module: TestModule,
+    test_function: TestFunction,
+    result: TestResult,
+  )
+  EndTestSuite(test_module: TestModule)
   EndTestRun(num_modules: Int)
 }
 

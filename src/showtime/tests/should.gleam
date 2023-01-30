@@ -3,7 +3,7 @@ import gleam/option.{None, Option, Some}
 import showtime/tests/meta.{Meta}
 
 pub type Assertion(t) {
-  Eq(a: t, b: t, Option(Meta))
+  Eq(a: t, b: t, meta: Option(Meta))
   NotEq(a: t, b: t)
 }
 
