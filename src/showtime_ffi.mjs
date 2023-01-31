@@ -45,8 +45,9 @@ export const test = async (callback, init_state) => {
           )
           passes++;
         } catch (error) {
-          // console.log("RAW ERROR")
-          // console.log(error)
+          console.log("STACKTRACE")
+          console.log(error.stack)
+          console.log(JSON.stringify(error.stack))
           // console.log("ERROR: " + JSON.stringify(error, null, 2))
           let moduleName = "\n" + js_path.slice(0, -4);
           let line = error.line ? `:${error.line}` : "";

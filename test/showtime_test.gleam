@@ -6,8 +6,8 @@ import showtime
 import showtime/tests/should
 import showtime/tests/test.{test}
 import showtime/tests/meta.{Meta}
-import showtime/reports/formatter.{
-  AlignLeft, AlignRight, Col, Content, Separator, Table,
+import showtime/reports/table.{
+  AlignLeft, AlignRight, Col, Content, Separator, StyledContent, Table,
 }
 import gleam_community/ansi.{cyan, green, red}
 
@@ -137,30 +137,30 @@ pub fn formatted_table_test() {
         None,
         [
           [
-            AlignRight(Content("###", green("###")), 2),
+            AlignRight(StyledContent(green("###")), 2),
             Separator(green("# ")),
-            AlignLeft(Content("Test Header ####", green("Test Header ####")), 0),
-            AlignLeft(Content("", ""), 0),
-            AlignLeft(Content("", ""), 0),
+            AlignLeft(StyledContent(green("Test Header ####")), 0),
+            AlignLeft(Content(""), 0),
+            AlignLeft(Content(""), 0),
           ],
           [
-            AlignRight(Content("first", cyan("first")), 2),
+            AlignRight(StyledContent(cyan("first")), 2),
             Separator(": "),
-            AlignLeft(Content("second", green("second")), 1),
+            AlignLeft(StyledContent(green("second")), 1),
             Separator("| "),
-            AlignLeft(Content("third", "third"), 1),
+            AlignLeft(Content("third"), 1),
           ],
           [
-            AlignRight(Content("firstlong", cyan("firstlong")), 2),
+            AlignRight(StyledContent(cyan("firstlong")), 2),
             Separator(": "),
-            AlignLeft(Content("sh", red("sh")), 1),
+            AlignLeft(StyledContent(red("sh")), 1),
             Separator("| "),
-            AlignLeft(Content("very long content", "very long content"), 1),
+            AlignLeft(Content("very long content"), 1),
           ],
         ],
       )
-      |> formatter.align_table()
-      |> formatter.to_string()
+      |> table.align_table()
+      |> table.to_string()
       |> io.println()
       Nil
     },
@@ -176,30 +176,30 @@ pub fn table_test() {
           None,
           [
             [
-              AlignRight(Content("###", "###"), 2),
+              AlignRight(Content("###"), 2),
               Separator("# "),
-              AlignLeft(Content("Test Header ####", "Test Header ####"), 0),
-              AlignLeft(Content("", ""), 0),
-              AlignLeft(Content("", ""), 0),
+              AlignLeft(Content("Test Header ####"), 0),
+              AlignLeft(Content(""), 0),
+              AlignLeft(Content(""), 0),
             ],
             [
-              AlignRight(Content("first", "first"), 2),
+              AlignRight(Content("first"), 2),
               Separator(": "),
-              AlignLeft(Content("second", "second"), 1),
+              AlignLeft(Content("second"), 1),
               Separator("| "),
-              AlignLeft(Content("third", "third"), 1),
+              AlignLeft(Content("third"), 1),
             ],
             [
-              AlignRight(Content("firstlong", "firstlong"), 2),
+              AlignRight(Content("firstlong"), 2),
               Separator(": "),
-              AlignLeft(Content("sh", "sh"), 1),
+              AlignLeft(Content("sh"), 1),
               Separator("| "),
-              AlignLeft(Content("very long content", "very long content"), 1),
+              AlignLeft(Content("very long content"), 1),
             ],
           ],
         )
-        |> formatter.align_table()
-        |> formatter.to_string()
+        |> table.align_table()
+        |> table.to_string()
       table_string
       |> test.equal(
         "        #### Test Header ####                   \n      first: second           | third             \n  firstlong: sh               | very long content ",
