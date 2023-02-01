@@ -7,18 +7,19 @@ import gleam/map.{Map}
 import gleam/dynamic.{Dynamic}
 import showtime/common/test_result.{
   Assert, AssertEqual, Expected, Expression, GleamError, GleamErrorDetail,
-  Ignored, ReasonDetail, Value,
+  Ignored, ReasonDetail, Trace, TraceModule, Value,
 }
 import showtime/common/test_suite.{CompletedTestRun, TestRun}
 import showtime/tests/should.{Assertion, Eq, NotEq}
 import showtime/reports/styles.{
   error_style, expected_highlight, failed_style, function_style, got_highlight,
-  heading_style, ignored_style, not_style, passed_style, strip_style,
+  heading_style, ignored_style, not_style, passed_style, stacktrace_style,
+  strip_style,
 }
 import showtime/reports/compare.{compare}
 import showtime/reports/table.{
-  AlignLeft, AlignRight, Content, Separator, StyledContent, Table, align_table,
-  to_string,
+  AlignLeft, AlignRight, Col, Content, Separator, StyledContent, Table,
+  align_table, to_string,
 }
 import showtime/tests/meta.{Meta}
 
@@ -33,6 +34,7 @@ type UnifiedError {
     message: String,
     expected: String,
     got: String,
+    stacktrace: List(Trace),
   )
 }
 
@@ -95,13 +97,17 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
               case exception.reason {
                 AssertEqual(reason_details) ->
                   Ok(format_reason(
-                    erlang_error_to_unified(reason_details, "Assert equal"),
+                    erlang_error_to_unified(
+                      reason_details,
+                      "Assert equal",
+                      exception.stacktrace.traces,
+                    ),
                     module_and_test_run.module_name,
                     test_function.name,
                   ))
                 GleamError(reason) ->
                   Ok(format_reason(
-                    gleam_error_to_unified(reason),
+                    gleam_error_to_unified(reason, exception.stacktrace.traces),
                     module_and_test_run.module_name,
                     test_function.name,
                   ))
@@ -158,10 +164,14 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
   "\n" <> failed_tests_table <> "\n" <> passed <> ", " <> failed <> ignored
 }
 
-fn erlang_error_to_unified(error_details: List(ReasonDetail), message: String) {
+fn erlang_error_to_unified(
+  error_details: List(ReasonDetail),
+  message: String,
+  stacktrace: List(Trace),
+) {
   error_details
   |> list.fold(
-    UnifiedError(None, "not_set", message, "", ""),
+    UnifiedError(None, "not_set", message, "", "", stacktrace),
     fn(unified, reason) {
       case reason {
         Expression(expression) -> UnifiedError(..unified, reason: expression)
@@ -178,7 +188,10 @@ fn erlang_error_to_unified(error_details: List(ReasonDetail), message: String) {
   )
 }
 
-fn gleam_error_to_unified(gleam_error: GleamErrorDetail) -> UnifiedError {
+fn gleam_error_to_unified(
+  gleam_error: GleamErrorDetail,
+  stacktrace: List(Trace),
+) -> UnifiedError {
   case gleam_error {
     Assert(_module, _function, _line_no, _message, value) -> {
       let result: Result(Dynamic, Assertion(Dynamic)) =
@@ -187,7 +200,14 @@ fn gleam_error_to_unified(gleam_error: GleamErrorDetail) -> UnifiedError {
       case assertion {
         Eq(got, expected, meta) -> {
           let #(expected, got) = compare(expected, got)
-          UnifiedError(meta, "assert", "Assert equal", expected, got)
+          UnifiedError(
+            meta,
+            "assert",
+            "Assert equal",
+            expected,
+            got,
+            stacktrace,
+          )
         }
         NotEq(got, expected) ->
           UnifiedError(
@@ -196,6 +216,7 @@ fn gleam_error_to_unified(gleam_error: GleamErrorDetail) -> UnifiedError {
             "Assert not equal",
             not_style("not ") <> string.inspect(expected),
             string.inspect(got),
+            stacktrace,
           )
       }
     }
@@ -212,6 +233,36 @@ fn format_reason(error: UnifiedError, module: String, function: String) {
       ])
 
     None -> None
+  }
+
+  let stacktrace =
+    error.stacktrace
+    |> list.map(fn(trace) {
+      case trace {
+        Trace(function, _, _) -> function
+        TraceModule(module, function, _, _) -> module <> "." <> function
+      }
+    })
+  let stacktrace_rows = case stacktrace {
+    [] -> []
+    [first, ..rest] -> {
+      let first_row =
+        Some([
+          AlignRight(StyledContent(heading_style("Stacktrace")), 2),
+          Separator(": "),
+          AlignLeft(StyledContent(stacktrace_style(first)), 0),
+        ])
+      let rest_rows =
+        rest
+        |> list.map(fn(row) {
+          Some([
+            AlignRight(Content(""), 2),
+            Separator("  "),
+            AlignLeft(StyledContent(stacktrace_style(row)), 0),
+          ])
+        })
+      [first_row, ..rest_rows]
+    }
   }
 
   let arrow =
@@ -241,12 +292,15 @@ fn format_reason(error: UnifiedError, module: String, function: String) {
       Separator(": "),
       AlignLeft(StyledContent(error.got), 0),
     ]),
+  ]
+  standard_table_rows
+  |> list.append(stacktrace_rows)
+  |> list.append([
     Some([
       AlignRight(Content(""), 0),
       AlignRight(Content(""), 0),
       AlignRight(Content(""), 0),
     ]),
-  ]
-  standard_table_rows
+  ])
   |> list.filter_map(fn(row) { option.to_result(row, Nil) })
 }

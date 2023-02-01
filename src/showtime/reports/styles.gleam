@@ -43,6 +43,10 @@ pub fn function_style(text: String) {
   bold_cyan(text)
 }
 
+pub fn stacktrace_style(text: String) {
+  text
+}
+
 fn bold_red(text: String) {
   ansi.bold(ansi.red(text))
 }
@@ -67,7 +71,7 @@ pub fn strip_style(text) {
       #("", False),
       fn(acc, char) {
         let #(str, removing) = acc
-        assert bit_char = bit_string.from_string(char)
+        let bit_char = bit_string.from_string(char)
         case bit_char, removing {
           <<0x1b>>, _ -> #(str, True)
           <<0x6d>>, True -> #(str, False)
