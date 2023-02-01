@@ -1,5 +1,5 @@
 import { StartTestRun, StartTestSuite, TestModule, EndTestRun, EndTest, TestFunction, StartTest, EndTestSuite } from "./showtime/common/test_suite.mjs";
-import { Assert, ErlangException, GleamError, ErlangError, TraceList, TestFunctionReturn } from "./showtime/common/test_result.mjs"
+import { Assert, ErlangException, GleamError, ErlangError, TraceList, TestFunctionReturn, TraceModule, Num } from "./showtime/common/test_result.mjs"
 import { Eq } from "./showtime/tests/should.mjs"
 import { Error, List, Ok } from "./gleam.mjs"
 import { None } from "../gleam_stdlib/gleam/option.mjs";
@@ -48,6 +48,19 @@ export const test = async (callback, init_state) => {
           console.log("STACKTRACE")
           console.log(error.stack)
           console.log(JSON.stringify(error.stack))
+          let stacktrace = []
+          if (error.stack) {
+            stacktrace = error.stack.split("\n")
+              .filter(line => line.trim().startsWith("at "))
+              .map(line => {
+                const segments = line.trim().split(" ")
+                const functionName = segments.length > 2 ? segments[1] : undefined
+                const modulePart = segments.length > 2 ? segments[2].split(".mjs") : segments[1].split(".mjs")
+                const moduleName = modulePart[0].split("/").pop()
+                return new TraceModule(moduleName, functionName || "", new Num(0), [])
+              }).reverse()
+          }
+          console.log(stacktrace)
           // console.log("ERROR: " + JSON.stringify(error, null, 2))
           let moduleName = "\n" + js_path.slice(0, -4);
           let line = error.line ? `:${error.line}` : "";
@@ -70,7 +83,7 @@ export const test = async (callback, init_state) => {
                         error.value
                       )
                     ),
-                    new TraceList(List.fromArray([]))
+                    new TraceList(List.fromArray(stacktrace))
                   )
                 )
               ),
@@ -96,7 +109,7 @@ export const test = async (callback, init_state) => {
                         new Error( new Eq(expected ? expected : "DUMMY_EXPECTED", got ? got : "DUMMY_GOT", new None()))
                       )
                     ),
-                    new TraceList(List.fromArray([]))
+                    new TraceList(List.fromArray(stacktrace))
                   )
                 )
               ),
