@@ -123,6 +123,7 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
       }
     })
     |> list.fold([], fn(rows, test_rows) { list.append(rows, test_rows) })
+
   let all_test_execution_time_reports =
     all_test_runs
     |> list.filter_map(fn(test_run) {

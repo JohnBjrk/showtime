@@ -28,10 +28,8 @@ if erlang {
 }
 
 if javascript {
-  fn system_time() {
-    // TODO: Implement javascript time
-    0
-  }
+  external fn system_time() -> Int =
+    "../../showtime_ffi.mjs" "system_time"
 }
 
 pub fn handle_event(msg: TestEvent, state: HandlerState) {

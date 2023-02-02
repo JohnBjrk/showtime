@@ -3,7 +3,7 @@ import { Assert, ErlangException, GleamError, ErlangError, TraceList, TestFuncti
 import { Eq } from "./showtime/tests/should.mjs"
 import { Error, List, Ok } from "./gleam.mjs"
 import { None } from "../gleam_stdlib/gleam/option.mjs";
-export const test = async (eventHandler, init_state) => {
+export const run = async (eventHandler, init_state) => {
     let state = init_state
     state = eventHandler(new StartTestRun(), state)
 
@@ -170,4 +170,8 @@ async function* gleamFiles(directory) {
       let contents = await readFile(path);
       return contents.toString();
     }
+  }
+
+  export function system_time() {
+    return Date.now()
   }
