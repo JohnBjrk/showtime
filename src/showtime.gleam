@@ -1,6 +1,6 @@
 if erlang {
   import gleam/list
-  import gleam/option.{None, Some}
+  import gleam/option.{None, Option, Some}
   import gleam/result
   import gleam/erlang.{start_arguments}
   import glint.{CommandInput}
@@ -12,49 +12,10 @@ if erlang {
   import showtime/erlang/discover.{collect_modules, collect_test_functions}
 
   pub fn main() {
-    glint.new()
-    |> glint.add_command(
-      at: [],
-      do: run,
-      with: [
-        flag.strings(
-          called: "modules",
-          default: [],
-          explained: "Run only tests in the modules in this list",
-        ),
-        flag.strings(
-          called: "ignore",
-          default: [],
-          explained: "Ignore tests that are have tags matching a tag in this list",
-        ),
-      ],
-      described: "Runs test",
-    )
-    |> glint.run(start_arguments())
+    start_with_args(start_arguments(), run)
   }
 
-  pub fn run(command: CommandInput) {
-    let module_list = case
-      command.flags
-      |> flag.get("modules")
-      |> result.unwrap(LS([]))
-    {
-      LS(module_list) ->
-        case module_list {
-          [] -> None
-          _ -> Some(module_list)
-        }
-      _ -> None
-    }
-    let ignore_tags = case
-      command.flags
-      |> flag.get("ignore")
-      |> result.unwrap(LS([]))
-    {
-      LS(ignore_tags) -> ignore_tags
-      _ -> []
-    }
-
+  pub fn run(module_list: Option(List(String)), ignore_tags: List(String)) {
     let test_event_handler = event_handler.start()
     let test_module_handler =
       module_handler.start(
@@ -77,7 +38,11 @@ if javascript {
   import gleam/io
   import gleam/list
   import gleam/map
+  import gleam/result
+  import gleam/option.{None, Option, Some}
   import gleam/dynamic.{Dynamic}
+  import glint.{CommandInput}
+  import glint/flag.{LS}
   import showtime/common/test_suite.{
     CompletedTestRun, EndTest, EndTestRun, StartTestRun, StartTestSuite,
     TestEvent, TestModule, TestRun,
@@ -88,7 +53,22 @@ if javascript {
   import showtime/reports/formatter.{create_test_report}
 
   pub fn main() {
-    run(event_handler, HandlerState(NotStarted, 0, map.new()))
+    start_with_args(start_arguments(), run)
+  }
+
+  pub fn run(module_list: Option(List(String)), ignore_tags: List(String)) {
+    io.println("Module list")
+    module_list
+    |> io.debug()
+    io.println("Ignore tags")
+    ignore_tags
+    |> io.debug()
+    run_tests(
+      event_handler,
+      HandlerState(NotStarted, 0, map.new()),
+      module_list,
+      ignore_tags,
+    )
   }
 
   fn event_handler(event: TestEvent, state: HandlerState) {
@@ -101,9 +81,62 @@ if javascript {
     new_state
   }
 
-  external fn run(
+  external fn run_tests(
     fn(TestEvent, HandlerState) -> HandlerState,
     HandlerState,
+    Option(List(String)),
+    List(String),
   ) -> Nil =
     "./showtime_ffi.mjs" "run"
+
+  external fn start_arguments() -> List(String) =
+    "./showtime_ffi.mjs" "start_args"
+}
+
+fn start_with_args(args, func) {
+  glint.new()
+  |> glint.add_command(
+    at: [],
+    do: mk_runner(func),
+    with: [
+      flag.strings(
+        called: "modules",
+        default: [],
+        explained: "Run only tests in the modules in this list",
+      ),
+      flag.strings(
+        called: "ignore",
+        default: [],
+        explained: "Ignore tests that are have tags matching a tag in this list",
+      ),
+    ],
+    described: "Runs test",
+  )
+  |> glint.run(args)
+}
+
+fn mk_runner(func) {
+  fn(command: CommandInput) {
+    let module_list = case
+      command.flags
+      |> flag.get("modules")
+      |> result.unwrap(LS([]))
+    {
+      LS(module_list) ->
+        case module_list {
+          [] -> None
+          _ -> Some(module_list)
+        }
+      _ -> None
+    }
+    let ignore_tags = case
+      command.flags
+      |> flag.get("ignore")
+      |> result.unwrap(LS([]))
+    {
+      LS(ignore_tags) -> ignore_tags
+      _ -> []
+    }
+    func(module_list, ignore_tags)
+  }
 }
