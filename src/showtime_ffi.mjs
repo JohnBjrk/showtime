@@ -3,37 +3,29 @@ import { Assert, ErlangException, GleamError, ErlangError, TraceList, TestFuncti
 import { Eq } from "./showtime/tests/should.mjs"
 import { Error, List, Ok } from "./gleam.mjs"
 import { None } from "../gleam_stdlib/gleam/option.mjs";
-export const test = async (callback, init_state) => {
-    console.log("Hello")
+export const test = async (eventHandler, init_state) => {
     let state = init_state
-    state = callback(new StartTestRun(), state)
+    state = eventHandler(new StartTestRun(), state)
 
-    let passes = 0;
-    let failures = 0;
     let num_modules = 0;
 
     let packageName = await readRootPackageName();
     let dist = `../${packageName}/`;
 
-
     for await (let path of await gleamFiles("test")) {
       let js_path = path.slice("test/".length).replace(".gleam", ".mjs");
       const test_module = new TestModule(js_path, js_path)
-      state = callback(new StartTestSuite(test_module), state)
+      state = eventHandler(new StartTestSuite(test_module), state)
       let module = await import(join_path(dist, js_path));
       for (let fnName of Object.keys(module)) {
         if (!fnName.endsWith("_test")) continue;
-        state = callback(new StartTest(test_module, new TestFunction(fnName)), state)
+        state = eventHandler(new StartTest(test_module, new TestFunction(fnName)), state)
         try {
-          // console.log("FUNCTION: NAME: " + fnName)
           let result = await module[fnName]();
-          // console.log(JSON.stringify(result, null, 2))
           if (result && result.test_function) {
-            // console.log("FOUND TESTFUNCTION")
-            result.test_function()
+            result = result.test_function()
           }
-          // write(`\u001b[32m.\u001b[0m`);
-          state = callback(
+          state = eventHandler(
             new EndTest(
               test_module, 
               new TestFunction(fnName), 
@@ -43,11 +35,7 @@ export const test = async (callback, init_state) => {
             ),
             state
           )
-          passes++;
         } catch (error) {
-          console.log("STACKTRACE")
-          console.log(error.stack)
-          console.log(JSON.stringify(error.stack))
           let stacktrace = []
           if (error.stack) {
             stacktrace = error.stack.split("\n")
@@ -60,14 +48,12 @@ export const test = async (callback, init_state) => {
                 return new TraceModule(moduleName, functionName || "", new Num(0), [])
               }).reverse()
           }
-          console.log(stacktrace)
-          // console.log("ERROR: " + JSON.stringify(error, null, 2))
           let moduleName = "\n" + js_path.slice(0, -4);
-          let line = error.line ? `:${error.line}` : "";
+          // let line = error.line ? `:${error.line}` : "";
           // write(`\n❌ ${moduleName}.${fnName}${line}: ${error}\n`);
           if (error && error.value) {
             // callback(new StartTestRun(), error.value)
-            state = callback(
+            state = eventHandler(
               new EndTest(
                 test_module, 
                 new TestFunction(fnName), 
@@ -78,6 +64,7 @@ export const test = async (callback, init_state) => {
                       new Assert(
                         test_module.name,
                         fnName,
+                        // TODO: Fix line number
                         error.line ? error.line : 0,
                         "DUMMY_MESSAGE",
                         error.value
@@ -91,9 +78,9 @@ export const test = async (callback, init_state) => {
             )
           } else {
             const error_parts = error.message.split("\n")
-            const expected = error_parts[1].trim()
-            const got = error_parts[3].trim()
-            state = callback(
+            const expected = error_parts[1] ? error_parts[1].trim() : "COULD NOT PARSE EXPECTED FROM EXCEPTION"
+            const got = error_parts[3] ? error_parts[3].trim() : "COULD NOT PARSE GOT FROM EXCEPTION"
+            state = eventHandler(
               new EndTest(
                 test_module, 
                 new TestFunction(fnName), 
@@ -105,8 +92,8 @@ export const test = async (callback, init_state) => {
                         test_module.name,
                         fnName,
                         error.line ? error.line : 0,
-                        "DUMMY_MESSAGE",
-                        new Error( new Eq(expected ? expected : "DUMMY_EXPECTED", got ? got : "DUMMY_GOT", new None()))
+                        "DUMMY_MESSAGE", // TODO: Base this on the middle word (between expected and got)
+                        new Error( new Eq(expected, got, new None()))
                       )
                     ),
                     new TraceList(List.fromArray(stacktrace))
@@ -117,13 +104,12 @@ export const test = async (callback, init_state) => {
             )
 
           }
-          failures++;
         }
       }
-      state = callback(new EndTestSuite(test_module), state)
+      state = eventHandler(new EndTestSuite(test_module), state)
       num_modules++;
     }
-    state = callback(new EndTestRun(num_modules), state)
+    state = eventHandler(new EndTestRun(num_modules), state)
 }
 
 async function* gleamFiles(directory) {
@@ -148,48 +134,6 @@ async function* gleamFiles(directory) {
       if (matches) return matches[1];
     }
     throw new Error("Could not determine package name from gleam.toml");
-  }
-  
-  export async function main() {
-    let passes = 0;
-    let failures = 0;
-  
-    let packageName = await readRootPackageName();
-    let dist = `../${packageName}/`;
-  
-    for await (let path of await gleamFiles("test")) {
-      let js_path = path.slice("test/".length).replace(".gleam", ".mjs");
-      let module = await import(join_path(dist, js_path));
-      for (let fnName of Object.keys(module)) {
-        if (!fnName.endsWith("_test")) continue;
-        try {
-          await module[fnName]();
-          write(`\u001b[32m.\u001b[0m`);
-          passes++;
-        } catch (error) {
-          let moduleName = "\n" + js_path.slice(0, -4);
-          let line = error.line ? `:${error.line}` : "";
-          write(`\n❌ ${moduleName}.${fnName}${line}: ${error}\n`);
-          failures++;
-        }
-      }
-    }
-  
-    console.log(`
-  ${passes + failures} tests, ${failures} failures`);
-    exit(failures ? 1 : 0);
-  }
-  
-  export function crash(message) {
-    throw new Error(message);
-  }
-  
-  function write(message) {
-    if (globalThis.Deno) {
-      Deno.stdout.writeSync(new TextEncoder().encode(message));
-    } else {
-      process.stdout.write(message);
-    }
   }
   
   function exit(code) {
