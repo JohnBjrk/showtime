@@ -7,15 +7,26 @@ A Gleam project
 
 ## Quick start
 
-```sh
-gleam run   # Run the project
-gleam test  # Run the tests
-gleam shell # Run an Erlang shell
+In your main test-file, replace:
+```gleam
+gleeunit.main()
+```
+with:
+```gleam
+showtime.main()
 ```
 
-## Installation
+Its also possible to replace the import:
+```gleam
+import gleeunit/should
+```
+with:
+```gleam
+import showtime/tests/should
+```
+but it only works for `equal` and `not_equal` so far.
 
-If available on Hex this package can be added to your Gleam project:
+## Installation
 
 ```sh
 gleam add showtime
