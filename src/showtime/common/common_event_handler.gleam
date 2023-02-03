@@ -32,6 +32,12 @@ if javascript {
     "../../showtime_ffi.mjs" "system_time"
 }
 
+// This is the common event-handler (shared between erlang/JS targets)
+// The main strategy is to collect the test-results in a map of maps:
+// module_name ->
+//   test_name -> test_result
+// It will also keep track of if it is running (i.e. did it receive the EndTestRun)
+// so that the caller can determine when to print test-results
 pub fn handle_event(msg: TestEvent, state: HandlerState) {
   let test_state = state.test_state
   let num_done = state.num_done
@@ -73,6 +79,7 @@ pub fn handle_event(msg: TestEvent, state: HandlerState) {
               module_event
               |> map.get(test.name)
             case maybe_test_run {
+              // TODO: Should be able to handle end-event even if test is not ongoing
               Ok(OngoingTestRun(test_function, started_at)) ->
                 module_event
                 |> map.insert(

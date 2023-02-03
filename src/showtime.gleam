@@ -1,10 +1,11 @@
+import glint.{CommandInput}
+import glint/flag.{LS}
+import gleam/result
+
 if erlang {
   import gleam/list
   import gleam/option.{None, Option, Some}
-  import gleam/result
   import gleam/erlang.{start_arguments}
-  import glint.{CommandInput}
-  import glint/flag.{LS}
   import showtime/common/test_suite.{EndTestRun, StartTestRun}
   import showtime/erlang/event_handler
   import showtime/erlang/module_handler
@@ -16,7 +17,11 @@ if erlang {
   }
 
   pub fn run(module_list: Option(List(String)), ignore_tags: List(String)) {
+    // Start event handler which will collect test-results and eventually
+    // print test report
     let test_event_handler = event_handler.start()
+    // Start module handler which receives msg about modules to test and
+    // runs the test-suite for the module
     let test_module_handler =
       module_handler.start(
         test_event_handler,
@@ -24,7 +29,9 @@ if erlang {
         runner.run_test_suite,
         ignore_tags,
       )
+
     test_event_handler(StartTestRun)
+    // Collect modules and notify the module handler to start the test-suites
     let modules = collect_modules(test_module_handler, module_list)
     test_event_handler(EndTestRun(
       modules
@@ -37,10 +44,7 @@ if erlang {
 if javascript {
   import gleam/io
   import gleam/map
-  import gleam/result
   import gleam/option.{None, Option, Some}
-  import glint.{CommandInput}
-  import glint/flag.{LS}
   import showtime/common/test_suite.{TestEvent}
   import showtime/common/common_event_handler.{
     Finished, HandlerState, NotStarted, handle_event,
@@ -52,12 +56,8 @@ if javascript {
   }
 
   pub fn run(module_list: Option(List(String)), ignore_tags: List(String)) {
-    io.println("Module list")
-    module_list
-    |> io.debug()
-    io.println("Ignore tags")
-    ignore_tags
-    |> io.debug()
+    // Find test modules and run the tests using the event-handler for
+    // collecting test-results and eventually print a test-report
     run_tests(
       event_handler,
       HandlerState(NotStarted, 0, map.new()),
