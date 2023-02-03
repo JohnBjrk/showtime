@@ -14,12 +14,11 @@ import showtime/tests/should.{Assertion, Eq, NotEq}
 import showtime/reports/styles.{
   error_style, expected_highlight, failed_style, function_style, got_highlight,
   heading_style, ignored_style, not_style, passed_style, stacktrace_style,
-  strip_style,
 }
 import showtime/reports/compare.{compare}
 import showtime/reports/table.{
-  AlignLeft, AlignRight, Col, Content, Separator, StyledContent, Table,
-  align_table, to_string,
+  AlignLeft, AlignRight, Content, Separator, StyledContent, Table, align_table,
+  to_string,
 }
 import showtime/tests/meta.{Meta}
 

@@ -7,7 +7,7 @@ import showtime/tests/should
 import showtime/tests/test.{test}
 import showtime/tests/meta.{Meta}
 import showtime/reports/table.{
-  AlignLeft, AlignRight, Col, Content, Separator, StyledContent, Table,
+  AlignLeft, AlignRight, Content, Separator, StyledContent, Table,
 }
 import gleam_community/ansi.{cyan, green, red}
 
@@ -18,7 +18,6 @@ pub type TestType {
 
 pub fn main() {
   showtime.main()
-  // run("showtime_test")
   // gleeunit.main()
 }
 
@@ -132,7 +131,7 @@ pub fn diff_custom_test() {
 pub fn formatted_table_test() {
   test(
     Meta("This is a test description", ["showtime", "ignore"]),
-    fn(meta) {
+    fn(_meta) {
       Table(
         None,
         [

@@ -1,7 +1,5 @@
 import gleam/dynamic.{Dynamic}
-import gleam/list
 import gleam/string
-import gleam/result
 import showtime/reports/styles.{expected_highlight, got_highlight}
 import gap.{compare_lists, compare_strings}
 import gap/styling.{from_comparison, highlight, to_styled_comparison}

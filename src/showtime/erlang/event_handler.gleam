@@ -1,24 +1,13 @@
 if erlang {
   import gleam/io
-  import gleam/option.{None, Some}
   import gleam/otp/actor.{Continue, Stop}
-  import gleam/erlang.{Millisecond}
   import gleam/erlang/process.{Normal}
   import gleam/map
-  import showtime/common/test_suite.{
-    CompletedTestRun, EndTest, EndTestRun, EndTestSuite, OngoingTestRun,
-    StartTest, StartTestRun, StartTestSuite, TestEvent,
-  }
+  import showtime/common/test_suite.{EndTestRun, TestEvent}
   import showtime/common/common_event_handler.{
-    Finished, HandlerState, NotStarted, Running, TestState, handle_event,
+    Finished, HandlerState, NotStarted, handle_event,
   }
   import showtime/reports/formatter.{create_test_report}
-
-  // type TestState {
-  //   NotStarted
-  //   Running
-  //   Finished(num_modules: Int)
-  // }
 
   pub fn start() {
     assert Ok(subject) =
@@ -28,68 +17,6 @@ if erlang {
           let #(test_state, num_done, events) = state
           let updated_state =
             handle_event(msg, HandlerState(test_state, num_done, events))
-          // let next = case msg {
-          //   StartTestRun -> Continue(#(Running, num_done, events))
-          //   StartTestSuite(module) -> {
-          //     let new_events =
-          //       events
-          //       |> map.insert(module.name, map.new())
-          //     Continue(#(test_state, num_done, new_events))
-          //   }
-          //   StartTest(module, test) -> {
-          //     let current_time = erlang.system_time(Millisecond)
-          //     let new_events =
-          //       events
-          //       |> map.update(
-          //         module.name,
-          //         fn(module_event) {
-          //           case module_event {
-          //             Some(module_event) ->
-          //               module_event
-          //               |> map.insert(
-          //                 test.name,
-          //                 OngoingTestRun(test, current_time),
-          //               )
-          //             None -> map.new()
-          //           }
-          //         },
-          //       )
-          //     Continue(#(test_state, num_done, new_events))
-          //   }
-          //   EndTest(module, test, result) -> {
-          //     let current_time = erlang.system_time(Millisecond)
-          //     let new_events =
-          //       map.update(
-          //         events,
-          //         module.name,
-          //         fn(maybe_module_event) {
-          //           let module_event =
-          //             option.unwrap(maybe_module_event, map.new())
-          //           let maybe_test_run =
-          //             module_event
-          //             |> map.get(test.name)
-          //           case maybe_test_run {
-          //             Ok(OngoingTestRun(test_function, started_at)) ->
-          //               module_event
-          //               |> map.insert(
-          //                 test.name,
-          //                 CompletedTestRun(
-          //                   test_function,
-          //                   current_time - started_at,
-          //                   result,
-          //                 ),
-          //               )
-          //             Error(_) -> module_event
-          //           }
-          //         },
-          //       )
-          //     Continue(#(test_state, num_done, new_events))
-          //   }
-          //   EndTestSuite(_) -> Continue(#(test_state, num_done + 1, events))
-          //   EndTestRun(num_modules) ->
-          //     Continue(#(Finished(num_modules), num_done, events))
-          //   _ -> Continue(state)
-          // }
           case updated_state {
             HandlerState(Finished(num_modules), num_done, events) if num_done == num_modules -> {
               io.println(create_test_report(events))

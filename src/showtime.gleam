@@ -36,17 +36,12 @@ if erlang {
 
 if javascript {
   import gleam/io
-  import gleam/list
   import gleam/map
   import gleam/result
   import gleam/option.{None, Option, Some}
-  import gleam/dynamic.{Dynamic}
   import glint.{CommandInput}
   import glint/flag.{LS}
-  import showtime/common/test_suite.{
-    CompletedTestRun, EndTest, EndTestRun, StartTestRun, StartTestSuite,
-    TestEvent, TestModule, TestRun,
-  }
+  import showtime/common/test_suite.{TestEvent}
   import showtime/common/common_event_handler.{
     Finished, HandlerState, NotStarted, handle_event,
   }
@@ -74,7 +69,7 @@ if javascript {
   fn event_handler(event: TestEvent, state: HandlerState) {
     let new_state = handle_event(event, state)
     case new_state {
-      HandlerState(Finished(num_modules), num_done, events) ->
+      HandlerState(Finished(_), _, events) ->
         io.println(create_test_report(events))
       _ -> Nil
     }
