@@ -8,6 +8,7 @@ if erlang {
   }
   import showtime/common/test_result.{Ignored, TestFunctionReturn, TestResult}
 
+  // Runs all tests in a test suite
   pub fn run_test_suite(
     test_suite: TestSuite,
     test_event_handler: TestEventHandler,
@@ -21,6 +22,7 @@ if erlang {
     })
   }
 
+  // Wrapper around the ffi function that converts names to atoms
   pub fn run_test(
     module_name: String,
     test_name: String,
@@ -33,6 +35,9 @@ if erlang {
     )
   }
 
+  // Calls ffi for running a test function
+  // The ffi will take care of mapping the result and exception to the data-types
+  // used in gleam
   external fn run_test_ffi(
     module: Atom,
     function: Atom,

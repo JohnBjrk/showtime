@@ -9,6 +9,9 @@ if erlang {
   }
   import showtime/reports/formatter.{create_test_report}
 
+  // Starts an actor that receives test events and forwards the to the event handler
+  // When handler updates the state to `Finished` the actor will wait until handler
+  // reports that all modules are done and the stop
   pub fn start() {
     assert Ok(subject) =
       actor.start(
@@ -36,13 +39,18 @@ if erlang {
       process.new_selector()
       |> process.selecting_process_down(monitor, fn(_process_down) { Nil })
 
+    // Returns a callback that can receive test events
     fn(test_event: TestEvent) {
       case test_event {
         EndTestRun(..) -> {
+          // When EndTestRun has been received the callback will wait until the
+          // actor has stopped
+          // TODO: Use a timeout?
           process.send(subject, test_event)
           process.select_forever(exit_subject)
         }
 
+        // Normally just send the test event to the actor
         _ -> process.send(subject, test_event)
       }
     }

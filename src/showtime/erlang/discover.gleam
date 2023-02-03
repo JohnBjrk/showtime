@@ -11,6 +11,9 @@ if erlang {
     TestFunction, TestModule, TestModuleHandler, TestSuite,
   }
 
+  // Module collector for erlang
+  // Will search the test folder for files ending with _test and notify
+  // the module handler about each module it finds
   pub fn collect_modules(
     test_module_handler: TestModuleHandler,
     only_modules: Option(List(String)),
@@ -46,6 +49,9 @@ if erlang {
     })
   }
 
+  // Test function collector for erlang
+  // Uses erlang `apply` to run `module_info` for the test module
+  // and collects all the exports ending with _test into a `TestSuite`
   pub fn collect_test_functions(module: TestModule) -> TestSuite {
     let test_functions: List(#(Atom, Int)) =
       apply(
