@@ -4,7 +4,7 @@ import showtime/tests/meta.{Meta}
 
 pub type Assertion(t) {
   Eq(a: t, b: t, meta: Option(Meta))
-  NotEq(a: t, b: t)
+  NotEq(a: t, b: t, meta: Option(Meta))
 }
 
 pub fn equal(a: t, b: t) {
@@ -16,7 +16,11 @@ pub fn equal_meta(a: t, b: t, meta: Meta) {
 }
 
 pub fn not_equal(a: t, b: t) {
-  evaluate(NotEq(a, b))
+  evaluate(NotEq(a, b, None))
+}
+
+pub fn not_equal_meta(a: t, b: t, meta: Meta) {
+  evaluate(NotEq(a, b, Some(meta)))
 }
 
 pub fn evaluate(assertion) -> Nil {
@@ -28,7 +32,7 @@ pub fn evaluate(assertion) -> Nil {
           assert Ok(_assertion) = Error(assertion)
         }
       }
-    NotEq(a, b) ->
+    NotEq(a, b, _meta) ->
       case a != b {
         True -> Ok(assertion)
         False -> {

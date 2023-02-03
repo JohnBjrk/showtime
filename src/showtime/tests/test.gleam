@@ -12,3 +12,7 @@ pub fn test(meta: Meta, test_function: fn(Meta) -> Nil) {
 pub fn equal(a: t, b: t, meta: Meta) {
   should.equal_meta(a, b, meta)
 }
+
+pub fn not_equal(a: t, b: t, meta: Meta) {
+  should.equal_meta(a, b, meta)
+}

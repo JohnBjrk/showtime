@@ -89,6 +89,16 @@ pub fn djur_test() {
   |> should.not_equal(TestType("apa", ["ren", "tur"]))
 }
 
+pub fn not_equal_meta_test() {
+  test(
+    Meta("Test if meta works for not_equal", []),
+    fn(meta) {
+      TestType("apa", ["ren", "tur"])
+      |> test.not_equal(TestType("apa", ["ren", "flax"]), meta)
+    },
+  )
+}
+
 pub fn meta_test() {
   test(
     Meta("This is a test description", ["ignore"]),

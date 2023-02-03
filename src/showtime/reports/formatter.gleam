@@ -209,9 +209,9 @@ fn gleam_error_to_unified(
             stacktrace,
           )
         }
-        NotEq(got, expected) ->
+        NotEq(got, expected, meta) ->
           UnifiedError(
-            None,
+            meta,
             "assert",
             "Assert not equal",
             not_style("not ") <> string.inspect(expected),
