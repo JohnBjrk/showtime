@@ -1,6 +1,6 @@
 import gleam/map.{Map}
 import gleam/option.{None, Some}
-import showtime/common/test_suite.{
+import showtime/internal/common/test_suite.{
   CompletedTestRun, EndTest, EndTestRun, EndTestSuite, OngoingTestRun, StartTest,
   StartTestRun, StartTestSuite, TestEvent, TestRun,
 }
@@ -29,7 +29,7 @@ if erlang {
 
 if javascript {
   external fn system_time() -> Int =
-    "../../showtime_ffi.mjs" "system_time"
+    "../../../showtime_ffi.mjs" "system_time"
 }
 
 // This is the common event-handler (shared between erlang/JS targets)

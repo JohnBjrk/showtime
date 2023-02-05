@@ -1,7 +1,7 @@
 if erlang {
   import gleam/otp/actor.{Continue}
   import gleam/erlang/process
-  import showtime/common/test_suite.{
+  import showtime/internal/common/test_suite.{
     EndTestSuite, StartTestSuite, TestEventHandler, TestFunctionCollector,
     TestModule, TestRunner,
   }

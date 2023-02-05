@@ -7,7 +7,7 @@ if erlang {
   import gleam/option.{None, Option, Some}
   import gleam/erlang/file
   import gleam/erlang/atom.{Atom}
-  import showtime/common/test_suite.{
+  import showtime/internal/common/test_suite.{
     TestFunction, TestModule, TestModuleHandler, TestSuite,
   }
 

@@ -5,18 +5,18 @@ import gleam/string
 import gleam/option.{None, Option, Some}
 import gleam/map.{Map}
 import gleam/dynamic.{Dynamic}
-import showtime/common/test_result.{
+import showtime/internal/common/test_result.{
   Assert, AssertEqual, Expected, Expression, GleamError, GleamErrorDetail,
   Ignored, ReasonDetail, Trace, TraceModule, Value,
 }
-import showtime/common/test_suite.{CompletedTestRun, TestRun}
+import showtime/internal/common/test_suite.{CompletedTestRun, TestRun}
 import showtime/tests/should.{Assertion, Eq, NotEq}
-import showtime/reports/styles.{
+import showtime/internal/reports/styles.{
   error_style, expected_highlight, failed_style, function_style, got_highlight,
   heading_style, ignored_style, not_style, passed_style, stacktrace_style,
 }
-import showtime/reports/compare.{compare}
-import showtime/reports/table.{
+import showtime/internal/reports/compare.{compare}
+import showtime/internal/reports/table.{
   AlignLeft, AlignRight, Content, Separator, StyledContent, Table, align_table,
   to_string,
 }

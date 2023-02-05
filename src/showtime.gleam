@@ -6,11 +6,13 @@ if erlang {
   import gleam/list
   import gleam/option.{None, Option, Some}
   import gleam/erlang.{start_arguments}
-  import showtime/common/test_suite.{EndTestRun, StartTestRun}
-  import showtime/erlang/event_handler
-  import showtime/erlang/module_handler
-  import showtime/erlang/runner
-  import showtime/erlang/discover.{collect_modules, collect_test_functions}
+  import showtime/internal/common/test_suite.{EndTestRun, StartTestRun}
+  import showtime/internal/erlang/event_handler
+  import showtime/internal/erlang/module_handler
+  import showtime/internal/erlang/runner
+  import showtime/internal/erlang/discover.{
+    collect_modules, collect_test_functions,
+  }
 
   pub fn main() {
     start_with_args(start_arguments(), run)
@@ -45,11 +47,11 @@ if javascript {
   import gleam/io
   import gleam/map
   import gleam/option.{None, Option, Some}
-  import showtime/common/test_suite.{TestEvent}
-  import showtime/common/common_event_handler.{
+  import showtime/internal/common/test_suite.{TestEvent}
+  import showtime/internal/common/common_event_handler.{
     Finished, HandlerState, NotStarted, handle_event,
   }
-  import showtime/reports/formatter.{create_test_report}
+  import showtime/internal/reports/formatter.{create_test_report}
 
   pub fn main() {
     start_with_args(start_arguments(), run)

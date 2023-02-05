@@ -4,7 +4,7 @@ import gleam/string
 import gleam/int
 import gleam/order.{Gt}
 import gleam/option.{Option}
-import showtime/reports/styles.{strip_style}
+import showtime/internal/reports/styles.{strip_style}
 
 pub type Content {
   Content(unstyled_text: String)

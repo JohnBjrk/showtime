@@ -7,7 +7,7 @@ import {
   TestFunction,
   StartTest,
   EndTestSuite,
-} from "./showtime/common/test_suite.mjs";
+} from "./showtime/internal/common/test_suite.mjs";
 import {
   Assert,
   ErlangException,
@@ -19,7 +19,7 @@ import {
   Ignore,
   TraceModule,
   Num,
-} from "./showtime/common/test_result.mjs";
+} from "./showtime/internal/common/test_result.mjs";
 import { Eq } from "./showtime/tests/should.mjs";
 import { Error, List, Ok } from "./gleam.mjs";
 import { None, is_some, unwrap } from "../gleam_stdlib/gleam/option.mjs";

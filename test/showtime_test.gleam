@@ -6,7 +6,7 @@ import showtime
 import showtime/tests/should
 import showtime/tests/test.{test}
 import showtime/tests/meta.{Meta}
-import showtime/reports/table.{
+import showtime/internal/reports/table.{
   AlignLeft, AlignRight, Content, Separator, StyledContent, Table,
 }
 import gleam_community/ansi.{cyan, green, red}

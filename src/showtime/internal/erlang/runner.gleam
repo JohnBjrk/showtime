@@ -3,10 +3,12 @@ if erlang {
   import gleam/list
   import gleam/dynamic.{Dynamic}
   import gleam/erlang/atom.{Atom}
-  import showtime/common/test_suite.{
+  import showtime/internal/common/test_suite.{
     EndTest, StartTest, TestEventHandler, TestSuite,
   }
-  import showtime/common/test_result.{Ignored, TestFunctionReturn, TestResult}
+  import showtime/internal/common/test_result.{
+    Ignored, TestFunctionReturn, TestResult,
+  }
 
   // Runs all tests in a test suite
   pub fn run_test_suite(

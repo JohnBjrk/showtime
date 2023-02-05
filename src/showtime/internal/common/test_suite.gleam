@@ -1,5 +1,5 @@
 import gleam/option.{Option}
-import showtime/common/test_result.{TestResult}
+import showtime/internal/common/test_result.{TestResult}
 
 // The state (and result) of a test function
 pub type TestRun {

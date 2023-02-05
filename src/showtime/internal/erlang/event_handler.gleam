@@ -3,11 +3,11 @@ if erlang {
   import gleam/otp/actor.{Continue, Stop}
   import gleam/erlang/process.{Normal}
   import gleam/map
-  import showtime/common/test_suite.{EndTestRun, TestEvent}
-  import showtime/common/common_event_handler.{
+  import showtime/internal/common/test_suite.{EndTestRun, TestEvent}
+  import showtime/internal/common/common_event_handler.{
     Finished, HandlerState, NotStarted, handle_event,
   }
-  import showtime/reports/formatter.{create_test_report}
+  import showtime/internal/reports/formatter.{create_test_report}
 
   // Starts an actor that receives test events and forwards the to the event handler
   // When handler updates the state to `Finished` the actor will wait until handler
