@@ -24,7 +24,9 @@ with:
 ```gleam
 import showtime/tests/should
 ```
-but it only works for `equal` and `not_equal` so far.
+
+This should improve the test-report since showtime can make more assumption on the data passed when
+failing an assertion.
 
 ## Installation
 
