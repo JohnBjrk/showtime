@@ -20,7 +20,7 @@ import {
   TraceModule,
   Num,
 } from "./showtime/internal/common/test_result.mjs";
-import { Eq } from "./showtime/tests/should.mjs";
+import { Eq, NotEq, IsOk, IsError, Fail } from "./showtime/tests/should.mjs";
 import { Error, List, Ok } from "./gleam.mjs";
 import { None, is_some, unwrap } from "../gleam_stdlib/gleam/option.mjs";
 export const run = async (
@@ -139,12 +139,25 @@ export const run = async (
           );
         } else {
           const error_parts = error.message.split("\n");
-          const expected = error_parts[1]
+          const got = error_parts[1]
             ? error_parts[1].trim()
-            : "COULD NOT PARSE EXPECTED FROM EXCEPTION";
-          const got = error_parts[3]
-            ? error_parts[3].trim()
             : "COULD NOT PARSE GOT FROM EXCEPTION";
+          const assertion = error_parts[2]
+            ? error_parts[2].trim()
+            : "COULD NOT PARSE ASSERTION FROM EXCEPTION";
+          const expected = error_parts[3]
+            ? error_parts[3].trim()
+            : "COULD NOT PARSE EXPECTED FROM EXCEPTION";
+          let result = new Eq(got, expected, new None())
+          if (assertion === "should equal") {
+            result = new Eq(got, expected, new None())
+          } else if (assertion === "should not equal") {
+            result = new NotEq(got, expected, new None())
+          } else if (assertion === "should be ok") {
+            result = new IsOk(new Error(got.substring(6, got.length - 1)), new None())
+          } else if (assertion === "should be error") {
+            result = new IsError(new Ok(got.substring(3, got.length - 1)), new None())
+          }
           state = eventHandler(
             new EndTest(
               test_module,
@@ -158,7 +171,7 @@ export const run = async (
                       fnName,
                       error.line ? error.line : 0,
                       "DUMMY_MESSAGE", // TODO: Base this on the middle word (between expected and got)
-                      new Error(new Eq(expected, got, new None()))
+                      new Error(result)
                     )
                   ),
                   new TraceList(List.fromArray(stacktrace))

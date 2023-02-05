@@ -107,7 +107,7 @@ pub fn gleeunit_should_be_ok_test() {
 }
 
 pub fn gleeunit_should_be_error_test() {
-  Ok("Done")
+  Ok(TestType("Done", ["good", "result"]))
   |> gshould.be_error()
 }
 
