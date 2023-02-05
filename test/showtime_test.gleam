@@ -28,6 +28,74 @@ pub fn i_am_test() {
   |> gshould.equal(TestType("name", ["some", "name"]))
 }
 
+pub fn is_ok_test() {
+  Error(TestType("error", ["caused", "by"]))
+  |> should.be_ok()
+}
+
+pub fn is_ok_meta_test() {
+  test(
+    Meta("Test failing be_ok assertion with meta-data", ["meta"]),
+    fn(meta) {
+      Error(TestType("error", ["caused", "by"]))
+      |> test.be_ok(meta)
+    },
+  )
+}
+
+pub fn is_error_test() {
+  Ok(TestType("ok", ["result"]))
+  |> should.be_error()
+}
+
+pub fn is_error_meta_test() {
+  test(
+    Meta("Test failing be_error assertion with meta-data", ["meta"]),
+    fn(meta) {
+      Ok(TestType("ok", ["result"]))
+      |> test.be_error(meta)
+    },
+  )
+}
+
+pub fn fail_test() {
+  should.fail()
+}
+
+pub fn fail_meta_test() {
+  test(Meta("Test fail with meta-data", ["meta"]), fn(meta) { test.fail(meta) })
+}
+
+pub fn is_true_test() {
+  False
+  |> should.be_true()
+}
+
+pub fn is_true_meta_test() {
+  test(
+    Meta("Test is true with meta", ["meta"]),
+    fn(meta) {
+      False
+      |> test.be_true(meta)
+    },
+  )
+}
+
+pub fn is_false_test() {
+  True
+  |> should.be_false()
+}
+
+pub fn is_false_meta_test() {
+  test(
+    Meta("Test is false with meta", ["meta"]),
+    fn(meta) {
+      True
+      |> test.be_false(meta)
+    },
+  )
+}
+
 pub fn many_gleeunit_should_test() {
   1
   |> gshould.equal(1)

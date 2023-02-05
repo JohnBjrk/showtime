@@ -16,3 +16,23 @@ pub fn equal(a: t, b: t, meta: Meta) {
 pub fn not_equal(a: t, b: t, meta: Meta) {
   should.equal_meta(a, b, meta)
 }
+
+pub fn be_ok(a: Result(o, e), meta: Meta) {
+  should.be_ok_meta(a, meta)
+}
+
+pub fn be_error(a: Result(o, e), meta: Meta) {
+  should.be_error_meta(a, meta)
+}
+
+pub fn fail(meta: Meta) {
+  should.fail_meta(meta)
+}
+
+pub fn be_true(a: Bool, meta: Meta) {
+  should.be_true_meta(a, meta)
+}
+
+pub fn be_false(a: Bool, meta: Meta) {
+  should.be_false_meta(a, meta)
+}

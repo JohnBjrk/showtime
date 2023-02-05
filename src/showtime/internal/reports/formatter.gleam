@@ -10,7 +10,7 @@ import showtime/internal/common/test_result.{
   Ignored, ReasonDetail, Trace, TraceModule, Value,
 }
 import showtime/internal/common/test_suite.{CompletedTestRun, TestRun}
-import showtime/tests/should.{Assertion, Eq, NotEq}
+import showtime/tests/should.{Assertion, Eq, Fail, IsError, IsOk, NotEq}
 import showtime/internal/reports/styles.{
   error_style, expected_highlight, failed_style, function_style, got_highlight,
   heading_style, ignored_style, not_style, passed_style, stacktrace_style,
@@ -194,7 +194,7 @@ fn gleam_error_to_unified(
 ) -> UnifiedError {
   case gleam_error {
     Assert(_module, _function, _line_no, _message, value) -> {
-      let result: Result(Dynamic, Assertion(Dynamic)) =
+      let result: Result(Dynamic, Assertion(Dynamic, Dynamic)) =
         dynamic.unsafe_coerce(value)
       assert Error(assertion) = result
       case assertion {
@@ -216,6 +216,33 @@ fn gleam_error_to_unified(
             "Assert not equal",
             not_style("not ") <> string.inspect(expected),
             string.inspect(got),
+            stacktrace,
+          )
+        IsOk(got, meta) ->
+          UnifiedError(
+            meta,
+            "assert",
+            "Assert is Ok",
+            expected_highlight("Ok(_)"),
+            got_highlight(string.inspect(got)),
+            stacktrace,
+          )
+        IsError(got, meta) ->
+          UnifiedError(
+            meta,
+            "assert",
+            "Assert is Ok",
+            expected_highlight("Error(_)"),
+            got_highlight(string.inspect(got)),
+            stacktrace,
+          )
+        Fail(meta) ->
+          UnifiedError(
+            meta,
+            "assert",
+            "Assert is Ok",
+            got_highlight("should.fail()"),
+            got_highlight("N/A - test always expected to fail"),
             stacktrace,
           )
       }
