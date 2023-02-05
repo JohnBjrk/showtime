@@ -96,6 +96,21 @@ pub fn is_false_meta_test() {
   )
 }
 
+pub fn gleeunit_assert_not_equal_test() {
+  1
+  |> gshould.not_equal(1)
+}
+
+pub fn gleeunit_should_be_ok_test() {
+  Error("Wrong")
+  |> gshould.be_ok()
+}
+
+pub fn gleeunit_should_be_error_test() {
+  Ok("Done")
+  |> gshould.be_error()
+}
+
 pub fn many_gleeunit_should_test() {
   1
   |> gshould.equal(1)

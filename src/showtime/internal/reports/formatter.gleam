@@ -6,8 +6,9 @@ import gleam/option.{None, Option, Some}
 import gleam/map.{Map}
 import gleam/dynamic.{Dynamic}
 import showtime/internal/common/test_result.{
-  Assert, AssertEqual, Expected, Expression, GleamError, GleamErrorDetail,
-  Ignored, ReasonDetail, Trace, TraceModule, Value,
+  Assert, AssertEqual, AssertMatch, AssertNotEqual, Expected, Expression,
+  GleamError, GleamErrorDetail, Ignored, Pattern, ReasonDetail, Trace,
+  TraceModule, Value,
 }
 import showtime/internal/common/test_suite.{CompletedTestRun, TestRun}
 import showtime/tests/should.{Assertion, Eq, Fail, IsError, IsOk, NotEq}
@@ -21,6 +22,12 @@ import showtime/internal/reports/table.{
   to_string,
 }
 import showtime/tests/meta.{Meta}
+
+type GleeUnitAssertionType {
+  GleeUnitAssertEqual(message: String)
+  GleeUnitAssertNotEqual(message: String)
+  GleeUnitAssertMatch(message: String)
+}
 
 type ModuleAndTest {
   ModuleAndTestRun(module_name: String, test_run: TestRun)
@@ -98,7 +105,27 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
                   Ok(format_reason(
                     erlang_error_to_unified(
                       reason_details,
-                      "Assert equal",
+                      GleeUnitAssertEqual("Assert equal"),
+                      exception.stacktrace.traces,
+                    ),
+                    module_and_test_run.module_name,
+                    test_function.name,
+                  ))
+                AssertNotEqual(reason_details) ->
+                  Ok(format_reason(
+                    erlang_error_to_unified(
+                      reason_details,
+                      GleeUnitAssertNotEqual("Assert not equal"),
+                      exception.stacktrace.traces,
+                    ),
+                    module_and_test_run.module_name,
+                    test_function.name,
+                  ))
+                AssertMatch(reason_details) ->
+                  Ok(format_reason(
+                    erlang_error_to_unified(
+                      reason_details,
+                      GleeUnitAssertMatch("Assert match"),
                       exception.stacktrace.traces,
                     ),
                     module_and_test_run.module_name,
@@ -166,22 +193,43 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
 
 fn erlang_error_to_unified(
   error_details: List(ReasonDetail),
-  message: String,
+  assertion_type: GleeUnitAssertionType,
   stacktrace: List(Trace),
 ) {
   error_details
   |> list.fold(
-    UnifiedError(None, "not_set", message, "", "", stacktrace),
+    UnifiedError(None, "not_set", assertion_type.message, "", "", stacktrace),
     fn(unified, reason) {
       case reason {
         Expression(expression) -> UnifiedError(..unified, reason: expression)
         Expected(value) ->
-          UnifiedError(
-            ..unified,
-            expected: expected_highlight(string.inspect(value)),
-          )
+          case assertion_type {
+            GleeUnitAssertEqual(_messaged) ->
+              UnifiedError(
+                ..unified,
+                expected: expected_highlight(string.inspect(value)),
+              )
+            _ -> unified
+          }
         Value(value) ->
-          UnifiedError(..unified, got: got_highlight(string.inspect(value)))
+          case assertion_type {
+            GleeUnitAssertNotEqual(_message) ->
+              UnifiedError(
+                ..unified,
+                expected: not_style("not ") <> string.inspect(value),
+                got: got_highlight(string.inspect(value)),
+              )
+            _ ->
+              UnifiedError(..unified, got: got_highlight(string.inspect(value)))
+          }
+        Pattern(pattern) ->
+          case pattern {
+            "{ ok , _ }" ->
+              UnifiedError(..unified, expected: expected_highlight("Ok(_)"))
+            "{ error , _ }" ->
+              UnifiedError(..unified, expected: expected_highlight("Error(_)"))
+            _ -> unified
+          }
         _ -> unified
       }
     },

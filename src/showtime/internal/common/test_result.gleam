@@ -40,6 +40,8 @@ pub type TestResult =
 // TODO: Rename GleamError to ShowtimeError
 pub type Reason {
   AssertEqual(details: List(ReasonDetail))
+  AssertNotEqual(details: List(ReasonDetail))
+  AssertMatch(details: List(ReasonDetail))
   GleamError(details: GleamErrorDetail)
 }
 
@@ -51,6 +53,7 @@ pub type ReasonDetail {
   Expression(expression: String)
   Expected(value: Dynamic)
   Value(value: Dynamic)
+  Pattern(pattern: String)
 }
 
 // Gleam error detail is produced by showtime should and will hold all the information

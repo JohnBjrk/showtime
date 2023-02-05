@@ -30,17 +30,26 @@ run_test(Module, Function, IgnoreTags) ->
                                          case ReasonDetail of
                                              {line, LineNo} -> {reason_line, LineNo};
                                              {expression, List} ->
-                                                 {expression, list_to_binary(List)};
+                                                {expression, list_to_binary(List)};
                                              {module, ModuleAtom} ->
-                                                 {module, atom_to_binary(ModuleAtom)};
+                                                {module, atom_to_binary(ModuleAtom)};
+                                            {pattern, Pattern} ->
+                                                {pattern, list_to_binary((Pattern))};
                                              Other -> Other
                                          end
                                       end,
                                       ReasonList),
                         % io:fwrite("Reason ~p~n", [ErlangReasonList]),
                         GleamAssertionType = case Assertion of
-                            assertEqual -> assert_equal;
-                            OtherAssertionType -> OtherAssertionType
+                            assertEqual -> 
+                                assert_equal;
+                            assertNotEqual ->
+                                assert_not_equal;
+                            assertMatch ->
+                                assert_match;
+                            OtherAssertionType ->
+                                io:fwrite("Assert other = ~p~n", [ Reason ]),
+                                OtherAssertionType
                         end,
                         {GleamAssertionType, ErlangReasonList};
                     #{function := GleamFunction,
