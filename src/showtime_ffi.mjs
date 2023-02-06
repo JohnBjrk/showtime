@@ -95,6 +95,10 @@ export const run = async (
               const segments = line.trim().split(" ");
               const functionName =
                 segments.length > 2 ? segments[1] : undefined;
+              const functionNameSplit = functionName && functionName.split(".")
+              const functionNameShort = functionNameSplit && functionNameSplit.length > 1 
+                ? functionNameSplit[1] 
+                : functionName
               const modulePart =
                 segments.length > 2
                   ? segments[2].split(".mjs")
@@ -102,7 +106,7 @@ export const run = async (
               const moduleName = modulePart[0].split("/").pop();
               return new TraceModule(
                 moduleName,
-                functionName || "",
+                functionNameShort || "",
                 new Num(0),
                 []
               );
@@ -110,10 +114,7 @@ export const run = async (
             .reverse();
         }
         let moduleName = "\n" + js_path.slice(0, -4);
-        // let line = error.line ? `:${error.line}` : "";
-        // write(`\n❌ ${moduleName}.${fnName}${line}: ${error}\n`);
         if (error && error.value) {
-          // callback(new StartTestRun(), error.value)
           state = eventHandler(
             new EndTest(
               test_module,

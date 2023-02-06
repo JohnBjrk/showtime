@@ -314,6 +314,8 @@ fn format_reason(error: UnifiedError, module: String, function: String) {
     error.stacktrace
     |> list.map(fn(trace) {
       case trace {
+        Trace(function, _, _) if function == "" -> "(anonymous)"
+        TraceModule(module, function, _, _) if function == "" -> module <> "." <> "(anonymous)"
         Trace(function, _, _) -> function
         TraceModule(module, function, _, _) -> module <> "." <> function
       }

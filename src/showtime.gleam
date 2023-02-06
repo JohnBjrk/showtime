@@ -18,7 +18,7 @@ if erlang {
     start_with_args(start_arguments(), run)
   }
 
-  pub fn run(module_list: Option(List(String)), ignore_tags: List(String)) {
+  fn run(module_list: Option(List(String)), ignore_tags: List(String)) {
     // Start event handler which will collect test-results and eventually
     // print test report
     let test_event_handler = event_handler.start()
@@ -57,7 +57,7 @@ if javascript {
     start_with_args(start_arguments(), run)
   }
 
-  pub fn run(module_list: Option(List(String)), ignore_tags: List(String)) {
+  fn run(module_list: Option(List(String)), ignore_tags: List(String)) {
     // Find test modules and run the tests using the event-handler for
     // collecting test-results and eventually print a test-report
     run_tests(
