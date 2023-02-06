@@ -45,7 +45,7 @@ export const run = async (
   for await (let path of await gleamFiles("test")) {
     let js_path = path.slice("test/".length).replace(".gleam", ".mjs");
     const module_name = js_path.split(".")[0];
-    const test_module = new TestModule(js_path, js_path);
+    const test_module = new TestModule(module_name, path);
     state = eventHandler(new StartTestSuite(test_module), state);
     let module = await import(join_path(dist, js_path));
     if (moduleListArray && !moduleListArray.includes(module_name)) continue;

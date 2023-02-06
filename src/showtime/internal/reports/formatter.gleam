@@ -347,7 +347,7 @@ fn format_reason(error: UnifiedError, module: String, function: String) {
     ) <> "⌄"
   let standard_table_rows = [
     Some([
-      AlignRight(StyledContent(error_style("Error")), 2),
+      AlignRight(StyledContent(error_style("Failed")), 2),
       Separator(": "),
       AlignLeft(Content(arrow), 0),
     ]),
