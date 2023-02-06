@@ -1,5 +1,5 @@
 name = "showtime"
-version = "0.0.3"
+version = "0.0.4"
 
 # Fill out these fields if you intend to generate HTML documentation or publish
 # your project to the Hex package manager.
@@ -20,3 +20,6 @@ gap = "~> 0.1"
 
 [dev-dependencies]
 gleeunit = "~> 0.10"
+
+[javascript.deno]
+allow_read = ["./"]
