@@ -22,6 +22,7 @@ run_test(Module, Function, IgnoreTags) ->
         {ok, FinalResult}
     catch
         Class:Reason:Stacktrace ->
+            % io:fwrite("Class ~p~nReason~p~nStacktrace~p~n", [Class, Reason, Stacktrace]),
             GleamReason =
                 case Reason of
                     {Assertion, ReasonList} ->
@@ -58,8 +59,24 @@ run_test(Module, Function, IgnoreTags) ->
                       message := Message,
                       module := GleamModule,
                       value := Value} ->
-                        {gleam_error,
-                         {GleamError, GleamModule, GleamFunction, Line, Message, Value}}
+                        io:fwrite("VALUE=~p~n", [Value]),
+                        case Value of
+                            {error, {OkValue, _, _, _}} when 
+                                OkValue == not_eq;
+                                OkValue == eq ->
+                                {gleam_error,
+                                {GleamError, GleamModule, GleamFunction, Line, Message, Value}};
+                            {error, {OkValue, _, _}} when 
+                                OkValue == is_ok;
+                                OkValue == is_error ->
+                                {gleam_error,
+                                {GleamError, GleamModule, GleamFunction, Line, Message, Value}};
+                            {error, {OkValue, _}} when 
+                                OkValue == fail ->
+                                {gleam_error,
+                                {GleamError, GleamModule, GleamFunction, Line, Message, Value}};
+                            _ -> {gleam_assert, Value}
+                        end
                 end,
             GleamClass =
                 case Class of

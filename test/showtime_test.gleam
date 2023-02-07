@@ -194,6 +194,22 @@ pub fn meta_test() {
   )
 }
 
+pub fn assert_test() {
+  assert Ok("apa") = Error("bepa")
+}
+
+pub fn use_meta_test() {
+  use meta <- test(Meta("This test is defined using use", ["meta"]))
+  "meta"
+  |> test.equal("universe", meta)
+}
+
+pub fn with_meta_test() {
+  use should <- test.with_meta(Meta("This test is defined using use", ["meta"]))
+  "meta"
+  |> should.equal("universe")
+}
+
 pub fn diff_string_test() {
   test(
     Meta("Test diffing of strings", []),

@@ -7,8 +7,8 @@ import gleam/map.{Map}
 import gleam/dynamic.{Dynamic}
 import showtime/internal/common/test_result.{
   Assert, AssertEqual, AssertMatch, AssertNotEqual, Expected, Expression,
-  GleamError, GleamErrorDetail, Ignored, Pattern, ReasonDetail, Trace,
-  TraceModule, Value,
+  GleamAssert, GleamError, GleamErrorDetail, Ignored, Pattern, ReasonDetail,
+  Trace, TraceModule, Value,
 }
 import showtime/internal/common/test_suite.{CompletedTestRun, TestRun}
 import showtime/tests/should.{Assertion, Eq, Fail, IsError, IsOk, NotEq}
@@ -134,6 +134,20 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
                 GleamError(reason) ->
                   Ok(format_reason(
                     gleam_error_to_unified(reason, exception.stacktrace.traces),
+                    module_and_test_run.module_name,
+                    test_function.name,
+                  ))
+                // GleamAssert(value) -> Error(Nil)
+                GleamAssert(value) ->
+                  Ok(format_reason(
+                    UnifiedError(
+                      None,
+                      "gleam assert",
+                      "Assert failed",
+                      "Patterns should match",
+                      error_style(string.inspect(value)),
+                      exception.stacktrace.traces,
+                    ),
                     module_and_test_run.module_name,
                     test_function.name,
                   ))
@@ -315,7 +329,8 @@ fn format_reason(error: UnifiedError, module: String, function: String) {
     |> list.map(fn(trace) {
       case trace {
         Trace(function, _, _) if function == "" -> "(anonymous)"
-        TraceModule(module, function, _, _) if function == "" -> module <> "." <> "(anonymous)"
+        TraceModule(module, function, _, _) if function == "" ->
+          module <> "." <> "(anonymous)"
         Trace(function, _, _) -> function
         TraceModule(module, function, _, _) -> module <> "." <> function
       }
