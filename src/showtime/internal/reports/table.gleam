@@ -1,8 +1,6 @@
-import gleam/io
 import gleam/list
 import gleam/string
 import gleam/int
-import gleam/order.{Gt}
 import gleam/option.{Option}
 import showtime/internal/reports/styles.{strip_style}
 

@@ -176,8 +176,6 @@ export const run = async (
             state
           );
         } else if (error && error.gleam_error) {
-          console.log("Gleam assert");
-          console.log(error);
           state = eventHandler(
             new EndTest(
               test_module,
@@ -193,8 +191,6 @@ export const run = async (
             state
           );
         } else {
-          console.log("Other exception");
-          console.log(error);
           state = eventHandler(
             new EndTest(
               test_module,
@@ -297,10 +293,22 @@ async function read_file(path) {
   }
 }
 
+export function exit(code) {
+  if (globalThis.Deno) {
+    Deno.exit(code);
+  } else {
+    process.exit(code);
+  }
+}
+
 export function system_time() {
   return Date.now();
 }
 
 export const start_args = function () {
-  return List.fromArray(process.argv.slice(1));
+  if (globalThis.Deno) {
+    return List.fromArray(Deno.args);
+  } else {
+    return List.fromArray(process.argv.slice(1));
+  }
 };

@@ -71,8 +71,14 @@ if javascript {
   fn event_handler(event: TestEvent, state: HandlerState) {
     let new_state = handle_event(event, state)
     case new_state {
-      HandlerState(Finished(_), _, events) ->
-        io.println(create_test_report(events))
+      HandlerState(Finished(_), _, events) -> {
+        let #(report, num_failed) = create_test_report(events)
+        io.println(report)
+        case num_failed > 0 {
+          True -> exit(1)
+          False -> exit(0)
+        }
+      }
       _ -> Nil
     }
     new_state
@@ -88,6 +94,9 @@ if javascript {
 
   external fn start_arguments() -> List(String) =
     "./showtime_ffi.mjs" "start_args"
+
+  external fn exit(Int) -> Nil =
+    "./showtime_ffi.mjs" "exit"
 }
 
 fn start_with_args(args, func) {

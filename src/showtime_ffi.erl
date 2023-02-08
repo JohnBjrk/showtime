@@ -54,7 +54,6 @@ run_test(Module, Function, IgnoreTags) ->
                                 assertMatch ->
                                     assert_match;
                                 OtherAssertionType ->
-                                    io:fwrite("Assert other = ~p~n", [Reason]),
                                     OtherAssertionType
                             end,
                         {GleamAssertionType, ErlangReasonList};
@@ -64,7 +63,6 @@ run_test(Module, Function, IgnoreTags) ->
                       message := Message,
                       module := GleamModule,
                       value := Value} ->
-                        io:fwrite("VALUE=~p~n", [Value]),
                         case Value of
                             {error, {OkValue, _, _, _}} when OkValue == not_eq; OkValue == eq ->
                                 {gleam_error,

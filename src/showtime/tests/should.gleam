@@ -1,4 +1,3 @@
-import gleam/io
 import gleam/option.{None, Option, Some}
 import showtime/tests/meta.{Meta}
 

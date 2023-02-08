@@ -215,7 +215,9 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
     |> align_table()
     |> to_string()
 
-  "\n" <> failed_tests_table <> "\n" <> passed <> ", " <> failed <> ignored
+  let test_report =
+    "\n" <> failed_tests_table <> "\n" <> passed <> ", " <> failed <> ignored
+  #(test_report, failed_tests_count)
 }
 
 fn erlang_error_to_unified(

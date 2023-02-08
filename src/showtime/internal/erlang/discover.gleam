@@ -95,7 +95,7 @@ if erlang {
     let module_prefix =
       path_without_leading_slash
       |> string.replace("/", "@")
-    let module_prefix_trailing_at = case string.length(module_prefix) {
+    case string.length(module_prefix) {
       0 -> module_prefix
       _ -> module_prefix <> "@"
     }
