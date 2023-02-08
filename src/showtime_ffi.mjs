@@ -11,6 +11,8 @@ import {
 import {
   Assert,
   ErlangException,
+  GenericException,
+  GleamAssert,
   GleamError,
   ErlangError,
   TraceList,
@@ -63,7 +65,7 @@ export const run = async (
               .toArray()
               .some((tag) => ignoreListArray.includes(tag))
           ) {
-            console.log(`Ignoring: ${fnName}`)
+            console.log(`Ignoring: ${fnName}`);
             state = eventHandler(
               new EndTest(
                 test_module,
@@ -88,33 +90,19 @@ export const run = async (
       } catch (error) {
         let stacktrace = [];
         if (error.stack) {
-          stacktrace = error.stack
-            .split("\n")
-            .filter((line) => line.trim().startsWith("at "))
-            .map((line) => {
-              const segments = line.trim().split(" ");
-              const functionName =
-                segments.length > 2 ? segments[1] : undefined;
-              const functionNameSplit = functionName && functionName.split(".")
-              const functionNameShort = functionNameSplit && functionNameSplit.length > 1 
-                ? functionNameSplit[1] 
-                : functionName
-              const modulePart =
-                segments.length > 2
-                  ? segments[2].split(".mjs")
-                  : segments[1].split(".mjs");
-              const moduleName = modulePart[0].split("/").pop();
-              return new TraceModule(
-                moduleName,
-                functionNameShort || "",
-                new Num(0),
-                []
-              );
-            })
-            .reverse();
+          stacktrace = parseStacktrace(error.stack);
         }
         let moduleName = "\n" + js_path.slice(0, -4);
-        if (error && error.value) {
+        if (
+          error &&
+          error.value &&
+          error.value instanceof Error &&
+          (error.value[0] instanceof Eq ||
+            error.value[0] instanceof NotEq ||
+            error.value[0] instanceof IsOk ||
+            error.value[0] instanceof IsError ||
+            error.value[0] instanceof Fail)
+        ) {
           state = eventHandler(
             new EndTest(
               test_module,
@@ -138,7 +126,7 @@ export const run = async (
             ),
             state
           );
-        } else {
+        } else if (error && error.message && error.message.includes("should")) {
           const error_parts = error.message.split("\n");
           const got = error_parts[1]
             ? error_parts[1].trim()
@@ -149,15 +137,21 @@ export const run = async (
           const expected = error_parts[3]
             ? error_parts[3].trim()
             : "COULD NOT PARSE EXPECTED FROM EXCEPTION";
-          let result = new Eq(got, expected, new None())
+          let result = new Eq(got, expected, new None());
           if (assertion === "should equal") {
-            result = new Eq(got, expected, new None())
+            result = new Eq(got, expected, new None());
           } else if (assertion === "should not equal") {
-            result = new NotEq(got, expected, new None())
+            result = new NotEq(got, expected, new None());
           } else if (assertion === "should be ok") {
-            result = new IsOk(new Error(got.substring(6, got.length - 1)), new None())
+            result = new IsOk(
+              new Error(got.substring(6, got.length - 1)),
+              new None()
+            );
           } else if (assertion === "should be error") {
-            result = new IsError(new Ok(got.substring(3, got.length - 1)), new None())
+            result = new IsError(
+              new Ok(got.substring(3, got.length - 1)),
+              new None()
+            );
           }
           state = eventHandler(
             new EndTest(
@@ -181,6 +175,40 @@ export const run = async (
             ),
             state
           );
+        } else if (error && error.gleam_error) {
+          console.log("Gleam assert");
+          console.log(error);
+          state = eventHandler(
+            new EndTest(
+              test_module,
+              new TestFunction(fnName),
+              new Error(
+                new ErlangException(
+                  new ErlangError(),
+                  new GleamAssert(error.value),
+                  new TraceList(List.fromArray(stacktrace))
+                )
+              )
+            ),
+            state
+          );
+        } else {
+          console.log("Other exception");
+          console.log(error);
+          state = eventHandler(
+            new EndTest(
+              test_module,
+              new TestFunction(fnName),
+              new Error(
+                new ErlangException(
+                  new ErlangError(),
+                  new GenericException(error),
+                  new TraceList(List.fromArray(stacktrace))
+                )
+              )
+            ),
+            state
+          );
         }
       }
     }
@@ -189,6 +217,33 @@ export const run = async (
   }
   state = eventHandler(new EndTestRun(num_modules), state);
 };
+
+function parseStacktrace(stack) {
+  return stack
+    .split("\n")
+    .filter((line) => line.trim().startsWith("at "))
+    .map((line) => {
+      const segments = line.trim().split(" ");
+      const functionName = segments.length > 2 ? segments[1] : undefined;
+      const functionNameSplit = functionName && functionName.split(".");
+      const functionNameShort =
+        functionNameSplit && functionNameSplit.length > 1
+          ? functionNameSplit[1]
+          : functionName;
+      const modulePart =
+        segments.length > 2
+          ? segments[2].split(".mjs")
+          : segments[1].split(".mjs");
+      const moduleName = modulePart[0].split("/").pop();
+      return new TraceModule(
+        moduleName,
+        functionNameShort || "",
+        new Num(0),
+        []
+      );
+    })
+    .reverse();
+}
 
 async function* gleamFiles(directory) {
   for (let entry of await read_dir(directory)) {
@@ -212,14 +267,6 @@ async function readRootPackageName() {
     if (matches) return matches[1];
   }
   throw new Error("Could not determine package name from gleam.toml");
-}
-
-function exit(code) {
-  if (globalThis.Deno) {
-    Deno.exit(code);
-  } else {
-    process.exit(code);
-  }
 }
 
 async function read_dir(path) {

@@ -7,8 +7,8 @@ import gleam/map.{Map}
 import gleam/dynamic.{Dynamic}
 import showtime/internal/common/test_result.{
   Assert, AssertEqual, AssertMatch, AssertNotEqual, Expected, Expression,
-  GleamAssert, GleamError, GleamErrorDetail, Ignored, Pattern, ReasonDetail,
-  Trace, TraceModule, Value,
+  GenericException, GleamAssert, GleamError, GleamErrorDetail, Ignored, Pattern,
+  ReasonDetail, Trace, TraceModule, Value,
 }
 import showtime/internal/common/test_suite.{CompletedTestRun, TestRun}
 import showtime/tests/should.{Assertion, Eq, Fail, IsError, IsOk, NotEq}
@@ -145,6 +145,19 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
                       "gleam assert",
                       "Assert failed",
                       "Patterns should match",
+                      error_style(string.inspect(value)),
+                      exception.stacktrace.traces,
+                    ),
+                    module_and_test_run.module_name,
+                    test_function.name,
+                  ))
+                GenericException(value) ->
+                  Ok(format_reason(
+                    UnifiedError(
+                      None,
+                      "generic exception",
+                      "Test function threw an exception",
+                      "Exception in test function",
                       error_style(string.inspect(value)),
                       exception.stacktrace.traces,
                     ),

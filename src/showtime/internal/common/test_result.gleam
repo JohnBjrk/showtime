@@ -44,6 +44,7 @@ pub type Reason {
   AssertMatch(details: List(ReasonDetail))
   GleamError(details: GleamErrorDetail)
   GleamAssert(value: Dynamic)
+  GenericException(value: Dynamic)
 }
 
 // ReasonDetail is the union-type used in erlang-exceptions where the reason

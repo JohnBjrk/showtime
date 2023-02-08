@@ -7,18 +7,22 @@ run_test(Module, Function, IgnoreTags) ->
         % io:fwrite("Testing~n"),
         Result = apply(Module, Function, []),
         % io:fwrite("Test result: ~p~n", [Result]),
-        FinalResult = case Result of
-            {test, {meta, _Description, Tags}, TestFun} ->
-                case lists:any(fun(Tag) ->
-                    lists:any(fun(IgnoreTag) ->
-                        IgnoreTag == Tag
-                    end, IgnoreTags)
-                end, Tags) of
-                    true -> {ignored, ignore};
-                    false -> {test_function_return, TestFun()}
-                end;
-            DirectResult -> {test_function_return, DirectResult}
-        end,
+        FinalResult =
+            case Result of
+                {test, {meta, _Description, Tags}, TestFun} ->
+                    case lists:any(fun(Tag) ->
+                                      lists:any(fun(IgnoreTag) -> IgnoreTag == Tag end, IgnoreTags)
+                                   end,
+                                   Tags)
+                    of
+                        true ->
+                            {ignored, ignore};
+                        false ->
+                            {test_function_return, TestFun()}
+                    end;
+                DirectResult ->
+                    {test_function_return, DirectResult}
+            end,
         {ok, FinalResult}
     catch
         Class:Reason:Stacktrace ->
@@ -31,27 +35,28 @@ run_test(Module, Function, IgnoreTags) ->
                                          case ReasonDetail of
                                              {line, LineNo} -> {reason_line, LineNo};
                                              {expression, List} ->
-                                                {expression, list_to_binary(List)};
+                                                 {expression, list_to_binary(List)};
                                              {module, ModuleAtom} ->
-                                                {module, atom_to_binary(ModuleAtom)};
-                                            {pattern, Pattern} ->
-                                                {pattern, list_to_binary((Pattern))};
+                                                 {module, atom_to_binary(ModuleAtom)};
+                                             {pattern, Pattern} ->
+                                                 {pattern, list_to_binary(Pattern)};
                                              Other -> Other
                                          end
                                       end,
                                       ReasonList),
                         % io:fwrite("Reason ~p~n", [ErlangReasonList]),
-                        GleamAssertionType = case Assertion of
-                            assertEqual -> 
-                                assert_equal;
-                            assertNotEqual ->
-                                assert_not_equal;
-                            assertMatch ->
-                                assert_match;
-                            OtherAssertionType ->
-                                io:fwrite("Assert other = ~p~n", [ Reason ]),
-                                OtherAssertionType
-                        end,
+                        GleamAssertionType =
+                            case Assertion of
+                                assertEqual ->
+                                    assert_equal;
+                                assertNotEqual ->
+                                    assert_not_equal;
+                                assertMatch ->
+                                    assert_match;
+                                OtherAssertionType ->
+                                    io:fwrite("Assert other = ~p~n", [Reason]),
+                                    OtherAssertionType
+                            end,
                         {GleamAssertionType, ErlangReasonList};
                     #{function := GleamFunction,
                       gleam_error := GleamError,
@@ -61,22 +66,20 @@ run_test(Module, Function, IgnoreTags) ->
                       value := Value} ->
                         io:fwrite("VALUE=~p~n", [Value]),
                         case Value of
-                            {error, {OkValue, _, _, _}} when 
-                                OkValue == not_eq;
-                                OkValue == eq ->
+                            {error, {OkValue, _, _, _}} when OkValue == not_eq; OkValue == eq ->
                                 {gleam_error,
-                                {GleamError, GleamModule, GleamFunction, Line, Message, Value}};
-                            {error, {OkValue, _, _}} when 
-                                OkValue == is_ok;
-                                OkValue == is_error ->
+                                 {GleamError, GleamModule, GleamFunction, Line, Message, Value}};
+                            {error, {OkValue, _, _}} when OkValue == is_ok; OkValue == is_error ->
                                 {gleam_error,
-                                {GleamError, GleamModule, GleamFunction, Line, Message, Value}};
-                            {error, {OkValue, _}} when 
-                                OkValue == fail ->
+                                 {GleamError, GleamModule, GleamFunction, Line, Message, Value}};
+                            {error, {OkValue, _}} when OkValue == fail ->
                                 {gleam_error,
-                                {GleamError, GleamModule, GleamFunction, Line, Message, Value}};
-                            _ -> {gleam_assert, Value}
-                        end
+                                 {GleamError, GleamModule, GleamFunction, Line, Message, Value}};
+                            _ ->
+                                {gleam_assert, Value}
+                        end;
+                    OtherReason ->
+                        {generic_exception, OtherReason}
                 end,
             GleamClass =
                 case Class of
