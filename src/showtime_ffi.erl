@@ -74,7 +74,7 @@ run_test(Module, Function, IgnoreTags) ->
                                 {gleam_error,
                                  {GleamError, GleamModule, GleamFunction, Line, Message, Value}};
                             _ ->
-                                {gleam_assert, Value}
+                                {gleam_assert, Value, Line}
                         end;
                     OtherReason ->
                         {generic_exception, OtherReason}

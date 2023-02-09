@@ -8,7 +8,7 @@ import gleam/dynamic.{Dynamic}
 import showtime/internal/common/test_result.{
   Assert, AssertEqual, AssertMatch, AssertNotEqual, Expected, Expression,
   GenericException, GleamAssert, GleamError, GleamErrorDetail, Ignored, Pattern,
-  ReasonDetail, Trace, TraceModule, Value,
+  ReasonDetail, ReasonLine, Trace, TraceModule, Value,
 }
 import showtime/internal/common/test_suite.{CompletedTestRun, TestRun}
 import showtime/tests/should.{Assertion, Eq, Fail, IsError, IsOk, NotEq}
@@ -40,6 +40,7 @@ type UnifiedError {
     message: String,
     expected: String,
     got: String,
+    line: Option(Int),
     stacktrace: List(Trace),
   )
 }
@@ -138,7 +139,7 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
                     test_function.name,
                   ))
                 // GleamAssert(value) -> Error(Nil)
-                GleamAssert(value) ->
+                GleamAssert(value, line_no) ->
                   Ok(format_reason(
                     UnifiedError(
                       None,
@@ -146,6 +147,7 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
                       "Assert failed",
                       "Patterns should match",
                       error_style(string.inspect(value)),
+                      Some(line_no),
                       exception.stacktrace.traces,
                     ),
                     module_and_test_run.module_name,
@@ -159,6 +161,7 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
                       "Test function threw an exception",
                       "Exception in test function",
                       error_style(string.inspect(value)),
+                      None,
                       exception.stacktrace.traces,
                     ),
                     module_and_test_run.module_name,
@@ -227,7 +230,15 @@ fn erlang_error_to_unified(
 ) {
   error_details
   |> list.fold(
-    UnifiedError(None, "not_set", assertion_type.message, "", "", stacktrace),
+    UnifiedError(
+      None,
+      "not_set",
+      assertion_type.message,
+      "",
+      "",
+      None,
+      stacktrace,
+    ),
     fn(unified, reason) {
       case reason {
         Expression(expression) -> UnifiedError(..unified, reason: expression)
@@ -270,7 +281,7 @@ fn gleam_error_to_unified(
   stacktrace: List(Trace),
 ) -> UnifiedError {
   case gleam_error {
-    Assert(_module, _function, _line_no, _message, value) -> {
+    Assert(_module, _function, line_no, _message, value) -> {
       let result: Result(Dynamic, Assertion(Dynamic, Dynamic)) =
         dynamic.unsafe_coerce(value)
       assert Error(assertion) = result
@@ -283,6 +294,7 @@ fn gleam_error_to_unified(
             "Assert equal",
             expected,
             got,
+            None,
             stacktrace,
           )
         }
@@ -293,6 +305,7 @@ fn gleam_error_to_unified(
             "Assert not equal",
             not_style("not ") <> string.inspect(expected),
             string.inspect(got),
+            None,
             stacktrace,
           )
         IsOk(got, meta) ->
@@ -302,6 +315,7 @@ fn gleam_error_to_unified(
             "Assert is Ok",
             expected_highlight("Ok(_)"),
             got_highlight(string.inspect(got)),
+            None,
             stacktrace,
           )
         IsError(got, meta) ->
@@ -311,6 +325,7 @@ fn gleam_error_to_unified(
             "Assert is Ok",
             expected_highlight("Error(_)"),
             got_highlight(string.inspect(got)),
+            None,
             stacktrace,
           )
         Fail(meta) ->
@@ -320,6 +335,7 @@ fn gleam_error_to_unified(
             "Assert is Ok",
             got_highlight("should.fail()"),
             got_highlight("N/A - test always expected to fail"),
+            None,
             stacktrace,
           )
       }
@@ -372,9 +388,19 @@ fn format_reason(error: UnifiedError, module: String, function: String) {
     }
   }
 
+  let line =
+    error.line
+    |> option.map(fn(line) { ":" <> int.to_string(line) })
+    |> option.unwrap("")
+
   let arrow =
     string.join(
-      list.repeat("-", string.length(module) + 1 + string.length(function) / 2),
+      list.repeat(
+        "-",
+        string.length(module) + 1 + {
+          string.length(function) + string.length(line)
+        } / 2,
+      ),
       "",
     ) <> "⌄"
   let standard_table_rows = [
@@ -386,7 +412,10 @@ fn format_reason(error: UnifiedError, module: String, function: String) {
     Some([
       AlignRight(StyledContent(heading_style("Test")), 2),
       Separator(": "),
-      AlignLeft(StyledContent(module <> "." <> function_style(function)), 0),
+      AlignLeft(
+        StyledContent(module <> "." <> function_style(function <> line)),
+        0,
+      ),
     ]),
     meta,
     Some([

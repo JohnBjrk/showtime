@@ -43,7 +43,7 @@ pub type Reason {
   AssertNotEqual(details: List(ReasonDetail))
   AssertMatch(details: List(ReasonDetail))
   GleamError(details: GleamErrorDetail)
-  GleamAssert(value: Dynamic)
+  GleamAssert(value: Dynamic, line_no: Int)
   GenericException(value: Dynamic)
 }
 
