@@ -3,6 +3,16 @@
 -export([run_test/3, functions/0]).
 
 run_test(Module, Function, IgnoreTags) ->
+    OldGL = group_leader(),
+    TestPid = spawn(fun() ->
+        receive
+            {io_request, From, ReplyAs, Request} ->
+                io:fwrite("I received: ~p~n", [Request]),
+                From ! {io_reply, ReplyAs, ok};
+            OtherMessage -> OldGL ! OtherMessage
+        end
+    end),
+    group_leader(TestPid, self()),
     try
         % io:fwrite("Testing~n"),
         Result = apply(Module, Function, []),
@@ -23,6 +33,7 @@ run_test(Module, Function, IgnoreTags) ->
                 DirectResult ->
                     {test_function_return, DirectResult}
             end,
+        group_leader(OldGL, self()),
         {ok, FinalResult}
     catch
         Class:Reason:Stacktrace ->
@@ -104,6 +115,7 @@ run_test(Module, Function, IgnoreTags) ->
                           end,
                           Stacktrace),
             % io:fwrite("Reason ~p", [GleamReason]),
+            group_leader(OldGL, self()),
             {error, {erlang_exception, GleamClass, GleamReason, {trace_list, GleamTraceList}}}
     end.
 
