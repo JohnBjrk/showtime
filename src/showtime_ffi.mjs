@@ -44,6 +44,8 @@ export const run = async (
   let packageName = await readRootPackageName();
   let dist = `../${packageName}/`;
 
+  const originalConsoleLog = console.log;
+
   for await (let path of await gleamFiles("test")) {
     let js_path = path.slice("test/".length).replace(".gleam", ".mjs");
     const module_name = js_path.split(".")[0];
@@ -58,7 +60,9 @@ export const run = async (
         state
       );
       try {
+        console.log = (message) => {};
         let result = await module[fnName]();
+        console.log = originalConsoleLog;
         if (result && result.test_function) {
           if (
             result.meta.tags
@@ -76,18 +80,21 @@ export const run = async (
             );
             continue;
           } else {
+            console.log = (message) => {};
             result = result.test_function();
+            console.log = originalConsoleLog;
           }
         }
         state = eventHandler(
           new EndTest(
             test_module,
             new TestFunction(fnName),
-            new Ok(new TestFunctionReturn(result))
+            new Ok(new TestFunctionReturn(result, List.fromArray([])))
           ),
           state
         );
       } catch (error) {
+        console.log = originalConsoleLog;
         let stacktrace = [];
         if (error.stack) {
           stacktrace = parseStacktrace(error.stack);
@@ -120,7 +127,8 @@ export const run = async (
                       error.value
                     )
                   ),
-                  new TraceList(List.fromArray(stacktrace))
+                  new TraceList(List.fromArray(stacktrace)),
+                  List.fromArray([]) // TODO: Capture output
                 )
               )
             ),
@@ -169,7 +177,8 @@ export const run = async (
                       new Error(result)
                     )
                   ),
-                  new TraceList(List.fromArray(stacktrace))
+                  new TraceList(List.fromArray(stacktrace)),
+                  List.fromArray([]) // TODO: Capture output
                 )
               )
             ),
@@ -184,7 +193,8 @@ export const run = async (
                 new ErlangException(
                   new ErlangError(),
                   new GleamAssert(error.value, error.line ? error.line : 0),
-                  new TraceList(List.fromArray(stacktrace))
+                  new TraceList(List.fromArray(stacktrace)),
+                  List.fromArray([]) // TODO: Capture output
                 )
               )
             ),
@@ -199,7 +209,8 @@ export const run = async (
                 new ErlangException(
                   new ErlangError(),
                   new GenericException(error),
-                  new TraceList(List.fromArray(stacktrace))
+                  new TraceList(List.fromArray(stacktrace)),
+                  List.fromArray([]) // TODO: Capture output
                 )
               )
             ),

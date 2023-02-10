@@ -22,6 +22,10 @@ pub fn main() {
 }
 
 pub fn i_am_test() {
+  io.println("Some test output")
+  io.println(
+    "And the some really really really really really really really really really really really really really really really really really really really really long output",
+  )
   Variant
   |> gshould.equal(TestType("name", ["some", "name"]))
   TestType("name", ["other", "names"])
@@ -44,6 +48,11 @@ pub fn is_ok_meta_test() {
 }
 
 pub fn is_error_test() {
+  io.println("This test")
+  io.println("has som lines of output")
+  io.println("Which is also followed by an io.debug()")
+  TestType("Im the infamous TestType", ["we", "are", "on", "the", "list"])
+  |> io.debug()
   Ok(TestType("ok", ["result"]))
   |> should.be_error()
 }
@@ -52,6 +61,11 @@ pub fn is_error_meta_test() {
   test(
     Meta("Test failing be_error assertion with meta-data", ["meta"]),
     fn(meta) {
+      io.println("This test")
+      io.println("has som lines of output")
+      io.println("Which is also followed by an io.debug()")
+      TestType("Im the infamous TestType", ["we", "are", "on", "the", "list"])
+      |> io.debug()
       Ok(TestType("ok", ["result"]))
       |> test.be_error(meta)
     },

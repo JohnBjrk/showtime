@@ -1,4 +1,6 @@
 if erlang {
+  import gleam/io
+  import showtime/internal/reports/styles.{function_style}
   import gleam/list
   import gleam/erlang/atom.{Atom}
   import showtime/internal/common/test_suite.{

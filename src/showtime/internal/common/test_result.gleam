@@ -18,7 +18,7 @@ pub type IgnoreReason {
 // This is the return value from running the test-function
 // or ignored if the test was ignored
 pub type TestReturn {
-  TestFunctionReturn(value: Dynamic)
+  TestFunctionReturn(value: Dynamic, output_buffer: List(String))
   Ignored(reason: IgnoreReason)
 }
 
@@ -26,7 +26,12 @@ pub type TestReturn {
 // in this type.
 // This is also where the data about the assertions will end up (in reason)
 pub type Exception {
-  ErlangException(class: Class, reason: Reason, stacktrace: TraceList)
+  ErlangException(
+    class: Class,
+    reason: Reason,
+    stacktrace: TraceList,
+    output_buffer: List(String),
+  )
 }
 
 // Alias for the test-result which is either a TestResult (passed test, ignored or a test-definition)

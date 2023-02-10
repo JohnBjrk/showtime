@@ -12,6 +12,8 @@ pub type Content {
 pub type Col {
   AlignRight(content: Content, margin: Int)
   AlignLeft(content: Content, margin: Int)
+  AlignRightOverflow(content: Content, margin: Int)
+  AlignLeftOverflow(content: Content, margin: Int)
   Separator(char: String)
   Aligned(content: String)
 }
@@ -56,6 +58,8 @@ pub fn align_table(table: Table) -> Table {
           AlignRight(StyledContent(styled), _) -> strip_style(styled)
           AlignLeft(Content(unstyled), _) -> unstyled
           AlignLeft(StyledContent(styled), _) -> strip_style(styled)
+          AlignLeftOverflow(_, _) -> ""
+          AlignRightOverflow(_, _) -> ""
           Separator(char) -> char
           Aligned(content) -> content
         }
@@ -82,6 +86,18 @@ pub fn align_table(table: Table) -> Table {
               width + margin - string.length(strip_style(styled)),
               " ",
             ))
+          AlignRightOverflow(Content(unstyled), margin) ->
+            Aligned(pad_left(
+              unstyled,
+              width + margin - string.length(unstyled),
+              " ",
+            ))
+          AlignRightOverflow(StyledContent(styled), margin) ->
+            Aligned(pad_left(
+              styled,
+              width + margin - string.length(strip_style(styled)),
+              " ",
+            ))
           AlignLeft(Content(unstyled), margin) ->
             Aligned(pad_right(
               unstyled,
@@ -89,6 +105,18 @@ pub fn align_table(table: Table) -> Table {
               " ",
             ))
           AlignLeft(StyledContent(styled), margin) ->
+            Aligned(pad_right(
+              styled,
+              width + margin - string.length(strip_style(styled)),
+              " ",
+            ))
+          AlignLeftOverflow(Content(unstyled), margin) ->
+            Aligned(pad_right(
+              unstyled,
+              width + margin - string.length(unstyled),
+              " ",
+            ))
+          AlignLeftOverflow(StyledContent(styled), margin) ->
             Aligned(pad_right(
               styled,
               width + margin - string.length(strip_style(styled)),

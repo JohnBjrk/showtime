@@ -18,8 +18,8 @@ import showtime/internal/reports/styles.{
 }
 import showtime/internal/reports/compare.{compare}
 import showtime/internal/reports/table.{
-  AlignLeft, AlignRight, Content, Separator, StyledContent, Table, align_table,
-  to_string,
+  AlignLeft, AlignLeftOverflow, AlignRight, Content, Separator, StyledContent,
+  Table, align_table, to_string,
 }
 import showtime/tests/meta.{Meta}
 
@@ -111,6 +111,7 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
                     ),
                     module_and_test_run.module_name,
                     test_function.name,
+                    exception.output_buffer,
                   ))
                 AssertNotEqual(reason_details) ->
                   Ok(format_reason(
@@ -121,6 +122,7 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
                     ),
                     module_and_test_run.module_name,
                     test_function.name,
+                    exception.output_buffer,
                   ))
                 AssertMatch(reason_details) ->
                   Ok(format_reason(
@@ -131,12 +133,14 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
                     ),
                     module_and_test_run.module_name,
                     test_function.name,
+                    exception.output_buffer,
                   ))
                 GleamError(reason) ->
                   Ok(format_reason(
                     gleam_error_to_unified(reason, exception.stacktrace.traces),
                     module_and_test_run.module_name,
                     test_function.name,
+                    exception.output_buffer,
                   ))
                 // GleamAssert(value) -> Error(Nil)
                 GleamAssert(value, line_no) ->
@@ -152,6 +156,7 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
                     ),
                     module_and_test_run.module_name,
                     test_function.name,
+                    exception.output_buffer,
                   ))
                 GenericException(value) ->
                   Ok(format_reason(
@@ -166,6 +171,7 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
                     ),
                     module_and_test_run.module_name,
                     test_function.name,
+                    exception.output_buffer,
                   ))
                 other -> {
                   io.println("Other: " <> string.inspect(other))
@@ -343,7 +349,12 @@ fn gleam_error_to_unified(
   }
 }
 
-fn format_reason(error: UnifiedError, module: String, function: String) {
+fn format_reason(
+  error: UnifiedError,
+  module: String,
+  function: String,
+  output_buffer: List(String),
+) {
   let meta = case error.meta {
     Some(meta) ->
       Some([
@@ -382,6 +393,32 @@ fn format_reason(error: UnifiedError, module: String, function: String) {
             AlignRight(Content(""), 2),
             Separator("  "),
             AlignLeft(StyledContent(stacktrace_style(row)), 0),
+          ])
+        })
+      [first_row, ..rest_rows]
+    }
+  }
+
+  let output_rows = case
+    output_buffer
+    |> list.reverse()
+    |> list.map(fn(row) { string.trim_right(row) })
+  {
+    [] -> []
+    [first, ..rest] -> {
+      let first_row =
+        Some([
+          AlignRight(StyledContent(heading_style("Output")), 2),
+          Separator(": "),
+          AlignLeftOverflow(StyledContent(stacktrace_style(first)), 0),
+        ])
+      let rest_rows =
+        rest
+        |> list.map(fn(row) {
+          Some([
+            AlignRight(Content(""), 2),
+            Separator("  "),
+            AlignLeftOverflow(StyledContent(stacktrace_style(row)), 0),
           ])
         })
       [first_row, ..rest_rows]
@@ -431,6 +468,7 @@ fn format_reason(error: UnifiedError, module: String, function: String) {
   ]
   standard_table_rows
   |> list.append(stacktrace_rows)
+  |> list.append(output_rows)
   |> list.append([
     Some([
       AlignRight(Content(""), 0),
