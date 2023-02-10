@@ -53,7 +53,6 @@ if erlang {
           // TODO: Use a timeout?
           process.send(subject, EventHandlerMessage(test_event, parent_subject))
           let num_failed = process.select_forever(selector)
-          io.println("Finished! Num failed = " <> int.to_string(num_failed))
           case num_failed > 0 {
             True -> halt(1)
             False -> halt(0)

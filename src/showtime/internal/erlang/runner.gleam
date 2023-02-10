@@ -28,11 +28,13 @@ if erlang {
     test_name: String,
     ignore_tags: List(String),
   ) -> TestResult {
-    run_test_ffi(
-      atom.create_from_string(module_name),
-      atom.create_from_string(test_name),
-      ignore_tags,
-    )
+    let result =
+      run_test_ffi(
+        atom.create_from_string(module_name),
+        atom.create_from_string(test_name),
+        ignore_tags,
+      )
+    result
   }
 
   // Calls ffi for running a test function

@@ -25,6 +25,10 @@ import {
 import { Eq, NotEq, IsOk, IsError, Fail } from "./showtime/tests/should.mjs";
 import { Error, List, Ok } from "./gleam.mjs";
 import { None, is_some, unwrap } from "../gleam_stdlib/gleam/option.mjs";
+let util;
+if (!globalThis.Deno) {
+  util = await import("node:util");
+}
 export const run = async (
   eventHandler,
   init_state,
@@ -35,7 +39,6 @@ export const run = async (
     ? unwrap(module_list, List.fromArray([])).toArray()
     : undefined;
   const ignoreListArray = ignore_list.toArray();
-  console.log(moduleListArray);
   let state = init_state;
   state = eventHandler(new StartTestRun(), state);
 
@@ -45,6 +48,8 @@ export const run = async (
   let dist = `../${packageName}/`;
 
   const originalConsoleLog = console.log;
+  let outputCapture = new OutputCapture();
+  let outputBuffer = [];
 
   for await (let path of await gleamFiles("test")) {
     let js_path = path.slice("test/".length).replace(".gleam", ".mjs");
@@ -60,9 +65,13 @@ export const run = async (
         state
       );
       try {
-        console.log = (message) => {};
+        console.log = (message, ...args) => {
+          outputCapture.captureOutput(message, ...args);
+        };
         let result = await module[fnName]();
         console.log = originalConsoleLog;
+        outputBuffer = outputCapture.getCapturedOutput();
+        outputCapture = new OutputCapture();
         if (result && result.test_function) {
           if (
             result.meta.tags
@@ -80,21 +89,31 @@ export const run = async (
             );
             continue;
           } else {
-            console.log = (message) => {};
+            console.log = (message, ...args) => {
+              outputCapture.captureOutput(message, ...args);
+            };
             result = result.test_function();
             console.log = originalConsoleLog;
+            outputBuffer = outputCapture.getCapturedOutput();
+            outputCapture = new OutputCapture();
           }
         }
         state = eventHandler(
           new EndTest(
             test_module,
             new TestFunction(fnName),
-            new Ok(new TestFunctionReturn(result, List.fromArray([])))
+            new Ok(
+              new TestFunctionReturn(
+                result,
+                List.fromArray(outputBuffer.reverse())
+              )
+            )
           ),
           state
         );
       } catch (error) {
         console.log = originalConsoleLog;
+        outputBuffer = outputCapture.getCapturedOutput();
         let stacktrace = [];
         if (error.stack) {
           stacktrace = parseStacktrace(error.stack);
@@ -128,7 +147,7 @@ export const run = async (
                     )
                   ),
                   new TraceList(List.fromArray(stacktrace)),
-                  List.fromArray([]) // TODO: Capture output
+                  List.fromArray(outputBuffer.reverse())
                 )
               )
             ),
@@ -178,7 +197,7 @@ export const run = async (
                     )
                   ),
                   new TraceList(List.fromArray(stacktrace)),
-                  List.fromArray([]) // TODO: Capture output
+                  List.fromArray(outputBuffer.reverse())
                 )
               )
             ),
@@ -194,7 +213,7 @@ export const run = async (
                   new ErlangError(),
                   new GleamAssert(error.value, error.line ? error.line : 0),
                   new TraceList(List.fromArray(stacktrace)),
-                  List.fromArray([]) // TODO: Capture output
+                  List.fromArray(outputBuffer.reverse())
                 )
               )
             ),
@@ -210,13 +229,14 @@ export const run = async (
                   new ErlangError(),
                   new GenericException(error),
                   new TraceList(List.fromArray(stacktrace)),
-                  List.fromArray([]) // TODO: Capture output
+                  List.fromArray(outputBuffer.reverse())
                 )
               )
             ),
             state
           );
         }
+        outputCapture = new OutputCapture();
       }
     }
     state = eventHandler(new EndTestSuite(test_module), state);
@@ -250,6 +270,21 @@ function parseStacktrace(stack) {
       );
     })
     .reverse();
+}
+
+class OutputCapture {
+  constructor() {
+    this.outputBuffer = [];
+  }
+
+  captureOutput(message, ...args) {
+    const line = globalThis.Deno ? message : util.format(message, ...args);
+    this.outputBuffer.push(line);
+  }
+
+  getCapturedOutput() {
+    return this.outputBuffer;
+  }
 }
 
 async function* gleamFiles(directory) {
