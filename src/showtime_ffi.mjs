@@ -183,7 +183,7 @@ export const run = async (
               new Error(
                 new ErlangException(
                   new ErlangError(),
-                  new GleamAssert(error.value),
+                  new GleamAssert(error.value, error.line ? error.line : 0),
                   new TraceList(List.fromArray(stacktrace))
                 )
               )

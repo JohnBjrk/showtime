@@ -43,6 +43,7 @@ if erlang {
               only_modules_list
               |> list.any(fn(only_module_name) {
                 only_module_name == module_name
+                |> string.replace("@", "/")
               })
             case module_in_list {
               True -> {
