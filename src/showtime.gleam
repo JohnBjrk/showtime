@@ -1,6 +1,10 @@
 import glint.{CommandInput}
-import glint/flag.{LS}
+import glint/flag.{LS, S}
 import gleam/result
+import gleam/string
+import gleam/io
+import snag
+import showtime/internal/common/cli.{Capture, Mixed, No, Yes}
 
 if erlang {
   import gleam/list
@@ -18,7 +22,11 @@ if erlang {
     start_with_args(start_arguments(), run)
   }
 
-  fn run(module_list: Option(List(String)), ignore_tags: List(String)) {
+  fn run(
+    module_list: Option(List(String)),
+    ignore_tags: List(String),
+    capture: Capture,
+  ) {
     // Start event handler which will collect test-results and eventually
     // print test report
     let test_event_handler = event_handler.start()
@@ -44,7 +52,6 @@ if erlang {
 }
 
 if javascript {
-  import gleam/io
   import gleam/map
   import gleam/option.{None, Option, Some}
   import showtime/internal/common/test_suite.{TestEvent}
@@ -57,7 +64,11 @@ if javascript {
     start_with_args(start_arguments(), run)
   }
 
-  fn run(module_list: Option(List(String)), ignore_tags: List(String)) {
+  fn run(
+    module_list: Option(List(String)),
+    ignore_tags: List(String),
+    capture: Capture,
+  ) {
     // Find test modules and run the tests using the event-handler for
     // collecting test-results and eventually print a test-report
     run_tests(
@@ -65,6 +76,7 @@ if javascript {
       HandlerState(NotStarted, 0, map.new()),
       module_list,
       ignore_tags,
+      capture,
     )
   }
 
@@ -89,6 +101,7 @@ if javascript {
     HandlerState,
     Option(List(String)),
     List(String),
+    Capture,
   ) -> Nil =
     "./showtime_ffi.mjs" "run"
 
@@ -114,6 +127,11 @@ fn start_with_args(args, func) {
         called: "ignore",
         default: [],
         explained: "Ignore tests that are have tags matching a tag in this list",
+      ),
+      flag.string(
+        called: "capture",
+        default: "no",
+        explained: "Capture output: no (default) - output when tests are run, yes - output is captured and shown in report, mixed - output when run and in report",
       ),
     ],
     described: "Runs test",
@@ -143,6 +161,28 @@ fn mk_runner(func) {
       LS(ignore_tags) -> ignore_tags
       _ -> []
     }
-    func(module_list, ignore_tags)
+    let capture_output_result = case
+      command.flags
+      |> flag.get("capture")
+      |> result.map(fn(arg) {
+        assert S(string_arg) = arg
+        S(string.lowercase(string_arg))
+      })
+      |> result.unwrap(S("no"))
+    {
+      S("no") -> Ok(No)
+      S("yes") -> Ok(Yes)
+      S("mixed") -> Ok(Mixed)
+      _ -> snag.error("Expected capture to be one of: ['yes', 'no', 'mixed']")
+    }
+
+    case capture_output_result {
+      Ok(capture_output) -> func(module_list, ignore_tags, capture_output)
+      Error(error) ->
+        error
+        |> snag.pretty_print()
+        |> io.println()
+    }
   }
+  // func(module_list, ignore_tags)
 }

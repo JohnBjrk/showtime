@@ -22,6 +22,7 @@ import {
   TraceModule,
   Num,
 } from "./showtime/internal/common/test_result.mjs";
+import { Yes, No, Mixed } from "./showtime/internal/common/cli.mjs";
 import { Eq, NotEq, IsOk, IsError, Fail } from "./showtime/tests/should.mjs";
 import { Error, List, Ok } from "./gleam.mjs";
 import { None, is_some, unwrap } from "../gleam_stdlib/gleam/option.mjs";
@@ -33,7 +34,8 @@ export const run = async (
   eventHandler,
   init_state,
   module_list,
-  ignore_list
+  ignore_list,
+  capture
 ) => {
   const moduleListArray = is_some(module_list)
     ? unwrap(module_list, List.fromArray([])).toArray()
@@ -47,8 +49,7 @@ export const run = async (
   let packageName = await readRootPackageName();
   let dist = `../${packageName}/`;
 
-  const originalConsoleLog = console.log;
-  let outputCapture = new OutputCapture();
+  let outputCapture = new OutputCapture(capture);
   let outputBuffer = [];
 
   for await (let path of await gleamFiles("test")) {
@@ -65,13 +66,9 @@ export const run = async (
         state
       );
       try {
-        console.log = (message, ...args) => {
-          outputCapture.captureOutput(message, ...args);
-        };
+        outputCapture.capture();
         let result = await module[fnName]();
-        console.log = originalConsoleLog;
-        outputBuffer = outputCapture.getCapturedOutput();
-        outputCapture = new OutputCapture();
+        outputBuffer = outputCapture.stop();
         if (result && result.test_function) {
           if (
             result.meta.tags
@@ -89,13 +86,9 @@ export const run = async (
             );
             continue;
           } else {
-            console.log = (message, ...args) => {
-              outputCapture.captureOutput(message, ...args);
-            };
+            outputCapture.capture();
             result = result.test_function();
-            console.log = originalConsoleLog;
-            outputBuffer = outputCapture.getCapturedOutput();
-            outputCapture = new OutputCapture();
+            outputBuffer = outputCapture.stop();
           }
         }
         state = eventHandler(
@@ -112,8 +105,7 @@ export const run = async (
           state
         );
       } catch (error) {
-        console.log = originalConsoleLog;
-        outputBuffer = outputCapture.getCapturedOutput();
+        outputBuffer = outputCapture.stop();
         let stacktrace = [];
         if (error.stack) {
           stacktrace = parseStacktrace(error.stack);
@@ -236,7 +228,6 @@ export const run = async (
             state
           );
         }
-        outputCapture = new OutputCapture();
       }
     }
     state = eventHandler(new EndTestSuite(test_module), state);
@@ -273,16 +264,37 @@ function parseStacktrace(stack) {
 }
 
 class OutputCapture {
-  constructor() {
+  constructor(shouldCapture) {
+    this.originalConsoleLog = console.log;
+    this.shouldCapture = shouldCapture;
     this.outputBuffer = [];
   }
 
+  capture() {
+    if (
+      this.shouldCapture instanceof Yes ||
+      this.shouldCapture instanceof Mixed
+    ) {
+      this.outputBuffer = [];
+      console.log = (message, ...args) => {
+        this.captureOutput(message, ...args);
+      };
+    }
+  }
+
   captureOutput(message, ...args) {
+    if (
+      this.shouldCapture instanceof Mixed ||
+      this.shouldCapture instanceof No
+    ) {
+      this.originalConsoleLog(message, ...args);
+    }
     const line = globalThis.Deno ? message : util.format(message, ...args);
     this.outputBuffer.push(line);
   }
 
-  getCapturedOutput() {
+  stop() {
+    console.log = this.originalConsoleLog;
     return this.outputBuffer;
   }
 }
