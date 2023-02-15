@@ -38,6 +38,7 @@ if erlang {
         collect_test_functions,
         runner.run_test_suite,
         ignore_tags,
+        capture,
       )
 
     test_event_handler(StartTestRun)

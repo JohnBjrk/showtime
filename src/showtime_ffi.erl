@@ -1,10 +1,10 @@
 -module(showtime_ffi).
 
--export([run_test/3, functions/0, capture_output/1]).
+-export([run_test/4, functions/0, capture_output/1]).
 
-start_output_capture() ->
+start_output_capture(Capture) ->
     OldGroupLeader = group_leader(),
-    CapturePid = spawn(showtime_ffi, capture_output, [{[], OldGroupLeader}]),
+    CapturePid = spawn(showtime_ffi, capture_output, [{[], {OldGroupLeader, Capture}}]),
     group_leader(CapturePid, self()),
     {CapturePid, OldGroupLeader}.
 
@@ -16,20 +16,29 @@ stop_output_capture({CapturePid, OldGroupLeader}) ->
             Buffer
     end.
 
-capture_output({Buffer, OldGroupLeader}) ->
+capture_output({Buffer, {OldGroupLeader, Capture}}) ->
     receive
         {io_request, From, ReplyAs, {put_chars, unicode, BitString}} ->
-            From ! {io_reply, ReplyAs, ok},
-            capture_output({[BitString | Buffer], OldGroupLeader});
+            case Capture of
+                yes ->
+                    From ! {io_reply, ReplyAs, ok},
+                    capture_output({[BitString | Buffer], {OldGroupLeader, Capture}});
+                mixed ->
+                    OldGroupLeader ! {io_request, From, ReplyAs, {put_chars, unicode, BitString}},
+                    capture_output({[BitString | Buffer], {OldGroupLeader, Capture}});
+                no ->
+                    OldGroupLeader ! {io_request, From, ReplyAs, {put_chars, unicode, BitString}},
+                    capture_output({Buffer, {OldGroupLeader, Capture}})
+            end;
         {capture_done, SenderPid} ->
             SenderPid ! Buffer;
         OtherMessage ->
             OldGroupLeader ! OtherMessage,
-            capture_output({Buffer, OldGroupLeader})
+            capture_output({Buffer, {OldGroupLeader, Capture}})
     end.
 
-run_test(Module, Function, IgnoreTags) ->
-    OutputCapture = start_output_capture(),
+run_test(Module, Function, IgnoreTags, Capture) ->
+    OutputCapture = start_output_capture(Capture),
     try
         % io:fwrite("Testing~n"),
         Result = apply(Module, Function, []),

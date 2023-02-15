@@ -1,6 +1,5 @@
 if erlang {
   import gleam/io
-  import gleam/int
   import gleam/otp/actor.{Continue, Stop}
   import gleam/erlang/process.{Normal, Subject}
   import gleam/map

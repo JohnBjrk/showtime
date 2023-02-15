@@ -8,7 +8,7 @@ import gleam/dynamic.{Dynamic}
 import showtime/internal/common/test_result.{
   Assert, AssertEqual, AssertMatch, AssertNotEqual, Expected, Expression,
   GenericException, GleamAssert, GleamError, GleamErrorDetail, Ignored, Pattern,
-  ReasonDetail, ReasonLine, Trace, TraceModule, Value,
+  ReasonDetail, Trace, TraceModule, Value,
 }
 import showtime/internal/common/test_suite.{CompletedTestRun, TestRun}
 import showtime/tests/should.{Assertion, Eq, Fail, IsError, IsOk, NotEq}
@@ -287,7 +287,7 @@ fn gleam_error_to_unified(
   stacktrace: List(Trace),
 ) -> UnifiedError {
   case gleam_error {
-    Assert(_module, _function, line_no, _message, value) -> {
+    Assert(_module, _function, _line_no, _message, value) -> {
       let result: Result(Dynamic, Assertion(Dynamic, Dynamic)) =
         dynamic.unsafe_coerce(value)
       assert Error(assertion) = result

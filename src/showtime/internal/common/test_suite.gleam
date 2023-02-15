@@ -1,5 +1,6 @@
 import gleam/option.{Option}
 import showtime/internal/common/test_result.{TestResult}
+import showtime/internal/common/cli.{Capture}
 
 // The state (and result) of a test function
 pub type TestRun {
@@ -59,4 +60,4 @@ pub type TestFunctionCollector =
 
 // Interface for the test runner
 pub type TestRunner =
-  fn(TestSuite, TestEventHandler, List(String)) -> Nil
+  fn(TestSuite, TestEventHandler, List(String), Capture) -> Nil
