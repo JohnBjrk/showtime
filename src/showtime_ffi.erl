@@ -40,7 +40,6 @@ capture_output({Buffer, {OldGroupLeader, Capture}}) ->
 run_test(Module, Function, IgnoreTags, Capture) ->
     OutputCapture = start_output_capture(Capture),
     try
-        % io:fwrite("Testing~n"),
         Result = apply(Module, Function, []),
         {ResultType, FinalResult} =
             case Result of
@@ -62,10 +61,12 @@ run_test(Module, Function, IgnoreTags, Capture) ->
                     {test_function_return, DirectResult}
             end,
         OutputCaptureBuffer = stop_output_capture(OutputCapture),
-        {ok, {ResultType, FinalResult, OutputCaptureBuffer}}
+        case ResultType of
+            ignored -> {ok, {ResultType, FinalResult}};
+            _ -> {ok, {ResultType, FinalResult, OutputCaptureBuffer}}
+        end
     catch
         Class:Reason:Stacktrace ->
-            % io:fwrite("Class ~p~nReason~p~nStacktrace~p~n", [Class, Reason, Stacktrace]),
             GleamReason =
                 case Reason of
                     {Assertion, ReasonList} ->
@@ -87,7 +88,6 @@ run_test(Module, Function, IgnoreTags, Capture) ->
                                 end,
                                 ReasonList
                             ),
-                        % io:fwrite("Reason ~p~n", [ErlangReasonList]),
                         GleamAssertionType =
                             case Assertion of
                                 assertEqual ->

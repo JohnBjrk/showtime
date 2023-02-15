@@ -1,0 +1,2 @@
+TestType("Im the infamous TestType", ["we", "are", "on", "the", "list"])
+TestType("Im the infamous TestType", ["we", "are", "on", "the", "list"])

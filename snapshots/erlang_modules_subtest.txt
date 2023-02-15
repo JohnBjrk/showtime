@@ -1,0 +1,12 @@
+
+      [1m[31mFailed[39m[22m: ---------------------------⌄                            
+        [36mTest[39m: subfolder@sub_test.[1m[36min_subfolder_test[39m[22m                    
+    [36mExpected[39m: ["I", "am", "in", [1m[32m"subfolder"[39m[22m]                          
+         [36mGot[39m: ["I", "am", "in", [1m[31m"test"[39m[22m]                               
+  [36mStacktrace[39m: showtime@tests@should.evaluate                          
+              showtime_ffi.run_test                                   
+              showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+              gleam@list.each                                         
+              showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                    
+[1m[32m0 passed[39m[22m, [1m[31m1 failed[39m[22m
