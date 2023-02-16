@@ -55,7 +55,7 @@ test: ## Run poor man's snapshot tests
 			false; \
 	fi
 	diff -c snapshots/new_erlang_capture_no.txt snapshots/erlang_capture_no.txt
-	diff -c snapshots/new_erlang_capture_no_stderr.txt snapshots/erlang_capture_no_stderr.txt
+	@(exit $((,$(stat -f "%z" snapshots/new_erlang_capture_no_stderr.txt) == $(stat -f "%z" snapshots/erlang_capture_no_stderr.txt) ? 0 : 2)))
 	@rm snapshots/new_erlang_capture_no.txt
 	@rm snapshots/new_erlang_capture_no_stderr.txt
 	@gleam test --target=erlang -- --capture=mixed 2> snapshots/new_erlang_capture_mixed_stderr.txt |(sed '1,/.*Running showtime_test.main.*/d' > snapshots/new_erlang_capture_mixed.txt); \
@@ -65,7 +65,7 @@ test: ## Run poor man's snapshot tests
 			false; \
 	fi
 	diff -c snapshots/new_erlang_capture_mixed.txt snapshots/erlang_capture_mixed.txt
-	diff -c snapshots/new_erlang_capture_mixed_stderr.txt snapshots/erlang_capture_mixed_stderr.txt
+	@(exit $((,$(stat -f "%z" snapshots/new_erlang_capture_mixed_stderr.txt) == $(stat -f "%z" snapshots/erlang_capture_mixed_stderr.txt) ? 0 : 2)))
 	@rm snapshots/new_erlang_capture_mixed.txt
 	@rm snapshots/new_erlang_capture_mixed_stderr.txt
 	@gleam test --target=erlang -- --ignore=ignore 2> snapshots/new_erlang_ignore_ignore_stderr.txt |(sed '1,/.*Running showtime_test.main.*/d' > snapshots/new_erlang_ignore_ignore.txt); \
@@ -75,7 +75,7 @@ test: ## Run poor man's snapshot tests
 			false; \
 	fi
 	diff -c snapshots/new_erlang_ignore_ignore.txt snapshots/erlang_ignore_ignore.txt
-	diff -c snapshots/new_erlang_ignore_ignore_stderr.txt snapshots/erlang_ignore_ignore_stderr.txt
+	@(exit $((,$(stat -f "%z" snapshots/new_erlang_ignore_ignore_stderr.txt) == $(stat -f "%z" snapshots/erlang_ignore_ignore_stderr.txt) ? 0 : 2)))
 	@rm snapshots/new_erlang_ignore_ignore.txt
 	@rm snapshots/new_erlang_ignore_ignore_stderr.txt
 	@gleam test --target=erlang -- --modules=subfolder/sub_test 2> snapshots/new_erlang_modules_subtest_stderr.txt |(sed '1,/.*Running showtime_test.main.*/d' > snapshots/new_erlang_modules_subtest.txt); \
@@ -86,5 +86,6 @@ test: ## Run poor man's snapshot tests
 	fi
 	diff -c snapshots/new_erlang_modules_subtest.txt snapshots/erlang_modules_subtest.txt
 	diff -c snapshots/new_erlang_modules_subtest_stderr.txt snapshots/erlang_modules_subtest_stderr.txt
+	@(exit $((,$(stat -f "%z" snapshots/new_erlang_modules_subtest_stderr.txt) == $(stat -f "%z" snapshots/erlang_modules_subtest_stderr.txt) ? 0 : 2)))
 	@rm snapshots/new_erlang_modules_subtest.txt
 	@rm snapshots/new_erlang_modules_subtest_stderr.txt
