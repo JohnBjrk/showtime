@@ -45,16 +45,22 @@ test: ## Run poor man's snapshot tests
 	then \
 			echo "Expected test to exit with code 1"; \
 			false; \
+	fi; \
+	if [ $$(stat -f "%z" snapshots/new_erlang_capture_yes.txt) -ne $$(stat -f "%z" snapshots/erlang_capture_yes.txt) ]; \
+	then \
+		diff -c snapshots/new_erlang_capture_yes.txt snapshots/erlang_capture_yes.txt; \
 	fi
-	diff -c snapshots/new_erlang_capture_yes.txt snapshots/erlang_capture_yes.txt
 	@rm snapshots/new_erlang_capture_yes.txt
 	@gleam test --target=erlang -- --capture=no 2> snapshots/new_erlang_capture_no_stderr.txt |(sed '1,/.*Running showtime_test.main.*/d' > snapshots/new_erlang_capture_no.txt); \
 	if [ $$? -ne 0 ]; \
 	then \
 			echo "Expected test to exit with code 1"; \
 			false; \
+	fi; \
+	if [ $$(stat -f "%z" snapshots/new_erlang_capture_no.txt) -ne $$(stat -f "%z" snapshots/erlang_capture_no.txt) ]; \
+	then \
+		diff -c snapshots/new_erlang_capture_no.txt snapshots/erlang_capture_no.txt; \
 	fi
-	diff -c snapshots/new_erlang_capture_no.txt snapshots/erlang_capture_no.txt
 	@(exit $((,$(stat -f "%z" snapshots/new_erlang_capture_no_stderr.txt) == $(stat -f "%z" snapshots/erlang_capture_no_stderr.txt) ? 0 : 2)))
 	@rm snapshots/new_erlang_capture_no.txt
 	@rm snapshots/new_erlang_capture_no_stderr.txt
@@ -63,8 +69,11 @@ test: ## Run poor man's snapshot tests
 	then \
 			echo "Expected test to exit with code 1"; \
 			false; \
+	fi; \
+	if [ $$(stat -f "%z" snapshots/new_erlang_capture_mixed.txt) -ne $$(stat -f "%z" snapshots/erlang_capture_mixed.txt) ]; \
+	then \
+		diff -c snapshots/new_erlang_capture_mixed.txt snapshots/erlang_capture_mixed.txt; \
 	fi
-	diff -c snapshots/new_erlang_capture_mixed.txt snapshots/erlang_capture_mixed.txt
 	@(exit $((,$(stat -f "%z" snapshots/new_erlang_capture_mixed_stderr.txt) == $(stat -f "%z" snapshots/erlang_capture_mixed_stderr.txt) ? 0 : 2)))
 	@rm snapshots/new_erlang_capture_mixed.txt
 	@rm snapshots/new_erlang_capture_mixed_stderr.txt
@@ -73,8 +82,11 @@ test: ## Run poor man's snapshot tests
 	then \
 			echo "Expected test to exit with code 1"; \
 			false; \
+	fi; \
+	if [ $$(stat -f "%z" snapshots/new_erlang_ignore_ignore.txt) -ne $$(stat -f "%z" snapshots/erlang_ignore_ignore.txt) ]; \
+	then \
+		diff -c snapshots/new_erlang_ignore_ignore.txt snapshots/erlang_ignore_ignore.txt; \
 	fi
-	diff -c snapshots/new_erlang_ignore_ignore.txt snapshots/erlang_ignore_ignore.txt
 	@(exit $((,$(stat -f "%z" snapshots/new_erlang_ignore_ignore_stderr.txt) == $(stat -f "%z" snapshots/erlang_ignore_ignore_stderr.txt) ? 0 : 2)))
 	@rm snapshots/new_erlang_ignore_ignore.txt
 	@rm snapshots/new_erlang_ignore_ignore_stderr.txt
@@ -83,8 +95,11 @@ test: ## Run poor man's snapshot tests
 	then \
 			echo "Expected test to exit with code 1"; \
 			false; \
+	fi; \
+	if [ $$(stat -f "%z" snapshots/new_erlang_modules_subtest.txt) -ne $$(stat -f "%z" snapshots/erlang_modules_subtest.txt) ]; \
+	then \
+		diff -c snapshots/new_erlang_modules_subtest.txt snapshots/erlang_modules_subtest.txt; \
 	fi
-	diff -c snapshots/new_erlang_modules_subtest.txt snapshots/erlang_modules_subtest.txt
 	diff -c snapshots/new_erlang_modules_subtest_stderr.txt snapshots/erlang_modules_subtest_stderr.txt
 	@(exit $((,$(stat -f "%z" snapshots/new_erlang_modules_subtest_stderr.txt) == $(stat -f "%z" snapshots/erlang_modules_subtest_stderr.txt) ? 0 : 2)))
 	@rm snapshots/new_erlang_modules_subtest.txt
