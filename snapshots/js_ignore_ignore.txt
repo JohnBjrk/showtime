@@ -306,4 +306,4 @@ Ignoring: meta_test
                should.evaluate                                                                                              
                gleam.throwError                                                                                             
                                                                                                                           
-[1m[32m3 passed[39m[22m, [1m[31m27 failed[39m[22m, [1m[33m2 ignored[39m[22m
+[1m[32m10 passed[39m[22m, [1m[31m27 failed[39m[22m, [1m[33m2 ignored[39m[22m

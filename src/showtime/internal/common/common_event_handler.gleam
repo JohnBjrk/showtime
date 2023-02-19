@@ -69,31 +69,31 @@ pub fn handle_event(msg: TestEvent, state: HandlerState) {
     }
     EndTest(module, test, result) -> {
       let current_time = system_time()
-      let new_events =
-        map.update(
-          events,
-          module.name,
-          fn(maybe_module_event) {
-            let module_event = option.unwrap(maybe_module_event, map.new())
-            let maybe_test_run =
-              module_event
-              |> map.get(test.name)
-            case maybe_test_run {
-              // TODO: Should be able to handle end-event even if test is not ongoing
-              Ok(OngoingTestRun(test_function, started_at)) ->
-                module_event
-                |> map.insert(
-                  test.name,
-                  CompletedTestRun(
-                    test_function,
-                    current_time - started_at,
-                    result,
-                  ),
-                )
-              Error(_) -> module_event
-            }
-          },
-        )
+      let maybe_module_events = map.get(events, module.name)
+      let new_events = case maybe_module_events {
+        Ok(module_events) -> {
+          let maybe_test_run =
+            module_events
+            |> map.get(test.name)
+          let updated_module_events = case maybe_test_run {
+            // TODO: Should be able to handle end-event even if test is not ongoing
+            Ok(OngoingTestRun(test_function, started_at)) ->
+              module_events
+              |> map.insert(
+                test.name,
+                CompletedTestRun(
+                  test_function,
+                  current_time - started_at,
+                  result,
+                ),
+              )
+            Error(_) -> module_events
+          }
+          events
+          |> map.insert(module.name, updated_module_events)
+        }
+        Error(_) -> events
+      }
       #(test_state, num_done, new_events)
     }
     EndTestSuite(_) -> #(test_state, num_done + 1, events)

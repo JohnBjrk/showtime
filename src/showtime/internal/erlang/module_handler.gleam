@@ -30,7 +30,7 @@ if erlang {
               )
               test_event_handler(EndTestSuite(module))
             },
-            True,
+            False,
           )
           Continue(state)
         },

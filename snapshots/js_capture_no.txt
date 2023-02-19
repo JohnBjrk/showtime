@@ -320,4 +320,4 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
                should.evaluate                                                                                              
                gleam.throwError                                                                                             
                                                                                                                           
-[1m[32m4 passed[39m[22m, [1m[31m28 failed[39m[22m
+[1m[32m11 passed[39m[22m, [1m[31m28 failed[39m[22m
