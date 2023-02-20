@@ -82,7 +82,7 @@ if javascript {
   }
 
   fn event_handler(event: TestEvent, state: HandlerState) {
-    let new_state = handle_event(event, state)
+    let new_state = handle_event(event, system_time, state)
     case new_state {
       HandlerState(Finished(_), _, events) -> {
         let #(report, num_failed) = create_test_report(events)
@@ -111,6 +111,9 @@ if javascript {
 
   external fn exit(Int) -> Nil =
     "./showtime_ffi.mjs" "exit"
+
+  external fn system_time() -> Int =
+    "./showtime_ffi.mjs" "system_time"
 }
 
 fn start_with_args(args, func) {

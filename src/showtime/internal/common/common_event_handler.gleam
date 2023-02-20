@@ -19,52 +19,51 @@ pub type HandlerState {
   )
 }
 
-if erlang {
-  import gleam/erlang.{Millisecond}
-
-  fn system_time() {
-    erlang.system_time(Millisecond)
-  }
-}
-
-if javascript {
-  external fn system_time() -> Int =
-    "../../../showtime_ffi.mjs" "system_time"
-}
-
 // This is the common event-handler (shared between erlang/JS targets)
 // The main strategy is to collect the test-results in a map of maps:
 // module_name ->
 //   test_name -> test_result
 // It will also keep track of if it is running (i.e. did it receive the EndTestRun)
 // so that the caller can determine when to print test-results
-pub fn handle_event(msg: TestEvent, state: HandlerState) {
+pub fn handle_event(
+  msg: TestEvent,
+  system_time: fn() -> Int,
+  state: HandlerState,
+) {
   let test_state = state.test_state
   let num_done = state.num_done
   let events = state.events
   let #(updated_test_state, updated_num_done, updated_events) = case msg {
     StartTestRun -> #(Running, num_done, events)
     StartTestSuite(module) -> {
-      let new_events =
-        events
-        |> map.insert(module.name, map.new())
+      let maybe_module_events = map.get(events, module.name)
+      let new_events = case maybe_module_events {
+        Ok(_) -> events
+        Error(_) ->
+          events
+          |> map.insert(module.name, map.new())
+      }
       #(test_state, num_done, new_events)
     }
     StartTest(module, test) -> {
       let current_time = system_time()
-      let new_events =
-        events
-        |> map.update(
-          module.name,
-          fn(module_event) {
-            case module_event {
-              Some(module_event) ->
-                module_event
-                |> map.insert(test.name, OngoingTestRun(test, current_time))
-              None -> map.new()
-            }
-          },
-        )
+      let maybe_module_events = map.get(events, module.name)
+      let new_events = case maybe_module_events {
+        Ok(module_events) -> {
+          let maybe_test_event = map.get(module_events, test.name)
+          case maybe_test_event {
+            Error(_) ->
+              events
+              |> map.insert(
+                module.name,
+                module_events
+                |> map.insert(test.name, OngoingTestRun(test, current_time)),
+              )
+            Ok(_) -> events
+          }
+        }
+        Error(_) -> events
+      }
       #(test_state, num_done, new_events)
     }
     EndTest(module, test, result) -> {
@@ -76,7 +75,6 @@ pub fn handle_event(msg: TestEvent, state: HandlerState) {
             module_events
             |> map.get(test.name)
           let updated_module_events = case maybe_test_run {
-            // TODO: Should be able to handle end-event even if test is not ongoing
             Ok(OngoingTestRun(test_function, started_at)) ->
               module_events
               |> map.insert(
