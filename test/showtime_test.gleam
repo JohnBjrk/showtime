@@ -1,5 +1,6 @@
 import gleam/io
 import gleam/option.{None}
+import gleam/list
 import gleeunit
 import gleeunit/should as gshould
 import showtime
@@ -209,7 +210,7 @@ pub fn meta_test() {
 }
 
 pub fn assert_test() {
-  assert Ok("apa") = Error("bepa")
+  let assert Ok("apa") = Error("bepa")
 }
 
 pub fn use_meta_test() {
@@ -222,6 +223,20 @@ pub fn with_meta_test() {
   use should <- test.with_meta(Meta("This test is defined using use", ["meta"]))
   "meta"
   |> should.equal("universe")
+}
+
+fn add(a, b) {
+  a + b
+}
+
+pub fn multi_test() {
+  use should <- test.with_meta(Meta("Test multiple param values", ["meta"]))
+  let as_and_bs =
+    list.range(0, 5)
+    |> list.zip(list.range(0, 5))
+  use #(a, b) <- list.each(as_and_bs)
+  add(a, b)
+  |> should.equal(a + b)
 }
 
 pub fn diff_string_test() {

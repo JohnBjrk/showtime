@@ -3,7 +3,7 @@ TestType("Im the infamous TestType", ["we", "are", "on", "the", "list"])
 TestType("Im the infamous TestType", ["we", "are", "on", "the", "list"])
 
        [1m[31mFailed[39m[22m: ---------------------⌄                                                               
-         [36mTest[39m: showtime_test.[1m[36massert_test:212[39m[22m                                                        
+         [36mTest[39m: showtime_test.[1m[36massert_test:213[39m[22m                                                        
      [36mExpected[39m: Patterns should match                                                                
           [36mGot[39m: [1m[31mError("bepa")[39m[22m                                                                        
    [36mStacktrace[39m: showtime_test.assert_test                                                            
@@ -303,4 +303,4 @@ TestType("Im the infamous TestType", ["we", "are", "on", "the", "list"])
                gleam@list.each                                                                      
                showtime@internal@erlang@module_handler.-start/5-fun-0-                              
                                                                                                   
-[1m[32m10 passed[39m[22m, [1m[31m28 failed[39m[22m
+[1m[32m14 passed[39m[22m, [1m[31m28 failed[39m[22m

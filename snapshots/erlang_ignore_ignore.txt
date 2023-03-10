@@ -10,7 +10,7 @@ has som lines of output
 Which is also followed by an io.debug()
 
        [1m[31mFailed[39m[22m: ---------------------⌄                                                               
-         [36mTest[39m: showtime_test.[1m[36massert_test:212[39m[22m                                                        
+         [36mTest[39m: showtime_test.[1m[36massert_test:213[39m[22m                                                        
      [36mExpected[39m: Patterns should match                                                                
           [36mGot[39m: [1m[31mError("bepa")[39m[22m                                                                        
    [36mStacktrace[39m: showtime_test.assert_test                                                            
@@ -290,4 +290,4 @@ Which is also followed by an io.debug()
                gleam@list.each                                                                      
                showtime@internal@erlang@module_handler.-start/5-fun-0-                              
                                                                                                   
-[1m[32m9 passed[39m[22m, [1m[31m27 failed[39m[22m, [1m[33m2 ignored[39m[22m
+[1m[32m13 passed[39m[22m, [1m[31m27 failed[39m[22m, [1m[33m2 ignored[39m[22m

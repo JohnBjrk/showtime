@@ -1,8 +1,9 @@
 import showtime/tests/test
 import showtime/tests/meta.{Meta}
 import showtime/internal/common/test_suite.{
-  CompletedTestRun, EndTest, StartTest, StartTestRun, StartTestSuite, TestEvent,
-  TestEventHandler, TestFunction, TestModule, TestSuite,
+  CompletedTestRun, EndTest, EndTestSuite, OngoingTestRun, StartTest,
+  StartTestRun, StartTestSuite, TestEvent, TestEventHandler, TestFunction,
+  TestModule, TestSuite,
 }
 import showtime/internal/common/common_event_handler.{
   Finished, HandlerState, NotStarted, Running,
@@ -240,6 +241,34 @@ pub fn start_test_suite_after_ended_test() {
           ),
         ]),
       ),
+    ]),
+  ))
+}
+
+pub fn end_test_suite_before_end_test_test() {
+  use should <- test.with_meta(Meta(
+    "StartTestRun -> StartTestSuite -> StartTest -> EndTessSuite",
+    ["showtime"],
+  ))
+  let handler_state = HandlerState(Running, 0, map.new())
+  let updated_handler_state =
+    common_event_handler.handle_event(
+      StartTestSuite(module_foo),
+      time(0),
+      handler_state,
+    )
+    |> common_event_handler.handle_event(
+      StartTest(module_foo, function_bar),
+      time(0),
+      _,
+    )
+    |> common_event_handler.handle_event(EndTestSuite(module_foo), time(100), _)
+  updated_handler_state
+  |> should.equal(HandlerState(
+    Running,
+    1,
+    map.from_list([
+      #("foo", map.from_list([#("bar", OngoingTestRun(function_bar, 0))])),
     ]),
   ))
 }

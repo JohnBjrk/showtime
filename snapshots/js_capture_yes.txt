@@ -2,7 +2,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
 TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "list"])
 
        [1m[31mFailed[39m[22m: ---------------------⌄                                                                                       
-         [36mTest[39m: showtime_test.[1m[36massert_test:212[39m[22m                                                                                
+         [36mTest[39m: showtime_test.[1m[36massert_test:213[39m[22m                                                                                
      [36mExpected[39m: Patterns should match                                                                                        
           [36mGot[39m: [1m[31mError("bepa")[39m[22m                                                                                                
    [36mStacktrace[39m: showtime_ffi.run                                                                                             
@@ -315,4 +315,4 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
                should.evaluate                                                                                              
                gleam.throwError                                                                                             
                                                                                                                           
-[1m[32m11 passed[39m[22m, [1m[31m28 failed[39m[22m
+[1m[32m15 passed[39m[22m, [1m[31m28 failed[39m[22m
