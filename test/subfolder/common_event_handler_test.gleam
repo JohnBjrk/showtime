@@ -2,14 +2,12 @@ import showtime/tests/test
 import showtime/tests/meta.{Meta}
 import showtime/internal/common/test_suite.{
   CompletedTestRun, EndTest, EndTestSuite, OngoingTestRun, StartTest,
-  StartTestRun, StartTestSuite, TestEvent, TestEventHandler, TestFunction,
-  TestModule, TestSuite,
+  StartTestRun, StartTestSuite, TestFunction, TestModule,
 }
 import showtime/internal/common/common_event_handler.{
   Finished, HandlerState, NotStarted, Running,
 }
 import showtime/internal/common/test_result.{TestFunctionReturn}
-import gleam/io
 import gleam/map
 import gleam/option.{None}
 import gleam/dynamic

@@ -75,32 +75,32 @@ pub fn evaluate(assertion) -> Nil {
       case a == b {
         True -> Ok(assertion)
         False -> {
-          assert Ok(_assertion) = Error(assertion)
+          let assert Ok(_assertion) = Error(assertion)
         }
       }
     NotEq(a, b, _meta) ->
       case a != b {
         True -> Ok(assertion)
         False -> {
-          assert Ok(_assertion) = Error(assertion)
+          let assert Ok(_assertion) = Error(assertion)
         }
       }
     IsOk(a, _meta) ->
       case a {
         Ok(_) -> Ok(assertion)
         Error(_) -> {
-          assert Ok(_assertion) = Error(assertion)
+          let assert Ok(_assertion) = Error(assertion)
         }
       }
     IsError(a, _meta) ->
       case a {
         Error(_) -> Ok(assertion)
         Ok(_) -> {
-          assert Ok(_assertion) = Error(assertion)
+          let assert Ok(_assertion) = Error(assertion)
         }
       }
     Fail(_meta) -> {
-      assert Ok(_assertion) = Error(assertion)
+      let assert Ok(_assertion) = Error(assertion)
     }
   }
   Nil

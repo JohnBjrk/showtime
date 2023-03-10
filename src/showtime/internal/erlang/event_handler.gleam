@@ -18,7 +18,7 @@ if erlang {
   // When handler updates the state to `Finished` the actor will wait until handler
   // reports that all modules are done and the stop
   pub fn start() {
-    assert Ok(subject) =
+    let assert Ok(subject) =
       actor.start(
         #(NotStarted, 0, map.new()),
         fn(msg: EventHandlerMessage, state) {

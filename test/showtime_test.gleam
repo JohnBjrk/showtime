@@ -234,7 +234,8 @@ pub fn multi_test() {
   let as_and_bs =
     list.range(0, 5)
     |> list.zip(list.range(0, 5))
-  use #(a, b) <- list.each(as_and_bs)
+  use a_and_b <- list.each(as_and_bs)
+  let #(a, b) = a_and_b
   add(a, b)
   |> should.equal(a + b)
 }

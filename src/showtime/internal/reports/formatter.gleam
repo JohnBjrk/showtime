@@ -175,7 +175,7 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
                   ))
                 other -> {
                   io.println("Other: " <> string.inspect(other))
-                  assert True = False
+                  let assert True = False
                   Error(Nil)
                 }
               }
@@ -290,7 +290,7 @@ fn gleam_error_to_unified(
     Assert(_module, _function, _line_no, _message, value) -> {
       let result: Result(Dynamic, Assertion(Dynamic, Dynamic)) =
         dynamic.unsafe_coerce(value)
-      assert Error(assertion) = result
+      let assert Error(assertion) = result
       case assertion {
         Eq(got, expected, meta) -> {
           let #(expected, got) = compare(expected, got)

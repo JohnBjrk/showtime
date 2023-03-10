@@ -14,7 +14,7 @@ if erlang {
     ignore_tags: List(String),
     capture: Capture,
   ) {
-    assert Ok(subject) =
+    let assert Ok(subject) =
       actor.start(
         Nil,
         fn(module: TestModule, state) {

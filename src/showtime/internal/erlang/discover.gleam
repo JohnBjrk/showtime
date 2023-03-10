@@ -27,7 +27,7 @@ if erlang {
     only_modules: Option(List(String)),
   ) {
     let module_prefix = get_module_prefix(path)
-    assert Ok(files) = file.list_directory(path)
+    let assert Ok(files) = file.list_directory(path)
     let test_modules_in_folder =
       files
       |> list.filter(string.ends_with(_, "_test.gleam"))
@@ -117,7 +117,7 @@ if erlang {
     let test_functions_filtered =
       test_functions
       |> list.map(fn(entry) {
-        assert #(name, arity) = entry
+        let assert #(name, arity) = entry
         #(
           name
           |> atom.to_string(),
@@ -125,7 +125,7 @@ if erlang {
         )
       })
       |> list.filter_map(fn(entry) {
-        assert #(name, arity) = entry
+        let assert #(name, arity) = entry
         case string.ends_with(name, "_test") {
           True ->
             case arity {

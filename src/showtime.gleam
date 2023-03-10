@@ -169,7 +169,7 @@ fn mk_runner(func) {
       command.flags
       |> flag.get("capture")
       |> result.map(fn(arg) {
-        assert S(string_arg) = arg
+        let assert S(string_arg) = arg
         S(string.lowercase(string_arg))
       })
       |> result.unwrap(S("no"))

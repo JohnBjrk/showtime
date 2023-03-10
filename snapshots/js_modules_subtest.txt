@@ -7,6 +7,6 @@
               sub_test.in_subfolder_test          
               should.equal                        
               should.evaluate                     
-              gleam.throwError                    
+              gleam.makeError                     
                                                 
 [1m[32m0 passed[39m[22m, [1m[31m1 failed[39m[22m

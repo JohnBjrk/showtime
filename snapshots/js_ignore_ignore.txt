@@ -19,7 +19,7 @@ Ignoring: meta_test
           [36mGot[39m: [1m[31mError("bepa")[39m[22m                                                                                                
    [36mStacktrace[39m: showtime_ffi.run                                                                                             
                showtime_test.assert_test                                                                                    
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: ----------------------⌄                                                                                      
          [36mTest[39m: showtime_test.[1m[36mdiff_custom_test[39m[22m                                                                               
@@ -32,7 +32,7 @@ Ignoring: meta_test
                test.equal                                                                                                   
                should.equal_meta                                                                                            
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: ----------------------⌄                                                                                      
          [36mTest[39m: showtime_test.[1m[36mdiff_string_test[39m[22m                                                                               
@@ -45,7 +45,7 @@ Ignoring: meta_test
                test.equal                                                                                                   
                should.equal_meta                                                                                            
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: ------------------⌄                                                                                          
          [36mTest[39m: showtime_test.[1m[36mdjur_test[39m[22m                                                                                      
@@ -55,7 +55,7 @@ Ignoring: meta_test
                showtime_test.djur_test                                                                                      
                should.not_equal                                                                                             
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: ---------------------⌄                                                                                       
          [36mTest[39m: showtime_test.[1m[36mfail_meta_test[39m[22m                                                                                 
@@ -68,7 +68,7 @@ Ignoring: meta_test
                test.fail                                                                                                    
                should.fail_meta                                                                                             
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: ------------------⌄                                                                                          
          [36mTest[39m: showtime_test.[1m[36mfail_test[39m[22m                                                                                      
@@ -78,7 +78,7 @@ Ignoring: meta_test
                showtime_test.fail_test                                                                                      
                should.fail                                                                                                  
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: -------------------------⌄                                                                                   
          [36mTest[39m: showtime_test.[1m[36mgeneric_exception_test[39m[22m                                                                         
@@ -132,7 +132,7 @@ Ignoring: meta_test
                test.be_error                                                                                                
                should.be_error_meta                                                                                         
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: --------------------⌄                                                                                        
          [36mTest[39m: showtime_test.[1m[36mis_error_test[39m[22m                                                                                  
@@ -142,7 +142,7 @@ Ignoring: meta_test
                showtime_test.is_error_test                                                                                  
                should.be_error                                                                                              
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: -----------------------⌄                                                                                     
          [36mTest[39m: showtime_test.[1m[36mis_false_meta_test[39m[22m                                                                             
@@ -156,7 +156,7 @@ Ignoring: meta_test
                should.be_false_meta                                                                                         
                should.equal_meta                                                                                            
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: --------------------⌄                                                                                        
          [36mTest[39m: showtime_test.[1m[36mis_false_test[39m[22m                                                                                  
@@ -167,7 +167,7 @@ Ignoring: meta_test
                should.be_false                                                                                              
                should.equal                                                                                                 
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: ---------------------⌄                                                                                       
          [36mTest[39m: showtime_test.[1m[36mis_ok_meta_test[39m[22m                                                                                
@@ -180,7 +180,7 @@ Ignoring: meta_test
                test.be_ok                                                                                                   
                should.be_ok_meta                                                                                            
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: -------------------⌄                                                                                         
          [36mTest[39m: showtime_test.[1m[36mis_ok_test[39m[22m                                                                                     
@@ -190,7 +190,7 @@ Ignoring: meta_test
                showtime_test.is_ok_test                                                                                     
                should.be_ok                                                                                                 
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: ----------------------⌄                                                                                      
          [36mTest[39m: showtime_test.[1m[36mis_true_meta_test[39m[22m                                                                              
@@ -204,7 +204,7 @@ Ignoring: meta_test
                should.be_true_meta                                                                                          
                should.equal_meta                                                                                            
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: --------------------⌄                                                                                        
          [36mTest[39m: showtime_test.[1m[36mis_true_test[39m[22m                                                                                   
@@ -215,7 +215,7 @@ Ignoring: meta_test
                should.be_true                                                                                               
                should.equal                                                                                                 
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: ------------------⌄                                                                                          
          [36mTest[39m: showtime_test.[1m[36mlist_test[39m[22m                                                                                      
@@ -225,7 +225,7 @@ Ignoring: meta_test
                showtime_test.list_test                                                                                      
                should.equal                                                                                                 
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: --------------------------⌄                                                                                  
          [36mTest[39m: showtime_test.[1m[36mmany_gleeunit_should_test[39m[22m                                                                      
@@ -244,7 +244,7 @@ Ignoring: meta_test
                showtime_test.many_showtime_should_test                                                                      
                should.equal                                                                                                 
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: -----------------------⌄                                                                                     
          [36mTest[39m: showtime_test.[1m[36mnot_equal_meta_test[39m[22m                                                                            
@@ -257,7 +257,7 @@ Ignoring: meta_test
                test.not_equal                                                                                               
                should.equal_meta                                                                                            
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: -------------------⌄                                                                                         
          [36mTest[39m: showtime_test.[1m[36mother_test[39m[22m                                                                                     
@@ -267,7 +267,7 @@ Ignoring: meta_test
                showtime_test.other_test                                                                                     
                should.equal                                                                                                 
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: --------------------⌄                                                                                        
          [36mTest[39m: showtime_test.[1m[36muse_meta_test[39m[22m                                                                                  
@@ -280,7 +280,7 @@ Ignoring: meta_test
                test.equal                                                                                                   
                should.equal_meta                                                                                            
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: ---------------------⌄                                                                                       
          [36mTest[39m: showtime_test.[1m[36mwith_meta_test[39m[22m                                                                                 
@@ -294,7 +294,7 @@ Ignoring: meta_test
                test.equal                                                                                                   
                should.equal_meta                                                                                            
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
        [1m[31mFailed[39m[22m: ---------------------------⌄                                                                                 
          [36mTest[39m: subfolder/sub_test.[1m[36min_subfolder_test[39m[22m                                                                         
@@ -304,6 +304,6 @@ Ignoring: meta_test
                sub_test.in_subfolder_test                                                                                   
                should.equal                                                                                                 
                should.evaluate                                                                                              
-               gleam.throwError                                                                                             
+               gleam.makeError                                                                                              
                                                                                                                           
 [1m[32m14 passed[39m[22m, [1m[31m27 failed[39m[22m, [1m[33m2 ignored[39m[22m
