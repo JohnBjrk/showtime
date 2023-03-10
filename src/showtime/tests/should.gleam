@@ -27,6 +27,7 @@ pub fn not_equal_meta(a: t, b: t, meta: Meta) {
 
 pub fn be_ok(a: Result(o, e)) {
   evaluate(IsOk(a, None))
+  a
 }
 
 pub fn be_ok_meta(a: Result(o, e), meta: Meta) {
@@ -35,6 +36,7 @@ pub fn be_ok_meta(a: Result(o, e), meta: Meta) {
 
 pub fn be_error(a: Result(o, e)) {
   evaluate(IsError(a, None))
+  a
 }
 
 pub fn be_error_meta(a: Result(o, e), meta: Meta) {

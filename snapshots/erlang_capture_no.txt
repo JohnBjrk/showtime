@@ -142,6 +142,7 @@ Which is also followed by an io.debug()
      [36mExpected[39m: [1m[32mError(_)[39m[22m                                                                             
           [36mGot[39m: [1m[31mOk(TestType("ok", ["result"]))[39m[22m                                                       
    [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
+               showtime@tests@should.be_error                                                       
                showtime_ffi.run_test                                                                
                showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
                gleam@list.each                                                                      
@@ -184,6 +185,7 @@ Which is also followed by an io.debug()
      [36mExpected[39m: [1m[32mOk(_)[39m[22m                                                                                
           [36mGot[39m: [1m[31mError(TestType("error", ["caused", "by"]))[39m[22m                                           
    [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
+               showtime@tests@should.be_ok                                                          
                showtime_ffi.run_test                                                                
                showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
                gleam@list.each                                                                      
