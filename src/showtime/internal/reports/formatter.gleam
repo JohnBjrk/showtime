@@ -62,8 +62,8 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
           CompletedTestRun(_test_function, _, result) ->
             case result {
               Error(_) -> Ok(ModuleAndTestRun(module_name, test_run))
-              Ok(_) -> Error(Nil)
               Ok(Ignored(_)) -> Error(Nil)
+              Ok(_) -> Error(Nil)
             }
           _ -> {
             test_run
@@ -175,7 +175,7 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
                   ))
                 other -> {
                   io.println("Other: " <> string.inspect(other))
-                  let assert True = False
+                  panic
                   Error(Nil)
                 }
               }

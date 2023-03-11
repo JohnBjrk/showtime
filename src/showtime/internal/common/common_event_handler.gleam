@@ -1,5 +1,4 @@
 import gleam/map.{Map}
-import gleam/option.{None, Some}
 import showtime/internal/common/test_suite.{
   CompletedTestRun, EndTest, EndTestRun, EndTestSuite, OngoingTestRun, StartTest,
   StartTestRun, StartTestSuite, TestEvent, TestRun,
