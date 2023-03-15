@@ -458,12 +458,12 @@ fn format_reason(
     Some([
       AlignRight(StyledContent(heading_style("Expected")), 2),
       Separator(": "),
-      AlignLeft(StyledContent(error.expected), 0),
+      AlignLeftOverflow(StyledContent(error.expected), 0),
     ]),
     Some([
       AlignRight(StyledContent(heading_style("Got")), 2),
       Separator(": "),
-      AlignLeft(StyledContent(error.got), 0),
+      AlignLeftOverflow(StyledContent(error.got), 0),
     ]),
   ]
   standard_table_rows

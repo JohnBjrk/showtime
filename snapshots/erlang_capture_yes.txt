@@ -2,307 +2,318 @@ WARNING: function "wrong_arity_test" has arity: 1 - cannot be used as test (need
 TestType("Im the infamous TestType", ["we", "are", "on", "the", "list"])
 TestType("Im the infamous TestType", ["we", "are", "on", "the", "list"])
 
-       [1m[31mFailed[39m[22m: ---------------------⌄                                                               
-         [36mTest[39m: showtime_test.[1m[36massert_test:213[39m[22m                                                        
-     [36mExpected[39m: Patterns should match                                                                
-          [36mGot[39m: [1m[31mError("bepa")[39m[22m                                                                        
-   [36mStacktrace[39m: showtime_test.assert_test                                                            
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: ----------------------⌄                                                              
-         [36mTest[39m: showtime_test.[1m[36mdiff_custom_test[39m[22m                                                       
-  [36mDescription[39m: Testing diffs of custom types                                                        
+       [1m[31mFailed[39m[22m: ---------------------⌄                                  
+         [36mTest[39m: showtime_test.[1m[36massert_test:213[39m[22m                           
+     [36mExpected[39m: Patterns should match                                   
+          [36mGot[39m: [1m[31mError("bepa")[39m[22m                                           
+   [36mStacktrace[39m: showtime_test.assert_test                               
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ----------------------⌄                                 
+         [36mTest[39m: showtime_test.[1m[36mdiff_custom_test[39m[22m                          
+  [36mDescription[39m: Testing diffs of custom types                           
      [36mExpected[39m: [TestType("second", ["in", "array"]), [1m[32mTestType("first", ["other", "array"])[39m[22m, [1m[32mVariant[39m[22m]
-          [36mGot[39m: [[1m[31mTestType("first", ["in", "array"])[39m[22m, TestType("second", ["in", "array"])]            
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: ----------------------⌄                                                              
-         [36mTest[39m: showtime_test.[1m[36mdiff_string_test[39m[22m                                                       
-  [36mDescription[39m: Test diffing of strings                                                              
-     [36mExpected[39m: [1m[32mt[39m[22m[1m[32mh[39m[22m[1m[32me[39m[22m test t[1m[32mh[39m[22ming                                                                       
-          [36mGot[39m: [1m[31ma[39m[22m test [1m[31ms[39m[22mt[1m[31mr[39m[22ming                                                                        
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: ------------------⌄                                                                  
-         [36mTest[39m: showtime_test.[1m[36mdjur_test[39m[22m                                                              
-     [36mExpected[39m: [1mnot [22mTestType("apa", ["ren", "tur"])                                                  
-          [36mGot[39m: TestType("apa", ["ren", "tur"])                                                      
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: ---------------------⌄                                                               
-         [36mTest[39m: showtime_test.[1m[36mfail_meta_test[39m[22m                                                         
-  [36mDescription[39m: Test fail with meta-data                                                             
-     [36mExpected[39m: [1m[31mshould.fail()[39m[22m                                                                        
-          [36mGot[39m: [1m[31mN/A - test always expected to fail[39m[22m                                                   
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: ------------------⌄                                                                  
-         [36mTest[39m: showtime_test.[1m[36mfail_test[39m[22m                                                              
-     [36mExpected[39m: [1m[31mshould.fail()[39m[22m                                                                        
-          [36mGot[39m: [1m[31mN/A - test always expected to fail[39m[22m                                                   
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: -------------------------⌄                                                           
-         [36mTest[39m: showtime_test.[1m[36mgeneric_exception_test[39m[22m                                                 
-     [36mExpected[39m: Exception in test function                                                           
-          [36mGot[39m: [1m[31mTestType("Generic", [])[39m[22m                                                              
-   [36mStacktrace[39m: test_ffi.throw_exception                                                             
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: -----------------------------⌄                                                       
-         [36mTest[39m: showtime_test.[1m[36mgleeunit_assert_not_equal_test[39m[22m                                         
-     [36mExpected[39m: [1mnot [22m1                                                                                
-          [36mGot[39m: [1m[31m1[39m[22m                                                                                    
-   [36mStacktrace[39m: gleeunit_ffi.should_not_equal                                                        
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: ----------------------------⌄                                                        
-         [36mTest[39m: showtime_test.[1m[36mgleeunit_should_be_error_test[39m[22m                                          
-     [36mExpected[39m: [1m[32mError(_)[39m[22m                                                                             
-          [36mGot[39m: [1m[31mOk(TestType("Done", ["good", "result"]))[39m[22m                                             
-   [36mStacktrace[39m: gleeunit_ffi.should_be_error                                                         
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: ---------------------------⌄                                                         
-         [36mTest[39m: showtime_test.[1m[36mgleeunit_should_be_ok_test[39m[22m                                             
-     [36mExpected[39m: [1m[32mOk(_)[39m[22m                                                                                
-          [36mGot[39m: [1m[31mError("Wrong")[39m[22m                                                                       
-   [36mStacktrace[39m: gleeunit_ffi.should_be_ok                                                            
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: ------------------⌄                                                                  
-         [36mTest[39m: showtime_test.[1m[36mi_am_test[39m[22m                                                              
-     [36mExpected[39m: [1m[32mTestType("name", ["some", "name"])[39m[22m                                                   
-          [36mGot[39m: [1m[31mVariant[39m[22m                                                                              
-   [36mStacktrace[39m: gleeunit_ffi.should_equal                                                            
-               showtime_test.i_am_test                                                              
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-       [36mOutput[39m: Some test output                                                                     
+          [36mGot[39m: [[1m[31mTestType("first", ["in", "array"])[39m[22m, TestType("second", ["in", "array"])]
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ---------------------⌄                                  
+         [36mTest[39m: showtime_test.[1m[36mdiff_long_test[39m[22m                            
+  [36mDescription[39m: Testing long expected and got                           
+     [36mExpected[39m: [TestType("second", ["in", "array"]), [1m[32mTestType("first", ["other", "array"])[39m[22m, [1m[32mVariant[39m[22m, TestType("second", ["in", "array"]), [1m[32mTestType("first", ["other", "array"])[39m[22m, TestType("second", ["in", "array"]), [1m[32mTestType("first", ["other", "array"])[39m[22m]
+          [36mGot[39m: [[1m[31mTestType("first", ["in", "array"])[39m[22m, TestType("second", ["in", "array"]), [1m[31mTestType("first", ["in", "array"])[39m[22m, TestType("second", ["in", "array"]), [1m[31mTestType("first", ["in", "array"])[39m[22m, TestType("second", ["in", "array"])]
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ----------------------⌄                                 
+         [36mTest[39m: showtime_test.[1m[36mdiff_string_test[39m[22m                          
+  [36mDescription[39m: Test diffing of strings                                 
+     [36mExpected[39m: [1m[32mt[39m[22m[1m[32mh[39m[22m[1m[32me[39m[22m test t[1m[32mh[39m[22ming                                          
+          [36mGot[39m: [1m[31ma[39m[22m test [1m[31ms[39m[22mt[1m[31mr[39m[22ming                                           
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ------------------⌄                                     
+         [36mTest[39m: showtime_test.[1m[36mdjur_test[39m[22m                                 
+     [36mExpected[39m: [1mnot [22mTestType("apa", ["ren", "tur"])                     
+          [36mGot[39m: TestType("apa", ["ren", "tur"])                         
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ---------------------⌄                                  
+         [36mTest[39m: showtime_test.[1m[36mfail_meta_test[39m[22m                            
+  [36mDescription[39m: Test fail with meta-data                                
+     [36mExpected[39m: [1m[31mshould.fail()[39m[22m                                           
+          [36mGot[39m: [1m[31mN/A - test always expected to fail[39m[22m                      
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ------------------⌄                                     
+         [36mTest[39m: showtime_test.[1m[36mfail_test[39m[22m                                 
+     [36mExpected[39m: [1m[31mshould.fail()[39m[22m                                           
+          [36mGot[39m: [1m[31mN/A - test always expected to fail[39m[22m                      
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: -------------------------⌄                              
+         [36mTest[39m: showtime_test.[1m[36mgeneric_exception_test[39m[22m                    
+     [36mExpected[39m: Exception in test function                              
+          [36mGot[39m: [1m[31mTestType("Generic", [])[39m[22m                                 
+   [36mStacktrace[39m: test_ffi.throw_exception                                
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: -----------------------------⌄                          
+         [36mTest[39m: showtime_test.[1m[36mgleeunit_assert_not_equal_test[39m[22m            
+     [36mExpected[39m: [1mnot [22m1                                                   
+          [36mGot[39m: [1m[31m1[39m[22m                                                       
+   [36mStacktrace[39m: gleeunit_ffi.should_not_equal                           
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ----------------------------⌄                           
+         [36mTest[39m: showtime_test.[1m[36mgleeunit_should_be_error_test[39m[22m             
+     [36mExpected[39m: [1m[32mError(_)[39m[22m                                                
+          [36mGot[39m: [1m[31mOk(TestType("Done", ["good", "result"]))[39m[22m                
+   [36mStacktrace[39m: gleeunit_ffi.should_be_error                            
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ---------------------------⌄                            
+         [36mTest[39m: showtime_test.[1m[36mgleeunit_should_be_ok_test[39m[22m                
+     [36mExpected[39m: [1m[32mOk(_)[39m[22m                                                   
+          [36mGot[39m: [1m[31mError("Wrong")[39m[22m                                          
+   [36mStacktrace[39m: gleeunit_ffi.should_be_ok                               
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ------------------⌄                                     
+         [36mTest[39m: showtime_test.[1m[36mi_am_test[39m[22m                                 
+     [36mExpected[39m: [1m[32mTestType("name", ["some", "name"])[39m[22m                      
+          [36mGot[39m: [1m[31mVariant[39m[22m                                                 
+   [36mStacktrace[39m: gleeunit_ffi.should_equal                               
+               showtime_test.i_am_test                                 
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+       [36mOutput[39m: Some test output                                        
                And the some really really really really really really really really really really really really really really really really really really really really long output
-                                                                                                  
-       [1m[31mFailed[39m[22m: -----------------------⌄                                                             
-         [36mTest[39m: showtime_test.[1m[36mis_error_meta_test[39m[22m                                                     
-  [36mDescription[39m: Test failing be_error assertion with meta-data                                       
-     [36mExpected[39m: [1m[32mError(_)[39m[22m                                                                             
-          [36mGot[39m: [1m[31mOk(TestType("ok", ["result"]))[39m[22m                                                       
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-       [36mOutput[39m: This test                                                                            
-               has som lines of output                                                              
-               Which is also followed by an io.debug()                                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: --------------------⌄                                                                
-         [36mTest[39m: showtime_test.[1m[36mis_error_test[39m[22m                                                          
-     [36mExpected[39m: [1m[32mError(_)[39m[22m                                                                             
-          [36mGot[39m: [1m[31mOk(TestType("ok", ["result"]))[39m[22m                                                       
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime@tests@should.be_error                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-       [36mOutput[39m: This test                                                                            
-               has som lines of output                                                              
-               Which is also followed by an io.debug()                                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: -----------------------⌄                                                             
-         [36mTest[39m: showtime_test.[1m[36mis_false_meta_test[39m[22m                                                     
-  [36mDescription[39m: Test is false with meta                                                              
-     [36mExpected[39m: [1m[32mFalse[39m[22m                                                                                
-          [36mGot[39m: [1m[31mTrue[39m[22m                                                                                 
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: --------------------⌄                                                                
-         [36mTest[39m: showtime_test.[1m[36mis_false_test[39m[22m                                                          
-     [36mExpected[39m: [1m[32mFalse[39m[22m                                                                                
-          [36mGot[39m: [1m[31mTrue[39m[22m                                                                                 
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: ---------------------⌄                                                               
-         [36mTest[39m: showtime_test.[1m[36mis_ok_meta_test[39m[22m                                                        
-  [36mDescription[39m: Test failing be_ok assertion with meta-data                                          
-     [36mExpected[39m: [1m[32mOk(_)[39m[22m                                                                                
-          [36mGot[39m: [1m[31mError(TestType("error", ["caused", "by"]))[39m[22m                                           
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: -------------------⌄                                                                 
-         [36mTest[39m: showtime_test.[1m[36mis_ok_test[39m[22m                                                             
-     [36mExpected[39m: [1m[32mOk(_)[39m[22m                                                                                
-          [36mGot[39m: [1m[31mError(TestType("error", ["caused", "by"]))[39m[22m                                           
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime@tests@should.be_ok                                                          
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: ----------------------⌄                                                              
-         [36mTest[39m: showtime_test.[1m[36mis_true_meta_test[39m[22m                                                      
-  [36mDescription[39m: Test is true with meta                                                               
-     [36mExpected[39m: [1m[32mTrue[39m[22m                                                                                 
-          [36mGot[39m: [1m[31mFalse[39m[22m                                                                                
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: --------------------⌄                                                                
-         [36mTest[39m: showtime_test.[1m[36mis_true_test[39m[22m                                                           
-     [36mExpected[39m: [1m[32mTrue[39m[22m                                                                                 
-          [36mGot[39m: [1m[31mFalse[39m[22m                                                                                
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: ------------------⌄                                                                  
-         [36mTest[39m: showtime_test.[1m[36mlist_test[39m[22m                                                              
-     [36mExpected[39m: [3, [1m[32m4[39m[22m, [1m[32m5[39m[22m]                                                                            
-          [36mGot[39m: [[1m[31m1[39m[22m, [1m[31m2[39m[22m, 3]                                                                            
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: --------------------------⌄                                                          
-         [36mTest[39m: showtime_test.[1m[36mmany_gleeunit_should_test[39m[22m                                              
-     [36mExpected[39m: [1m[32m2[39m[22m                                                                                    
-          [36mGot[39m: [1m[31m1[39m[22m                                                                                    
-   [36mStacktrace[39m: gleeunit_ffi.should_equal                                                            
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: --------------------------⌄                                                          
-         [36mTest[39m: showtime_test.[1m[36mmany_showtime_should_test[39m[22m                                              
-     [36mExpected[39m: [1m[32m2[39m[22m                                                                                    
-          [36mGot[39m: [1m[31m1[39m[22m                                                                                    
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: ------------------⌄                                                                  
-         [36mTest[39m: showtime_test.[1m[36mmeta_test[39m[22m                                                              
-  [36mDescription[39m: This is a test description                                                           
-     [36mExpected[39m: ["bepa", [1m[32m"depa"[39m[22m]                                                                     
-          [36mGot[39m: [[1m[31m"apa"[39m[22m, "bepa"]                                                                      
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_test.-meta_test/0-fun-0-                                                    
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: -----------------------⌄                                                             
-         [36mTest[39m: showtime_test.[1m[36mnot_equal_meta_test[39m[22m                                                    
-  [36mDescription[39m: Test if meta works for not_equal                                                     
-     [36mExpected[39m: [1m[32mTestType("apa", ["ren", "flax"])[39m[22m                                                     
-          [36mGot[39m: [1m[31mTestType("apa", ["ren", "tur"])[39m[22m                                                      
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: -------------------⌄                                                                 
-         [36mTest[39m: showtime_test.[1m[36mother_test[39m[22m                                                             
-     [36mExpected[39m: [1m[32mTestType("apa", ["älg", "skog"])[39m[22m                                                     
-          [36mGot[39m: [1m[31mVariant[39m[22m                                                                              
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: --------------------⌄                                                                
-         [36mTest[39m: showtime_test.[1m[36muse_meta_test[39m[22m                                                          
-  [36mDescription[39m: This test is defined using use                                                       
-     [36mExpected[39m: [1m[32mu[39m[22m[1m[32mn[39m[22m[1m[32mi[39m[22m[1m[32mv[39m[22me[1m[32mr[39m[22m[1m[32ms[39m[22m[1m[32me[39m[22m                                                                             
-          [36mGot[39m: [1m[31mm[39m[22me[1m[31mt[39m[22m[1m[31ma[39m[22m                                                                                 
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: ---------------------⌄                                                               
-         [36mTest[39m: showtime_test.[1m[36mwith_meta_test[39m[22m                                                         
-  [36mDescription[39m: This test is defined using use                                                       
-     [36mExpected[39m: [1m[32mu[39m[22m[1m[32mn[39m[22m[1m[32mi[39m[22m[1m[32mv[39m[22me[1m[32mr[39m[22m[1m[32ms[39m[22m[1m[32me[39m[22m                                                                             
-          [36mGot[39m: [1m[31mm[39m[22me[1m[31mt[39m[22m[1m[31ma[39m[22m                                                                                 
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-       [1m[31mFailed[39m[22m: ---------------------------⌄                                                         
-         [36mTest[39m: subfolder@sub_test.[1m[36min_subfolder_test[39m[22m                                                 
-     [36mExpected[39m: ["I", "am", "in", [1m[32m"subfolder"[39m[22m]                                                       
-          [36mGot[39m: ["I", "am", "in", [1m[31m"test"[39m[22m]                                                            
-   [36mStacktrace[39m: showtime@tests@should.evaluate                                                       
-               showtime_ffi.run_test                                                                
-               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-                             
-               gleam@list.each                                                                      
-               showtime@internal@erlang@module_handler.-start/5-fun-0-                              
-                                                                                                  
-[1m[32m14 passed[39m[22m, [1m[31m28 failed[39m[22m
+                                                                     
+       [1m[31mFailed[39m[22m: -----------------------⌄                                
+         [36mTest[39m: showtime_test.[1m[36mis_error_meta_test[39m[22m                        
+  [36mDescription[39m: Test failing be_error assertion with meta-data          
+     [36mExpected[39m: [1m[32mError(_)[39m[22m                                                
+          [36mGot[39m: [1m[31mOk(TestType("ok", ["result"]))[39m[22m                          
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+       [36mOutput[39m: This test                                               
+               has som lines of output                                 
+               Which is also followed by an io.debug()                 
+                                                                     
+       [1m[31mFailed[39m[22m: --------------------⌄                                   
+         [36mTest[39m: showtime_test.[1m[36mis_error_test[39m[22m                             
+     [36mExpected[39m: [1m[32mError(_)[39m[22m                                                
+          [36mGot[39m: [1m[31mOk(TestType("ok", ["result"]))[39m[22m                          
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime@tests@should.be_error                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+       [36mOutput[39m: This test                                               
+               has som lines of output                                 
+               Which is also followed by an io.debug()                 
+                                                                     
+       [1m[31mFailed[39m[22m: -----------------------⌄                                
+         [36mTest[39m: showtime_test.[1m[36mis_false_meta_test[39m[22m                        
+  [36mDescription[39m: Test is false with meta                                 
+     [36mExpected[39m: [1m[32mFalse[39m[22m                                                   
+          [36mGot[39m: [1m[31mTrue[39m[22m                                                    
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: --------------------⌄                                   
+         [36mTest[39m: showtime_test.[1m[36mis_false_test[39m[22m                             
+     [36mExpected[39m: [1m[32mFalse[39m[22m                                                   
+          [36mGot[39m: [1m[31mTrue[39m[22m                                                    
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ---------------------⌄                                  
+         [36mTest[39m: showtime_test.[1m[36mis_ok_meta_test[39m[22m                           
+  [36mDescription[39m: Test failing be_ok assertion with meta-data             
+     [36mExpected[39m: [1m[32mOk(_)[39m[22m                                                   
+          [36mGot[39m: [1m[31mError(TestType("error", ["caused", "by"]))[39m[22m              
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: -------------------⌄                                    
+         [36mTest[39m: showtime_test.[1m[36mis_ok_test[39m[22m                                
+     [36mExpected[39m: [1m[32mOk(_)[39m[22m                                                   
+          [36mGot[39m: [1m[31mError(TestType("error", ["caused", "by"]))[39m[22m              
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime@tests@should.be_ok                             
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ----------------------⌄                                 
+         [36mTest[39m: showtime_test.[1m[36mis_true_meta_test[39m[22m                         
+  [36mDescription[39m: Test is true with meta                                  
+     [36mExpected[39m: [1m[32mTrue[39m[22m                                                    
+          [36mGot[39m: [1m[31mFalse[39m[22m                                                   
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: --------------------⌄                                   
+         [36mTest[39m: showtime_test.[1m[36mis_true_test[39m[22m                              
+     [36mExpected[39m: [1m[32mTrue[39m[22m                                                    
+          [36mGot[39m: [1m[31mFalse[39m[22m                                                   
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ------------------⌄                                     
+         [36mTest[39m: showtime_test.[1m[36mlist_test[39m[22m                                 
+     [36mExpected[39m: [3, [1m[32m4[39m[22m, [1m[32m5[39m[22m]                                               
+          [36mGot[39m: [[1m[31m1[39m[22m, [1m[31m2[39m[22m, 3]                                               
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: --------------------------⌄                             
+         [36mTest[39m: showtime_test.[1m[36mmany_gleeunit_should_test[39m[22m                 
+     [36mExpected[39m: [1m[32m2[39m[22m                                                       
+          [36mGot[39m: [1m[31m1[39m[22m                                                       
+   [36mStacktrace[39m: gleeunit_ffi.should_equal                               
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: --------------------------⌄                             
+         [36mTest[39m: showtime_test.[1m[36mmany_showtime_should_test[39m[22m                 
+     [36mExpected[39m: [1m[32m2[39m[22m                                                       
+          [36mGot[39m: [1m[31m1[39m[22m                                                       
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ------------------⌄                                     
+         [36mTest[39m: showtime_test.[1m[36mmeta_test[39m[22m                                 
+  [36mDescription[39m: This is a test description                              
+     [36mExpected[39m: ["bepa", [1m[32m"depa"[39m[22m]                                        
+          [36mGot[39m: [[1m[31m"apa"[39m[22m, "bepa"]                                         
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_test.-meta_test/0-fun-0-                       
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: -----------------------⌄                                
+         [36mTest[39m: showtime_test.[1m[36mnot_equal_meta_test[39m[22m                       
+  [36mDescription[39m: Test if meta works for not_equal                        
+     [36mExpected[39m: [1m[32mTestType("apa", ["ren", "flax"])[39m[22m                        
+          [36mGot[39m: [1m[31mTestType("apa", ["ren", "tur"])[39m[22m                         
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: -------------------⌄                                    
+         [36mTest[39m: showtime_test.[1m[36mother_test[39m[22m                                
+     [36mExpected[39m: [1m[32mTestType("apa", ["älg", "skog"])[39m[22m                        
+          [36mGot[39m: [1m[31mVariant[39m[22m                                                 
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: --------------------⌄                                   
+         [36mTest[39m: showtime_test.[1m[36muse_meta_test[39m[22m                             
+  [36mDescription[39m: This test is defined using use                          
+     [36mExpected[39m: [1m[32mu[39m[22m[1m[32mn[39m[22m[1m[32mi[39m[22m[1m[32mv[39m[22me[1m[32mr[39m[22m[1m[32ms[39m[22m[1m[32me[39m[22m                                                
+          [36mGot[39m: [1m[31mm[39m[22me[1m[31mt[39m[22m[1m[31ma[39m[22m                                                    
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ---------------------⌄                                  
+         [36mTest[39m: showtime_test.[1m[36mwith_meta_test[39m[22m                            
+  [36mDescription[39m: This test is defined using use                          
+     [36mExpected[39m: [1m[32mu[39m[22m[1m[32mn[39m[22m[1m[32mi[39m[22m[1m[32mv[39m[22me[1m[32mr[39m[22m[1m[32ms[39m[22m[1m[32me[39m[22m                                                
+          [36mGot[39m: [1m[31mm[39m[22me[1m[31mt[39m[22m[1m[31ma[39m[22m                                                    
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+       [1m[31mFailed[39m[22m: ---------------------------⌄                            
+         [36mTest[39m: subfolder@sub_test.[1m[36min_subfolder_test[39m[22m                    
+     [36mExpected[39m: ["I", "am", "in", [1m[32m"subfolder"[39m[22m]                          
+          [36mGot[39m: ["I", "am", "in", [1m[31m"test"[39m[22m]                               
+   [36mStacktrace[39m: showtime@tests@should.evaluate                          
+               showtime_ffi.run_test                                   
+               showtime@internal@erlang@runner.-run_test_suite/4-fun-0-
+               gleam@list.each                                         
+               showtime@internal@erlang@module_handler.-start/5-fun-0- 
+                                                                     
+[1m[32m14 passed[39m[22m, [1m[31m29 failed[39m[22m

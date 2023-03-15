@@ -267,6 +267,34 @@ pub fn diff_custom_test() {
   )
 }
 
+pub fn diff_long_test() {
+  test(
+    Meta("Testing long expected and got", ["diff"]),
+    fn(meta) {
+      [
+        TestType("first", ["in", "array"]),
+        TestType("second", ["in", "array"]),
+        TestType("first", ["in", "array"]),
+        TestType("second", ["in", "array"]),
+        TestType("first", ["in", "array"]),
+        TestType("second", ["in", "array"]),
+      ]
+      |> test.equal(
+        [
+          TestType("second", ["in", "array"]),
+          TestType("first", ["other", "array"]),
+          Variant,
+          TestType("second", ["in", "array"]),
+          TestType("first", ["other", "array"]),
+          TestType("second", ["in", "array"]),
+          TestType("first", ["other", "array"]),
+        ],
+        meta,
+      )
+    },
+  )
+}
+
 pub fn formatted_table_test() {
   test(
     Meta("This is a test description", ["showtime", "ignore"]),
