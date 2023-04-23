@@ -20,7 +20,7 @@ fn time(time) {
   fn() { time }
 }
 
-fn run_foo_test() {
+fn run_test_foo() {
   let handler_state = HandlerState(Running, 0, map.new())
   common_event_handler.handle_event(
     StartTestSuite(module_foo),
@@ -179,7 +179,7 @@ pub fn run_test_after_ended_test() {
     ["showtime"],
   ))
   let updated_handler_state =
-    run_foo_test()
+    run_test_foo()
     |> common_event_handler.handle_event(
       StartTest(module_foo, function_bar),
       time(120),
@@ -214,7 +214,7 @@ pub fn start_test_suite_after_ended_test() {
     ["showtime"],
   ))
   let updated_handler_state =
-    run_foo_test()
+    run_test_foo()
     |> common_event_handler.handle_event(
       StartTestSuite(module_foo),
       time(120),

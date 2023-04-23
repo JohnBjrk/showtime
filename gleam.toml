@@ -11,12 +11,12 @@ repository = { type = "github", user = "JohnBjrk", repo = "showtime" }
 target = "erlang"
 
 [dependencies]
-gleam_stdlib = "~> 0.27"
+gleam_stdlib = "~> 0.28"
 gleam_erlang = "~> 0.18"
 gleam_otp = "~> 0.5"
 gleam_community_ansi = "~> 1.1"
 glint = "~> 0.11"
-gap = "~> 0.3"
+gap = "~> 0.4"
 snag = "~> 0.2"
 
 [dev-dependencies]
