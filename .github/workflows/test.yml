@@ -22,4 +22,4 @@ jobs:
       - run: gleam deps download
       - run: gleam test -- --modules=subfolder/common_event_handler_test
       - run: gleam test --target=javascript -- --modules=subfolder/common_event_handler_test
-      # - run: make test
+      - run: make test
