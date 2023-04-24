@@ -1,4 +1,4 @@
-![](assets/images/showtime2.png)
+![](https://raw.githubusercontent.com/JohnBjrk/showtime/main/assets/images/showtime2.png)
 
 Test framework for Gleam
 
