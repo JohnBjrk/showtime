@@ -57,3 +57,7 @@ gleam add showtime
 ```
 
 and its documentation can be found at <https://hexdocs.pm/showtime>.
+
+## Name
+
+The name "showtime" is a nod to the Gleam test framework "gleeunit" which surely must have something to do with the TV series 📺.

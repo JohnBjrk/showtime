@@ -5,6 +5,7 @@ if erlang {
   import gleam/string
   import gleam/int
   import gleam/option.{None, Option, Some}
+  import gleam/result
   import gleam/erlang/file
   import gleam/erlang/atom.{Atom}
   import showtime/internal/common/test_suite.{
@@ -66,7 +67,10 @@ if erlang {
     let test_modules_in_subfolders =
       files
       |> list.map(fn(filename) { path <> "/" <> filename })
-      |> list.filter(file.is_directory)
+      |> list.filter(fn(file) {
+        file.is_directory(file)
+        |> result.unwrap(False)
+      })
       |> list.fold(
         [],
         fn(modules, subfolder) {
