@@ -164,11 +164,11 @@ map_extra_info_list(ExtraInfoList) ->
     ).
 
 map_arity(Arity) ->
-    case Arity of
-        [head | tail] ->
-            {arg_list, [head | tail]};
-        Num ->
-            {num, Num}
+    if 
+        is_list(Arity) ->
+            {arg_list, Arity};
+        is_integer(Arity) ->
+            {num, Arity}
     end.
 
 functions() ->
