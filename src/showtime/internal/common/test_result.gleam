@@ -66,7 +66,7 @@ pub type ReasonDetail {
 // Gleam error detail is produced by showtime should and will hold all the information
 // about the assertion (both expected and got)
 pub type GleamErrorDetail {
-  Assert(
+  LetAssert(
     module: String,
     function: String,
     line_no: Int,

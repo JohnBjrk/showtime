@@ -376,24 +376,22 @@ pub fn table_test() {
   )
 }
 
-if javascript {
-  import gleam/dynamic.{Dynamic}
+@target(javascript)
+import gleam/dynamic.{Dynamic}
 
-  pub fn generic_exception_test() {
-    throw_exception(dynamic.from(TestType("Generic", [])))
-  }
-
-  external fn throw_exception(exception: Dynamic) -> Nil =
-    "./test_ffi.mjs" "throwException"
+@target(javascript)
+pub fn generic_exception_test() {
+  throw_exception(dynamic.from(TestType("Generic", [])))
 }
 
-if erlang {
-  import gleam/dynamic.{Dynamic}
+@external(erlang, "test_ffi", "throw_exception")
+@external(javascript, "./test_ffi.mjs", "throwException")
+fn throw_exception(exception exception: Dynamic) -> Nil
 
-  pub fn generic_exception_test() {
-    throw_exception(dynamic.from(TestType("Generic", [])))
-  }
+@target(erlang)
+import gleam/dynamic.{Dynamic}
 
-  external fn throw_exception(exception: Dynamic) -> Nil =
-    "test_ffi" "throw_exception"
+@target(erlang)
+pub fn generic_exception_test() {
+  throw_exception(dynamic.from(TestType("Generic", [])))
 }

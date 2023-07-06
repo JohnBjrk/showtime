@@ -9,7 +9,7 @@ import {
   EndTestSuite,
 } from "./showtime/internal/common/test_suite.mjs";
 import {
-  Assert,
+  LetAssert,
   ErlangException,
   GenericException,
   GleamAssert,
@@ -129,7 +129,7 @@ export const run = async (
                 new ErlangException(
                   new ErlangError(),
                   new GleamError(
-                    new Assert(
+                    new LetAssert(
                       test_module.name,
                       fnName,
                       // TODO: Fix line number
@@ -180,7 +180,7 @@ export const run = async (
                 new ErlangException(
                   new ErlangError(),
                   new GleamError(
-                    new Assert(
+                    new LetAssert(
                       test_module.name,
                       fnName,
                       error.line ? error.line : 0,
