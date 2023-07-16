@@ -99,7 +99,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
           [36mGot[39m: [1m[31mTestType(arg1: "Generic", arg2: [])[39m[22m           
                                                            
        [1m[31mFailed[39m[22m: ---------------------⌄                        
-         [36mTest[39m: showtime_test.[1m[36massert_test:213[39m[22m                 
+         [36mTest[39m: showtime_test.[1m[36massert_test:211[39m[22m                 
      [36mExpected[39m: Patterns should match                         
           [36mGot[39m: [1m[31mError("bepa")[39m[22m                                 
    [36mStacktrace[39m: showtime_ffi.run                              
