@@ -1,4 +1,5 @@
 name = "showtime"
+gleam = ">= 0.30.0"
 version = "0.1.6"
 
 # Fill out these fields if you intend to generate HTML documentation or publish
@@ -11,8 +12,8 @@ repository = { type = "github", user = "JohnBjrk", repo = "showtime" }
 target = "erlang"
 
 [dependencies]
-gleam_stdlib = "~> 0.28"
-gleam_erlang = "~> 0.18"
+gleam_stdlib = "~> 0.29"
+gleam_erlang = "~> 0.19"
 gleam_otp = "~> 0.5"
 gleam_community_ansi = "~> 1.1"
 glint = "~> 0.12-rc5"

@@ -22,6 +22,8 @@ import showtime/internal/erlang/runner
 import showtime/internal/erlang/discover.{
   collect_modules, collect_test_functions,
 }
+@target(javascript)
+import gleam/io
 
 @target(erlang)
 pub fn main() {
@@ -143,7 +145,7 @@ fn event_handler(event: TestEvent, state: HandlerState) {
 @external(javascript, "./showtime_ffi.mjs", "run")
 fn run_tests(a: fn(TestEvent, HandlerState) -> HandlerState, b: HandlerState, c: Option(
     List(String),
-  ), d: List(String), e: Capture) -> Nil
+  ), d: List(String), e: cli.Capture) -> Nil
 
 @target(javascript)
 @external(javascript, "./showtime_ffi.mjs", "start_args")
