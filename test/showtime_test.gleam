@@ -1,7 +1,6 @@
 import gleam/io
 import gleam/option.{None}
 import gleam/list
-import gleeunit
 import gleeunit/should as gshould
 import showtime
 import showtime/tests/should
@@ -19,7 +18,6 @@ pub type TestType {
 
 pub fn main() {
   showtime.main()
-  // gleeunit.main()
 }
 
 pub fn i_am_test() {
