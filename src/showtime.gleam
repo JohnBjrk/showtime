@@ -1,15 +1,13 @@
 import glint.{CommandInput, flag}
-import glint/flag.{LS, S}
+import glint/flag
 import glint/flag/constraint.{one_of}
 import gleam/result
 import gleam/string
-import gleam/io
-import snag
-import showtime/internal/common/cli.{Capture, Mixed, No, Yes}
+import showtime/internal/common/cli.{Mixed, No, Yes}
 @target(erlang)
 import gleam/list
 @target(erlang)
-import gleam/option.{None, Option, Some}
+import gleam/option.{None, Some}
 @target(erlang)
 import gleam/erlang.{start_arguments}
 @target(erlang)
