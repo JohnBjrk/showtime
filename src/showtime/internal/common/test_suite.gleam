@@ -1,6 +1,6 @@
-import gleam/option.{Option}
-import showtime/internal/common/test_result.{TestResult}
-import showtime/internal/common/cli.{Capture}
+import gleam/option.{type Option}
+import showtime/internal/common/test_result.{type TestResult}
+import showtime/internal/common/cli.{type Capture}
 
 // The state (and result) of a test function
 pub type TestRun {

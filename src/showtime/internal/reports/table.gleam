@@ -1,7 +1,7 @@
 import gleam/list
 import gleam/string
 import gleam/int
-import gleam/option.{Option}
+import gleam/option.{type Option}
 import showtime/internal/reports/styles.{strip_style}
 
 pub type Content {

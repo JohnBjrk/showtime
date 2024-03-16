@@ -1,7 +1,7 @@
 @target(erlang)
 import gleam/io
 @target(erlang)
-import gleam/dynamic.{Dynamic}
+import gleam/dynamic.{type Dynamic}
 @target(erlang)
 import gleam/list
 @target(erlang)
@@ -9,16 +9,17 @@ import gleam/string
 @target(erlang)
 import gleam/int
 @target(erlang)
-import gleam/option.{None, Option, Some}
+import gleam/option.{type Option, None, Some}
 @target(erlang)
 import gleam/result
 @target(erlang)
-import gleam/erlang/file
+import simplifile
 @target(erlang)
-import gleam/erlang/atom.{Atom}
+import gleam/erlang/atom.{type Atom}
 @target(erlang)
 import showtime/internal/common/test_suite.{
-  TestFunction, TestModule, TestModuleHandler, TestSuite,
+  type TestModule, type TestModuleHandler, type TestSuite, TestFunction,
+  TestModule, TestSuite,
 }
 
 // Module collector for erlang
@@ -39,13 +40,14 @@ fn collect_modules_in_folder(
   only_modules: Option(List(String)),
 ) {
   let module_prefix = get_module_prefix(path)
-  let assert Ok(files) = file.list_directory(path)
+  let assert Ok(files) = simplifile.read_directory(path)
   let test_modules_in_folder =
     files
     |> list.filter(string.ends_with(_, "_test.gleam"))
     |> list.filter_map(fn(test_module_file) {
       let module_name =
-        module_prefix <> {
+        module_prefix
+        <> {
           test_module_file
           |> string.replace(".gleam", "")
         }
@@ -54,7 +56,8 @@ fn collect_modules_in_folder(
           let module_in_list =
             only_modules_list
             |> list.any(fn(only_module_name) {
-              only_module_name == module_name
+              only_module_name
+              == module_name
               |> string.replace("@", "/")
             })
           case module_in_list {
@@ -78,20 +81,17 @@ fn collect_modules_in_folder(
     files
     |> list.map(fn(filename) { path <> "/" <> filename })
     |> list.filter(fn(file) {
-      file.is_directory(file)
+      simplifile.verify_is_directory(file)
       |> result.unwrap(False)
     })
-    |> list.fold(
-      [],
-      fn(modules, subfolder) {
-        modules
-        |> list.append(collect_modules_in_folder(
-          subfolder,
-          test_module_handler,
-          only_modules,
-        ))
-      },
-    )
+    |> list.fold([], fn(modules, subfolder) {
+      modules
+      |> list.append(collect_modules_in_folder(
+        subfolder,
+        test_module_handler,
+        only_modules,
+      ))
+    })
   test_modules_in_folder
   |> list.append(test_modules_in_subfolders)
 }
@@ -136,7 +136,7 @@ pub fn collect_test_functions(module: TestModule) -> TestSuite {
       let assert #(name, arity) = entry
       #(
         name
-        |> atom.to_string(),
+          |> atom.to_string(),
         arity,
       )
     })
@@ -148,9 +148,11 @@ pub fn collect_test_functions(module: TestModule) -> TestSuite {
             0 -> Ok(name)
             _ -> {
               io.println(
-                "WARNING: function \"" <> name <> "\" has arity: " <> int.to_string(
-                  arity,
-                ) <> " - cannot be used as test (needs to be 0)",
+                "WARNING: function \""
+                <> name
+                <> "\" has arity: "
+                <> int.to_string(arity)
+                <> " - cannot be used as test (needs to be 0)",
               )
               Error("Wrong arity")
             }
@@ -165,4 +167,8 @@ pub fn collect_test_functions(module: TestModule) -> TestSuite {
 
 @target(erlang)
 @external(erlang, "erlang", "apply")
-fn apply(module module: Atom, function function: Atom, args args: List(Dynamic)) -> Dynamic
+fn apply(
+  module module: Atom,
+  function function: Atom,
+  args args: List(Dynamic),
+) -> Dynamic

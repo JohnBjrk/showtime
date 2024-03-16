@@ -4,7 +4,7 @@ import gleam/list
 import gleeunit/should as gshould
 import showtime
 import showtime/tests/should
-import showtime/tests/test.{test}
+import showtime/tests/do_test.{do_test}
 import showtime/tests/meta.{Meta}
 import showtime/internal/reports/table.{
   AlignLeft, AlignRight, Content, Separator, StyledContent, Table,
@@ -37,11 +37,11 @@ pub fn is_ok_test() {
 }
 
 pub fn is_ok_meta_test() {
-  test(
+  do_test(
     Meta("Test failing be_ok assertion with meta-data", ["meta"]),
     fn(meta) {
       Error(TestType("error", ["caused", "by"]))
-      |> test.be_ok(meta)
+      |> do_test.be_ok(meta)
     },
   )
 }
@@ -57,7 +57,7 @@ pub fn is_error_test() {
 }
 
 pub fn is_error_meta_test() {
-  test(
+  do_test(
     Meta("Test failing be_error assertion with meta-data", ["meta"]),
     fn(meta) {
       io.println("This test")
@@ -66,7 +66,7 @@ pub fn is_error_meta_test() {
       TestType("Im the infamous TestType", ["we", "are", "on", "the", "list"])
       |> io.debug()
       Ok(TestType("ok", ["result"]))
-      |> test.be_error(meta)
+      |> do_test.be_error(meta)
     },
   )
 }
@@ -76,7 +76,9 @@ pub fn fail_test() {
 }
 
 pub fn fail_meta_test() {
-  test(Meta("Test fail with meta-data", ["meta"]), fn(meta) { test.fail(meta) })
+  do_test(Meta("Test fail with meta-data", ["meta"]), fn(meta) {
+    do_test.fail(meta)
+  })
 }
 
 pub fn is_true_test() {
@@ -85,13 +87,10 @@ pub fn is_true_test() {
 }
 
 pub fn is_true_meta_test() {
-  test(
-    Meta("Test is true with meta", ["meta"]),
-    fn(meta) {
-      False
-      |> test.be_true(meta)
-    },
-  )
+  do_test(Meta("Test is true with meta", ["meta"]), fn(meta) {
+    False
+    |> do_test.be_true(meta)
+  })
 }
 
 pub fn is_false_test() {
@@ -100,13 +99,10 @@ pub fn is_false_test() {
 }
 
 pub fn is_false_meta_test() {
-  test(
-    Meta("Test is false with meta", ["meta"]),
-    fn(meta) {
-      True
-      |> test.be_false(meta)
-    },
-  )
+  do_test(Meta("Test is false with meta", ["meta"]), fn(meta) {
+    True
+    |> do_test.be_false(meta)
+  })
 }
 
 pub fn gleeunit_assert_not_equal_test() {
@@ -186,25 +182,19 @@ pub fn djur_test() {
 }
 
 pub fn not_equal_meta_test() {
-  test(
-    Meta("Test if meta works for not_equal", []),
-    fn(meta) {
-      TestType("apa", ["ren", "tur"])
-      |> test.not_equal(TestType("apa", ["ren", "flax"]), meta)
-    },
-  )
+  do_test(Meta("Test if meta works for not_equal", []), fn(meta) {
+    TestType("apa", ["ren", "tur"])
+    |> do_test.not_equal(TestType("apa", ["ren", "flax"]), meta)
+  })
 }
 
 pub fn meta_test() {
-  test(
-    Meta("This is a test description", ["ignore"]),
-    fn(meta) {
-      ["apa", "bepa"]
-      |> test.equal(["bepa", "depa"], meta)
-      2
-      |> test.equal(3, meta)
-    },
-  )
+  do_test(Meta("This is a test description", ["ignore"]), fn(meta) {
+    ["apa", "bepa"]
+    |> do_test.equal(["bepa", "depa"], meta)
+    2
+    |> do_test.equal(3, meta)
+  })
 }
 
 pub fn assert_test() {
@@ -212,13 +202,15 @@ pub fn assert_test() {
 }
 
 pub fn use_meta_test() {
-  use meta <- test(Meta("This test is defined using use", ["meta"]))
+  use meta <- do_test(Meta("This test is defined using use", ["meta"]))
   "meta"
-  |> test.equal("universe", meta)
+  |> do_test.equal("universe", meta)
 }
 
 pub fn with_meta_test() {
-  use should <- test.with_meta(Meta("This test is defined using use", ["meta"]))
+  use should <- do_test.with_meta(
+    Meta("This test is defined using use", ["meta"]),
+  )
   "meta"
   |> should.equal("universe")
 }
@@ -228,7 +220,7 @@ fn add(a, b) {
 }
 
 pub fn multi_test() {
-  use should <- test.with_meta(Meta("Test multiple param values", ["meta"]))
+  use should <- do_test.with_meta(Meta("Test multiple param values", ["meta"]))
   let as_and_bs =
     list.range(0, 5)
     |> list.zip(list.range(0, 5))
@@ -239,139 +231,118 @@ pub fn multi_test() {
 }
 
 pub fn diff_string_test() {
-  test(
-    Meta("Test diffing of strings", []),
-    fn(meta) {
-      "a test string"
-      |> test.equal("the test thing", meta)
-    },
-  )
+  do_test(Meta("Test diffing of strings", []), fn(meta) {
+    "a test string"
+    |> do_test.equal("the test thing", meta)
+  })
 }
 
 pub fn diff_custom_test() {
-  test(
-    Meta("Testing diffs of custom types", ["diff"]),
-    fn(meta) {
-      [TestType("first", ["in", "array"]), TestType("second", ["in", "array"])]
-      |> test.equal(
-        [
-          TestType("second", ["in", "array"]),
-          TestType("first", ["other", "array"]),
-          Variant,
-        ],
-        meta,
-      )
-    },
-  )
+  do_test(Meta("Testing diffs of custom types", ["diff"]), fn(meta) {
+    [TestType("first", ["in", "array"]), TestType("second", ["in", "array"])]
+    |> do_test.equal(
+      [
+        TestType("second", ["in", "array"]),
+        TestType("first", ["other", "array"]),
+        Variant,
+      ],
+      meta,
+    )
+  })
 }
 
 pub fn diff_long_test() {
-  test(
-    Meta("Testing long expected and got", ["diff"]),
-    fn(meta) {
+  do_test(Meta("Testing long expected and got", ["diff"]), fn(meta) {
+    [
+      TestType("first", ["in", "array"]),
+      TestType("second", ["in", "array"]),
+      TestType("first", ["in", "array"]),
+      TestType("second", ["in", "array"]),
+      TestType("first", ["in", "array"]),
+      TestType("second", ["in", "array"]),
+    ]
+    |> do_test.equal(
       [
-        TestType("first", ["in", "array"]),
         TestType("second", ["in", "array"]),
-        TestType("first", ["in", "array"]),
+        TestType("first", ["other", "array"]),
+        Variant,
         TestType("second", ["in", "array"]),
-        TestType("first", ["in", "array"]),
+        TestType("first", ["other", "array"]),
         TestType("second", ["in", "array"]),
-      ]
-      |> test.equal(
-        [
-          TestType("second", ["in", "array"]),
-          TestType("first", ["other", "array"]),
-          Variant,
-          TestType("second", ["in", "array"]),
-          TestType("first", ["other", "array"]),
-          TestType("second", ["in", "array"]),
-          TestType("first", ["other", "array"]),
-        ],
-        meta,
-      )
-    },
-  )
+        TestType("first", ["other", "array"]),
+      ],
+      meta,
+    )
+  })
 }
 
 pub fn formatted_table_test() {
-  test(
-    Meta("This is a test description", ["showtime", "ignore"]),
-    fn(_meta) {
-      Table(
-        None,
-        [
-          [
-            AlignRight(StyledContent(green("###")), 2),
-            Separator(green("# ")),
-            AlignLeft(StyledContent(green("Test Header ####")), 0),
-            AlignLeft(Content(""), 0),
-            AlignLeft(Content(""), 0),
-          ],
-          [
-            AlignRight(StyledContent(cyan("first")), 2),
-            Separator(": "),
-            AlignLeft(StyledContent(green("second")), 1),
-            Separator("| "),
-            AlignLeft(Content("third"), 1),
-          ],
-          [
-            AlignRight(StyledContent(cyan("firstlong")), 2),
-            Separator(": "),
-            AlignLeft(StyledContent(red("sh")), 1),
-            Separator("| "),
-            AlignLeft(Content("very long content"), 1),
-          ],
-        ],
-      )
-      |> table.align_table()
-      |> table.to_string()
-      |> io.println()
-      Nil
-    },
-  )
+  do_test(Meta("This is a test description", ["showtime", "ignore"]), fn(_meta) {
+    Table(None, [
+      [
+        AlignRight(StyledContent(green("###")), 2),
+        Separator(green("# ")),
+        AlignLeft(StyledContent(green("Test Header ####")), 0),
+        AlignLeft(Content(""), 0),
+        AlignLeft(Content(""), 0),
+      ],
+      [
+        AlignRight(StyledContent(cyan("first")), 2),
+        Separator(": "),
+        AlignLeft(StyledContent(green("second")), 1),
+        Separator("| "),
+        AlignLeft(Content("third"), 1),
+      ],
+      [
+        AlignRight(StyledContent(cyan("firstlong")), 2),
+        Separator(": "),
+        AlignLeft(StyledContent(red("sh")), 1),
+        Separator("| "),
+        AlignLeft(Content("very long content"), 1),
+      ],
+    ])
+    |> table.align_table()
+    |> table.to_string()
+    |> io.println()
+    Nil
+  })
 }
 
 pub fn table_test() {
-  test(
-    Meta("This is a test description", ["showtime"]),
-    fn(meta) {
-      let table_string =
-        Table(
-          None,
-          [
-            [
-              AlignRight(Content("###"), 2),
-              Separator("# "),
-              AlignLeft(Content("Test Header ####"), 0),
-              AlignLeft(Content(""), 0),
-              AlignLeft(Content(""), 0),
-            ],
-            [
-              AlignRight(Content("first"), 2),
-              Separator(": "),
-              AlignLeft(Content("second"), 1),
-              Separator("| "),
-              AlignLeft(Content("third"), 1),
-            ],
-            [
-              AlignRight(Content("firstlong"), 2),
-              Separator(": "),
-              AlignLeft(Content("sh"), 1),
-              Separator("| "),
-              AlignLeft(Content("very long content"), 1),
-            ],
-          ],
-        )
-        |> table.align_table()
-        |> table.to_string()
-      table_string
-      |> test.equal(
-        "        #### Test Header ####                   \n      first: second           | third             \n  firstlong: sh               | very long content ",
-        meta,
-      )
-      Nil
-    },
-  )
+  do_test(Meta("This is a test description", ["showtime"]), fn(meta) {
+    let table_string =
+      Table(None, [
+        [
+          AlignRight(Content("###"), 2),
+          Separator("# "),
+          AlignLeft(Content("Test Header ####"), 0),
+          AlignLeft(Content(""), 0),
+          AlignLeft(Content(""), 0),
+        ],
+        [
+          AlignRight(Content("first"), 2),
+          Separator(": "),
+          AlignLeft(Content("second"), 1),
+          Separator("| "),
+          AlignLeft(Content("third"), 1),
+        ],
+        [
+          AlignRight(Content("firstlong"), 2),
+          Separator(": "),
+          AlignLeft(Content("sh"), 1),
+          Separator("| "),
+          AlignLeft(Content("very long content"), 1),
+        ],
+      ])
+      |> table.align_table()
+      |> table.to_string()
+    table_string
+    |> do_test.equal(
+      "        #### Test Header ####                   \n      first: second           | third             \n  firstlong: sh               | very long content ",
+      meta,
+    )
+    Nil
+  })
 }
 
 @target(javascript)
@@ -387,7 +358,7 @@ pub fn generic_exception_test() {
 fn throw_exception(exception exception: Dynamic) -> Nil
 
 @target(erlang)
-import gleam/dynamic.{Dynamic}
+import gleam/dynamic.{type Dynamic}
 
 @target(erlang)
 pub fn generic_exception_test() {

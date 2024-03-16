@@ -1,4 +1,4 @@
-import glint.{CommandInput, flag}
+import glint.{type CommandInput, flag}
 import glint/flag
 import glint/flag/constraint.{one_of}
 import gleam/result
@@ -143,9 +143,13 @@ fn event_handler(event: TestEvent, state: HandlerState) {
 
 @target(javascript)
 @external(javascript, "./showtime_ffi.mjs", "run")
-fn run_tests(a: fn(TestEvent, HandlerState) -> HandlerState, b: HandlerState, c: Option(
-    List(String),
-  ), d: List(String), e: cli.Capture) -> Nil
+fn run_tests(
+  a: fn(TestEvent, HandlerState) -> HandlerState,
+  b: HandlerState,
+  c: Option(List(String)),
+  d: List(String),
+  e: cli.Capture,
+) -> Nil
 
 @target(javascript)
 @external(javascript, "./showtime_ffi.mjs", "start_args")
@@ -160,37 +164,38 @@ fn exit(a: Int) -> Nil
 fn system_time() -> Int
 
 fn start_with_args(args, func) {
-  let modules_flag =
-    flag.new(flag.LS)
-    |> flag.default([])
-    |> flag.description("Run only tests in the modules in this list")
-
-  let ignore_flag =
-    flag.new(flag.LS)
-    |> flag.default([])
-    |> flag.description(
-      "Ignore tests that are have tags matching a tag in this list",
-    )
-
-  let capture_flag =
-    flag.new(flag.S)
-    |> flag.default("no")
-    |> flag.constraint(one_of(["yes", "no", "mixed"]))
-    |> flag.description(
-      "Capture output: no (default) - output when tests are run, yes - output is captured and shown in report, mixed - output when run and in report",
-    )
-
-  glint.new()
-  |> glint.add(
-    at: [],
-    do: glint.command(mk_runner(func, _))
-    |> glint.flag("modules", modules_flag)
-    |> glint.flag("ignore", ignore_flag)
-    |> glint.flag("capture", capture_flag)
-    |> glint.description("Runs test"),
-  )
-  |> glint.with_pretty_help(glint.default_pretty_help())
-  |> glint.run(args)
+  todo as "Fix for new glint API"
+  // let modules_flag =
+  //   flag.new(flag.LS)
+  //   |> flag.default([])
+  //   |> flag.description("Run only tests in the modules in this list")
+  //
+  // let ignore_flag =
+  //   flag.new(flag.LS)
+  //   |> flag.default([])
+  //   |> flag.description(
+  //     "Ignore tests that are have tags matching a tag in this list",
+  //   )
+  //
+  // let capture_flag =
+  //   flag.new(flag.S)
+  //   |> flag.default("no")
+  //   |> flag.constraint(one_of(["yes", "no", "mixed"]))
+  //   |> flag.description(
+  //     "Capture output: no (default) - output when tests are run, yes - output is captured and shown in report, mixed - output when run and in report",
+  //   )
+  //
+  // glint.new()
+  // |> glint.add(
+  //   at: [],
+  //   do: glint.command(mk_runner(func, _))
+  //     |> glint.flag("modules", modules_flag)
+  //     |> glint.flag("ignore", ignore_flag)
+  //     |> glint.flag("capture", capture_flag)
+  //     |> glint.description("Runs test"),
+  // )
+  // |> glint.with_pretty_help(glint.default_pretty_help())
+  // |> glint.run(args)
 }
 
 fn mk_runner(func, command: CommandInput) {
@@ -216,6 +221,7 @@ fn mk_runner(func, command: CommandInput) {
         "no" -> No
         "yes" -> Yes
         "mixed" -> Mixed
+        _ -> No
       }
     })
   func(module_list, ignore_tags, capture_output)

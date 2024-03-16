@@ -1,4 +1,4 @@
-import gleam/dynamic.{Dynamic}
+import gleam/dynamic.{type Dynamic}
 import gleam/string
 import showtime/internal/reports/styles.{expected_highlight, got_highlight}
 import gap.{compare_lists, compare_strings}

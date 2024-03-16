@@ -1,14 +1,14 @@
 @target(erlang)
-import gleam/otp/actor.{Continue}
+import gleam/otp/actor
 @target(erlang)
 import gleam/erlang/process
 @target(erlang)
 import showtime/internal/common/test_suite.{
-  EndTestSuite, StartTestSuite, TestEventHandler, TestFunctionCollector,
-  TestModule, TestRunner,
+  type TestEventHandler, type TestFunctionCollector, type TestModule,
+  type TestRunner, EndTestSuite, StartTestSuite,
 }
 @target(erlang)
-import showtime/internal/common/cli.{Capture}
+import showtime/internal/common/cli.{type Capture}
 
 @target(erlang)
 pub fn start(
@@ -19,21 +19,18 @@ pub fn start(
   capture: Capture,
 ) {
   let assert Ok(subject) =
-    actor.start(
-      Nil,
-      fn(module: TestModule, state) {
-        process.start(
-          fn() {
-            let test_suite = test_function_collector(module)
-            test_event_handler(StartTestSuite(module))
-            run_test_suite(test_suite, test_event_handler, ignore_tags, capture)
-            test_event_handler(EndTestSuite(module))
-          },
-          False,
-        )
-        Continue(state)
-      },
-    )
+    actor.start(Nil, fn(module: TestModule, state) {
+      process.start(
+        fn() {
+          let test_suite = test_function_collector(module)
+          test_event_handler(StartTestSuite(module))
+          run_test_suite(test_suite, test_event_handler, ignore_tags, capture)
+          test_event_handler(EndTestSuite(module))
+        },
+        False,
+      )
+      actor.continue(state)
+    })
   fn(test_module: TestModule) {
     process.send(subject, test_module)
     Nil

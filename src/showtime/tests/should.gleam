@@ -1,5 +1,5 @@
-import gleam/option.{None, Option, Some}
-import showtime/tests/meta.{Meta}
+import gleam/option.{type Option, None, Some}
+import showtime/tests/meta.{type Meta}
 
 pub type Assertion(t, e) {
   Eq(a: t, b: t, meta: Option(Meta))

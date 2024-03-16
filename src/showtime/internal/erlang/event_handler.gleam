@@ -1,13 +1,13 @@
 @target(erlang)
 import gleam/io
 @target(erlang)
-import gleam/otp/actor.{Continue, Stop}
+import gleam/otp/actor.{Stop}
 @target(erlang)
-import gleam/erlang/process.{Normal, Subject}
+import gleam/erlang/process.{type Subject, Normal}
 @target(erlang)
-import gleam/map
+import gleam/dict
 @target(erlang)
-import showtime/internal/common/test_suite.{EndTestRun, TestEvent}
+import showtime/internal/common/test_suite.{type TestEvent, EndTestRun}
 @target(erlang)
 import showtime/internal/common/common_event_handler.{
   Finished, HandlerState, NotStarted, handle_event,
@@ -29,7 +29,7 @@ type EventHandlerMessage {
 pub fn start() {
   let assert Ok(subject) =
     actor.start(
-      #(NotStarted, 0, map.new()),
+      #(NotStarted, 0, dict.new()),
       fn(msg: EventHandlerMessage, state) {
         let EventHandlerMessage(test_event, reply_to) = msg
         let #(test_state, num_done, events) = state
@@ -40,17 +40,20 @@ pub fn start() {
             HandlerState(test_state, num_done, events),
           )
         case updated_state {
-          HandlerState(Finished(num_modules), num_done, events) if num_done == num_modules -> {
+          HandlerState(Finished(num_modules), num_done, events)
+            if num_done == num_modules
+          -> {
             let #(test_report, num_failed) = create_test_report(events)
             io.println(test_report)
             process.send(reply_to, num_failed)
             Stop(Normal)
           }
           HandlerState(test_state, num_done, events) ->
-            Continue(#(test_state, num_done, events))
+            actor.continue(#(test_state, num_done, events))
         }
       },
     )
+
   let parent_subject = process.new_subject()
 
   let selector =

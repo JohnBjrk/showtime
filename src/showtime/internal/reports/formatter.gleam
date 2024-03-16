@@ -2,16 +2,16 @@ import gleam/io
 import gleam/int
 import gleam/list
 import gleam/string
-import gleam/option.{None, Option, Some}
-import gleam/map.{Map}
-import gleam/dynamic.{Dynamic}
+import gleam/option.{type Option, None, Some}
+import gleam/dict.{type Dict}
+import gleam/dynamic.{type Dynamic}
 import showtime/internal/common/test_result.{
-  AssertEqual, AssertMatch, AssertNotEqual, Expected, Expression,
-  GenericException, GleamAssert, GleamError, GleamErrorDetail, Ignored,
-  LetAssert, Pattern, ReasonDetail, Trace, TraceModule, Value,
+  type GleamErrorDetail, type ReasonDetail, type Trace, AssertEqual, AssertMatch,
+  AssertNotEqual, Expected, Expression, GenericException, GleamAssert,
+  GleamError, Ignored, LetAssert, Pattern, Trace, TraceModule, Value,
 }
-import showtime/internal/common/test_suite.{CompletedTestRun, TestRun}
-import showtime/tests/should.{Assertion, Eq, Fail, IsError, IsOk, NotEq}
+import showtime/internal/common/test_suite.{type TestRun, CompletedTestRun}
+import showtime/tests/should.{type Assertion, Eq, Fail, IsError, IsOk, NotEq}
 import showtime/internal/reports/styles.{
   error_style, expected_highlight, failed_style, function_style, got_highlight,
   heading_style, ignored_style, not_style, passed_style, stacktrace_style,
@@ -21,7 +21,7 @@ import showtime/internal/reports/table.{
   AlignLeft, AlignLeftOverflow, AlignRight, Content, Separator, StyledContent,
   Table, align_table, to_string,
 }
-import showtime/tests/meta.{Meta}
+import showtime/tests/meta.{type Meta}
 
 type GleeUnitAssertionType {
   GleeUnitAssertEqual(message: String)
@@ -45,18 +45,18 @@ type UnifiedError {
   )
 }
 
-pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
+pub fn create_test_report(test_results: Dict(String, Dict(String, TestRun))) {
   let all_test_runs =
     test_results
-    |> map.values()
-    |> list.flat_map(map.values)
+    |> dict.values()
+    |> list.flat_map(dict.values)
   let failed_test_runs =
     test_results
-    |> map.to_list()
+    |> dict.to_list()
     |> list.flat_map(fn(entry) {
       let #(module_name, test_module_results) = entry
       test_module_results
-      |> map.values()
+      |> dict.values()
       |> list.filter_map(fn(test_run) {
         case test_run {
           CompletedTestRun(_test_function, _, result) ->
@@ -76,11 +76,11 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
 
   let ignored_test_runs =
     test_results
-    |> map.to_list()
+    |> dict.to_list()
     |> list.flat_map(fn(entry) {
       let #(module_name, test_module_results) = entry
       test_module_results
-      |> map.values()
+      |> dict.values()
       |> list.filter_map(fn(test_run) {
         case test_run {
           CompletedTestRun(test_function, _, result) ->
@@ -211,7 +211,8 @@ pub fn create_test_report(test_results: Map(String, Map(String, TestRun))) {
 
   let passed =
     passed_style(
-      int.to_string(all_tests_count - failed_tests_count - ignored_tests_count) <> " passed",
+      int.to_string(all_tests_count - failed_tests_count - ignored_tests_count)
+      <> " passed",
     )
   let failed = failed_style(int.to_string(failed_tests_count) <> " failed")
   let ignored = case ignored_tests_count {
@@ -262,7 +263,8 @@ fn erlang_error_to_unified(
             GleeUnitAssertNotEqual(_message) ->
               UnifiedError(
                 ..unified,
-                expected: not_style("not ") <> string.inspect(value),
+                expected: not_style("not ")
+                <> string.inspect(value),
                 got: got_highlight(string.inspect(value)),
               )
             _ ->
@@ -434,12 +436,14 @@ fn format_reason(
     string.join(
       list.repeat(
         "-",
-        string.length(module) + 1 + {
-          string.length(function) + string.length(line)
-        } / 2,
+        string.length(module)
+          + 1
+          + { string.length(function) + string.length(line) }
+          / 2,
       ),
       "",
-    ) <> "⌄"
+    )
+    <> "⌄"
   let standard_table_rows = [
     Some([
       AlignRight(StyledContent(error_style("Failed")), 2),

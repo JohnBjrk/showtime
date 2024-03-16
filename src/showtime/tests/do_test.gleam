@@ -1,5 +1,5 @@
 import showtime/tests/should
-import showtime/tests/meta.{Meta}
+import showtime/tests/meta.{type Meta}
 
 pub type Test {
   Test(meta: Meta, test_function: fn() -> Nil)
@@ -9,20 +9,18 @@ pub type MetaShould(t) {
   MetaShould(equal: fn(t, t) -> Nil, not_equal: fn(t, t) -> Nil)
 }
 
-pub fn test(meta: Meta, test_function: fn(Meta) -> Nil) {
+pub fn do_test(meta: Meta, test_function: fn(Meta) -> Nil) {
   Test(meta, fn() { test_function(meta) })
 }
 
 pub fn with_meta(meta: Meta, test_function: fn(MetaShould(a)) -> Nil) {
-  Test(
-    meta,
-    fn() {
-      test_function(MetaShould(
-        fn(a, b) { equal(a, b, meta) },
-        fn(a, b) { not_equal(a, b, meta) },
-      ))
-    },
-  )
+  Test(meta, fn() {
+    test_function(
+      MetaShould(fn(a, b) { equal(a, b, meta) }, fn(a, b) {
+        not_equal(a, b, meta)
+      }),
+    )
+  })
 }
 
 pub fn equal(a: t, b: t, meta: Meta) {

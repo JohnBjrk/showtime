@@ -1,7 +1,7 @@
 import gleam_community/ansi
 import gleam/list
 import gleam/string
-import gleam/bit_string
+import gleam/bit_array
 
 pub fn passed_style(text) {
   bold_green(text)
@@ -67,18 +67,15 @@ pub fn strip_style(text) {
   let #(new_text, _) =
     text
     |> string.to_graphemes()
-    |> list.fold(
-      #("", False),
-      fn(acc, char) {
-        let #(str, removing) = acc
-        let bit_char = bit_string.from_string(char)
-        case bit_char, removing {
-          <<0x1b>>, _ -> #(str, True)
-          <<0x6d>>, True -> #(str, False)
-          _, True -> #(str, True)
-          _, False -> #(str <> char, False)
-        }
-      },
-    )
+    |> list.fold(#("", False), fn(acc, char) {
+      let #(str, removing) = acc
+      let bit_char = bit_array.from_string(char)
+      case bit_char, removing {
+        <<0x1b>>, _ -> #(str, True)
+        <<0x6d>>, True -> #(str, False)
+        _, True -> #(str, True)
+        _, False -> #(str <> char, False)
+      }
+    })
   new_text
 }

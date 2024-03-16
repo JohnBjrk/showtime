@@ -1,5 +1,5 @@
-import gleam/dynamic.{Dynamic}
-import gleam/map.{Map}
+import gleam/dynamic.{type Dynamic}
+import gleam/dict.{type Dict}
 
 // These are all the types used for test-results
 // NOTE: These are heavily used in the erlang/js ffi:s
@@ -106,7 +106,7 @@ pub type Trace {
 // as well as some dynamic data in a map
 // This is currently not used in the reporter
 pub type ExtraInfo {
-  ErrorInfo(error_info: Map(Dynamic, Dynamic))
+  ErrorInfo(error_info: Dict(Dynamic, Dynamic))
   File(filename: String)
   Line(line_no: Int)
 }
