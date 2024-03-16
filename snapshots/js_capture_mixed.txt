@@ -20,12 +20,12 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
      [36mExpected[39m: [1m[32mError(_)[39m[22m                                      
           [36mGot[39m: [1m[31mOk(TestType(arg1: "ok", arg2: ["result"]))[39m[22m    
    [36mStacktrace[39m: showtime_ffi.run                              
-               test.test_function                            
+               do_test.test_function                         
                showtime_test.(anonymous)                     
-               test.be_error                                 
+               do_test.be_error                              
                should.be_error_meta                          
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
        [36mOutput[39m: This test                                     
                has som lines of output                       
                Which is also followed by an io.debug()       
@@ -38,7 +38,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
                showtime_test.is_ok_test                      
                should.be_ok                                  
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: -------------------⌄                          
          [36mTest[39m: showtime_test.[1m[36mother_test[39m[22m                      
@@ -48,7 +48,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
                showtime_test.other_test                      
                should.equal                                  
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: --------------------⌄                         
          [36mTest[39m: showtime_test.[1m[36mis_false_test[39m[22m                   
@@ -59,7 +59,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
                should.be_false                               
                should.equal                                  
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: ----------------------⌄                       
          [36mTest[39m: showtime_test.[1m[36mdiff_string_test[39m[22m                
@@ -67,12 +67,12 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
      [36mExpected[39m: [1m[32mt[39m[22m[1m[32mh[39m[22m[1m[32me[39m[22m test t[1m[32mh[39m[22ming                                
           [36mGot[39m: [1m[31ma[39m[22m test [1m[31ms[39m[22mt[1m[31mr[39m[22ming                                 
    [36mStacktrace[39m: showtime_ffi.run                              
-               test.test_function                            
+               do_test.test_function                         
                showtime_test.(anonymous)                     
-               test.equal                                    
+               do_test.equal                                 
                should.equal_meta                             
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: ----------------------⌄                       
          [36mTest[39m: showtime_test.[1m[36mdiff_custom_test[39m[22m                
@@ -80,12 +80,12 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
      [36mExpected[39m: [TestType(arg1: "second", arg2: ["in", "array"]), [1m[32mTestType(arg1: "first", arg2: ["other", "array"])[39m[22m, [1m[32mVariant[39m[22m]
           [36mGot[39m: [[1m[31mTestType(arg1: "first", arg2: ["in", "array"])[39m[22m, TestType(arg1: "second", arg2: ["in", "array"])]
    [36mStacktrace[39m: showtime_ffi.run                              
-               test.test_function                            
+               do_test.test_function                         
                showtime_test.(anonymous)                     
-               test.equal                                    
+               do_test.equal                                 
                should.equal_meta                             
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: --------------------------⌄                   
          [36mTest[39m: showtime_test.[1m[36mmany_gleeunit_should_test[39m[22m       
@@ -94,7 +94,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
    [36mStacktrace[39m: showtime_ffi.run                              
                showtime_test.many_gleeunit_should_test       
                should.equal                                  
-               gleeunit_ffi.crash                            
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: --------------------------⌄                   
          [36mTest[39m: showtime_test.[1m[36mmany_showtime_should_test[39m[22m       
@@ -104,7 +104,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
                showtime_test.many_showtime_should_test       
                should.equal                                  
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: -------------------------⌄                    
          [36mTest[39m: showtime_test.[1m[36mgeneric_exception_test[39m[22m          
@@ -112,12 +112,12 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
           [36mGot[39m: [1m[31mTestType(arg1: "Generic", arg2: [])[39m[22m           
                                                            
        [1m[31mFailed[39m[22m: ---------------------⌄                        
-         [36mTest[39m: showtime_test.[1m[36massert_test:211[39m[22m                 
+         [36mTest[39m: showtime_test.[1m[36massert_test:201[39m[22m                 
      [36mExpected[39m: Patterns should match                         
           [36mGot[39m: [1m[31mError("bepa")[39m[22m                                 
    [36mStacktrace[39m: showtime_ffi.run                              
                showtime_test.assert_test                     
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: ---------------------⌄                        
          [36mTest[39m: showtime_test.[1m[36mfail_meta_test[39m[22m                  
@@ -125,12 +125,12 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
      [36mExpected[39m: [1m[31mshould.fail()[39m[22m                                 
           [36mGot[39m: [1m[31mN/A - test always expected to fail[39m[22m            
    [36mStacktrace[39m: showtime_ffi.run                              
-               test.test_function                            
+               do_test.test_function                         
                showtime_test.(anonymous)                     
-               test.fail                                     
+               do_test.fail                                  
                should.fail_meta                              
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: -----------------------------⌄                
          [36mTest[39m: showtime_test.[1m[36mgleeunit_assert_not_equal_test[39m[22m  
@@ -139,7 +139,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
    [36mStacktrace[39m: showtime_ffi.run                              
                showtime_test.gleeunit_assert_not_equal_test  
                should.not_equal                              
-               gleeunit_ffi.crash                            
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: ------------------⌄                           
          [36mTest[39m: showtime_test.[1m[36mmeta_test[39m[22m                       
@@ -147,12 +147,12 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
      [36mExpected[39m: ["bepa", [1m[32m"depa"[39m[22m]                              
           [36mGot[39m: [[1m[31m"apa"[39m[22m, "bepa"]                               
    [36mStacktrace[39m: showtime_ffi.run                              
-               test.test_function                            
+               do_test.test_function                         
                showtime_test.(anonymous)                     
-               test.equal                                    
+               do_test.equal                                 
                should.equal_meta                             
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: ------------------⌄                           
          [36mTest[39m: showtime_test.[1m[36mdjur_test[39m[22m                       
@@ -162,7 +162,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
                showtime_test.djur_test                       
                should.not_equal                              
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: --------------------⌄                         
          [36mTest[39m: showtime_test.[1m[36mis_true_test[39m[22m                    
@@ -173,7 +173,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
                should.be_true                                
                should.equal                                  
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: ------------------⌄                           
          [36mTest[39m: showtime_test.[1m[36mi_am_test[39m[22m                       
@@ -182,7 +182,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
    [36mStacktrace[39m: showtime_ffi.run                              
                showtime_test.i_am_test                       
                should.equal                                  
-               gleeunit_ffi.crash                            
+               prelude.makeError                             
        [36mOutput[39m: Some test output                              
                And the some really really really really really really really really really really really really really really really really really really really really long output
                                                            
@@ -193,7 +193,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
    [36mStacktrace[39m: showtime_ffi.run                              
                showtime_test.gleeunit_should_be_error_test   
                should.be_error                               
-               gleeunit_ffi.crash                            
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: ---------------------------⌄                  
          [36mTest[39m: showtime_test.[1m[36mgleeunit_should_be_ok_test[39m[22m      
@@ -202,7 +202,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
    [36mStacktrace[39m: showtime_ffi.run                              
                showtime_test.gleeunit_should_be_ok_test      
                should.be_ok                                  
-               gleeunit_ffi.crash                            
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: ----------------------⌄                       
          [36mTest[39m: showtime_test.[1m[36mis_true_meta_test[39m[22m               
@@ -210,13 +210,13 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
      [36mExpected[39m: [1m[32mTrue[39m[22m                                          
           [36mGot[39m: [1m[31mFalse[39m[22m                                         
    [36mStacktrace[39m: showtime_ffi.run                              
-               test.test_function                            
+               do_test.test_function                         
                showtime_test.(anonymous)                     
-               test.be_true                                  
+               do_test.be_true                               
                should.be_true_meta                           
                should.equal_meta                             
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: ------------------⌄                           
          [36mTest[39m: showtime_test.[1m[36mfail_test[39m[22m                       
@@ -226,7 +226,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
                showtime_test.fail_test                       
                should.fail                                   
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: ---------------------⌄                        
          [36mTest[39m: showtime_test.[1m[36mwith_meta_test[39m[22m                  
@@ -234,13 +234,13 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
      [36mExpected[39m: [1m[32mu[39m[22m[1m[32mn[39m[22m[1m[32mi[39m[22m[1m[32mv[39m[22me[1m[32mr[39m[22m[1m[32ms[39m[22m[1m[32me[39m[22m                                      
           [36mGot[39m: [1m[31mm[39m[22me[1m[31mt[39m[22m[1m[31ma[39m[22m                                          
    [36mStacktrace[39m: showtime_ffi.run                              
-               test.test_function                            
+               do_test.test_function                         
                showtime_test.(anonymous)                     
-               test.equal                                    
-               test.equal                                    
+               do_test.equal                                 
+               do_test.equal                                 
                should.equal_meta                             
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: ------------------⌄                           
          [36mTest[39m: showtime_test.[1m[36mlist_test[39m[22m                       
@@ -250,7 +250,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
                showtime_test.list_test                       
                should.equal                                  
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: --------------------⌄                         
          [36mTest[39m: showtime_test.[1m[36muse_meta_test[39m[22m                   
@@ -258,12 +258,12 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
      [36mExpected[39m: [1m[32mu[39m[22m[1m[32mn[39m[22m[1m[32mi[39m[22m[1m[32mv[39m[22me[1m[32mr[39m[22m[1m[32ms[39m[22m[1m[32me[39m[22m                                      
           [36mGot[39m: [1m[31mm[39m[22me[1m[31mt[39m[22m[1m[31ma[39m[22m                                          
    [36mStacktrace[39m: showtime_ffi.run                              
-               test.test_function                            
+               do_test.test_function                         
                showtime_test.(anonymous)                     
-               test.equal                                    
+               do_test.equal                                 
                should.equal_meta                             
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: -----------------------⌄                      
          [36mTest[39m: showtime_test.[1m[36mnot_equal_meta_test[39m[22m             
@@ -271,12 +271,12 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
      [36mExpected[39m: [1m[32mTestType(arg1: "apa", arg2: ["ren", "flax"])[39m[22m  
           [36mGot[39m: [1m[31mTestType(arg1: "apa", arg2: ["ren", "tur"])[39m[22m   
    [36mStacktrace[39m: showtime_ffi.run                              
-               test.test_function                            
+               do_test.test_function                         
                showtime_test.(anonymous)                     
-               test.not_equal                                
+               do_test.not_equal                             
                should.equal_meta                             
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: ---------------------⌄                        
          [36mTest[39m: showtime_test.[1m[36mdiff_long_test[39m[22m                  
@@ -284,12 +284,12 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
      [36mExpected[39m: [TestType(arg1: "second", arg2: ["in", "array"]), [1m[32mTestType(arg1: "first", arg2: ["other", "array"])[39m[22m, [1m[32mVariant[39m[22m, TestType(arg1: "second", arg2: ["in", "array"]), [1m[32mTestType(arg1: "first", arg2: ["other", "array"])[39m[22m, TestType(arg1: "second", arg2: ["in", "array"]), [1m[32mTestType(arg1: "first", arg2: ["other", "array"])[39m[22m]
           [36mGot[39m: [[1m[31mTestType(arg1: "first", arg2: ["in", "array"])[39m[22m, TestType(arg1: "second", arg2: ["in", "array"]), [1m[31mTestType(arg1: "first", arg2: ["in", "array"])[39m[22m, TestType(arg1: "second", arg2: ["in", "array"]), [1m[31mTestType(arg1: "first", arg2: ["in", "array"])[39m[22m, TestType(arg1: "second", arg2: ["in", "array"])]
    [36mStacktrace[39m: showtime_ffi.run                              
-               test.test_function                            
+               do_test.test_function                         
                showtime_test.(anonymous)                     
-               test.equal                                    
+               do_test.equal                                 
                should.equal_meta                             
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: -----------------------⌄                      
          [36mTest[39m: showtime_test.[1m[36mis_false_meta_test[39m[22m              
@@ -297,13 +297,13 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
      [36mExpected[39m: [1m[32mFalse[39m[22m                                         
           [36mGot[39m: [1m[31mTrue[39m[22m                                          
    [36mStacktrace[39m: showtime_ffi.run                              
-               test.test_function                            
+               do_test.test_function                         
                showtime_test.(anonymous)                     
-               test.be_false                                 
+               do_test.be_false                              
                should.be_false_meta                          
                should.equal_meta                             
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: ---------------------⌄                        
          [36mTest[39m: showtime_test.[1m[36mis_ok_meta_test[39m[22m                 
@@ -311,12 +311,12 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
      [36mExpected[39m: [1m[32mOk(_)[39m[22m                                         
           [36mGot[39m: [1m[31mError(TestType(arg1: "error", arg2: ["caused", "by"]))[39m[22m
    [36mStacktrace[39m: showtime_ffi.run                              
-               test.test_function                            
+               do_test.test_function                         
                showtime_test.(anonymous)                     
-               test.be_ok                                    
+               do_test.be_ok                                 
                should.be_ok_meta                             
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
        [1m[31mFailed[39m[22m: --------------------⌄                         
          [36mTest[39m: showtime_test.[1m[36mis_error_test[39m[22m                   
@@ -326,7 +326,7 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
                showtime_test.is_error_test                   
                should.be_error                               
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
        [36mOutput[39m: This test                                     
                has som lines of output                       
                Which is also followed by an io.debug()       
@@ -339,6 +339,6 @@ TestType(arg1: "Im the infamous TestType", arg2: ["we", "are", "on", "the", "lis
                sub_test.in_subfolder_test                    
                should.equal                                  
                should.evaluate                               
-               gleam.makeError                               
+               prelude.makeError                             
                                                            
 [1m[32m15 passed[39m[22m, [1m[31m29 failed[39m[22m

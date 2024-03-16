@@ -346,7 +346,7 @@ pub fn table_test() {
 }
 
 @target(javascript)
-import gleam/dynamic.{Dynamic}
+import gleam/dynamic.{type Dynamic}
 
 @target(javascript)
 pub fn generic_exception_test() {

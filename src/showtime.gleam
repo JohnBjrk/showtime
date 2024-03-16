@@ -83,14 +83,14 @@ pub fn main() {
 // }
 
 @target(javascript)
-import gleam/map
+import gleam/dict
 @target(javascript)
-import gleam/option.{None, Option, Some}
+import gleam/option.{type Option, None, Some}
 @target(javascript)
-import showtime/internal/common/test_suite.{TestEvent}
+import showtime/internal/common/test_suite.{type TestEvent}
 @target(javascript)
 import showtime/internal/common/common_event_handler.{
-  Finished, HandlerState, NotStarted, handle_event,
+  type HandlerState, Finished, HandlerState, NotStarted, handle_event,
 }
 @target(javascript)
 import showtime/internal/reports/formatter.{create_test_report}
@@ -100,7 +100,7 @@ pub fn main() {
   use module_list, ignore_tags, capture <- start_with_args(start_arguments())
   run_tests(
     event_handler,
-    HandlerState(NotStarted, 0, map.new()),
+    HandlerState(NotStarted, 0, dict.new()),
     module_list,
     ignore_tags,
     capture,
