@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.0
+
+- Updated for gleam 1.0.0
+
 ## v0.2.0
 
 - Updated for gleam 0.30
