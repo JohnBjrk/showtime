@@ -20,6 +20,7 @@ glint = "~> 0.18.0"
 gap = "~> 1.1"
 snag = "~> 0.3"
 simplifile = "~> 1.5"
+argv = "~> 1.0"
 
 [dev-dependencies]
 gleeunit = "~> 1.0"

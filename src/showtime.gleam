@@ -9,8 +9,6 @@ import gleam/list
 @target(erlang)
 import gleam/option.{None, Some}
 @target(erlang)
-import gleam/erlang.{start_arguments}
-@target(erlang)
 import showtime/internal/common/test_suite.{EndTestRun, StartTestRun}
 @target(erlang)
 import showtime/internal/erlang/event_handler
@@ -24,10 +22,13 @@ import showtime/internal/erlang/discover.{
 }
 @target(javascript)
 import gleam/io
+import argv
 
 @target(erlang)
 pub fn main() {
-  use module_list, ignore_tags, capture <- start_with_args(start_arguments())
+  use module_list, ignore_tags, capture <- start_with_args(
+    argv.load().arguments,
+  )
   // Start event handler which will collect test-results and eventually
   // print test report
   let test_event_handler = event_handler.start()
@@ -52,36 +53,6 @@ pub fn main() {
   Nil
 }
 
-// @target(erlang)
-// fn run(
-//   module_list: Option(List(String)),
-//   ignore_tags: List(String),
-//   capture: Capture,
-// ) {
-//   // Start event handler which will collect test-results and eventually
-//   // print test report
-//   let test_event_handler = event_handler.start()
-//   // Start module handler which receives msg about modules to test and
-//   // runs the test-suite for the module
-//   let test_module_handler =
-//     module_handler.start(
-//       test_event_handler,
-//       collect_test_functions,
-//       runner.run_test_suite,
-//       ignore_tags,
-//       capture,
-//     )
-
-//   test_event_handler(StartTestRun)
-//   // Collect modules and notify the module handler to start the test-suites
-//   let modules = collect_modules(test_module_handler, module_list)
-//   test_event_handler(EndTestRun(
-//     modules
-//     |> list.length(),
-//   ))
-//   Nil
-// }
-
 @target(javascript)
 import gleam/dict
 @target(javascript)
@@ -97,7 +68,9 @@ import showtime/internal/reports/formatter.{create_test_report}
 
 @target(javascript)
 pub fn main() {
-  use module_list, ignore_tags, capture <- start_with_args(start_arguments())
+  use module_list, ignore_tags, capture <- start_with_args(
+    argv.load().arguments,
+  )
   run_tests(
     event_handler,
     HandlerState(NotStarted, 0, dict.new()),
@@ -133,10 +106,6 @@ fn run_tests(
   d: List(String),
   e: cli.Capture,
 ) -> Nil
-
-@target(javascript)
-@external(javascript, "./showtime_ffi.mjs", "start_args")
-fn start_arguments() -> List(String)
 
 @target(javascript)
 @external(javascript, "./showtime_ffi.mjs", "exit")

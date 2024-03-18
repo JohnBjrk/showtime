@@ -100,7 +100,6 @@ pub fn handle_event(
     }
     EndTestSuite(_) -> #(test_state, num_done + 1, events)
     EndTestRun(num_modules) -> #(Finished(num_modules), num_done, events)
-    _ -> #(Running, num_done, events)
   }
   HandlerState(updated_test_state, updated_num_done, updated_events)
 }

@@ -173,11 +173,6 @@ pub fn create_test_report(test_results: Dict(String, Dict(String, TestRun))) {
                     test_function.name,
                     exception.output_buffer,
                   ))
-                other -> {
-                  io.println("Other: " <> string.inspect(other))
-                  panic
-                  Error(Nil)
-                }
               }
             _ -> Error(Nil)
           }

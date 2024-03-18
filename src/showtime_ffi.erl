@@ -97,7 +97,7 @@ run_test(Module, Function, IgnoreTags, Capture) ->
                                 assertMatch ->
                                     assert_match;
                                 OtherAssertionType ->
-                                    OtherAssertionType
+                                    {generic_exception, OtherAssertionType}
                             end,
                         {GleamAssertionType, ErlangReasonList};
                     #{
